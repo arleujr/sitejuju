@@ -1,0 +1,570 @@
+
+.viv4{
+  --viv4-bg-rgb: 146 111 139;
+  --viv4-ink: #fffaf7;
+  --viv4-card-w: clamp(280px, 24vw, 430px);
+  --viv4-gap: clamp(28px, 3.6vw, 68px);
+  --viv4-progress: .01;
+  position: relative;
+  width: 100%;
+  height: 860vh;
+  min-height: 860vh;
+  overflow-x: clip;
+  background: rgb(var(--viv4-bg-rgb));
+  color: var(--viv4-ink);
+  isolation: isolate;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.viv4 *, .viv4 *::before, .viv4 *::after{ box-sizing:border-box; }
+
+.viv4__sticky{
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: rgb(var(--viv4-bg-rgb));
+}
+
+.viv4__stage{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.18), transparent 26%),
+    radial-gradient(circle at 82% 76%, rgba(255,214,227,.16), transparent 24%),
+    radial-gradient(circle at 54% 54%, rgba(255,255,255,.06), transparent 36%),
+    linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
+    rgb(var(--viv4-bg-rgb));
+}
+
+.viv4__grain{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .08;
+  mix-blend-mode: soft-light;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 5px);
+}
+
+.viv4__headline-viewport{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 30;
+  width: min(96vw, 1420px);
+  height: clamp(250px, 34vw, 460px);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.viv4__headline{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 2vw;
+  text-align: center;
+  color: #fffdfb;
+  text-transform: uppercase;
+  font-size: clamp(52px, 7.1vw, 132px);
+  line-height: .88;
+  letter-spacing: -.07em;
+  font-weight: 900;
+  text-wrap: balance;
+  text-shadow: 0 12px 38px rgba(68, 34, 59, .18);
+  will-change: transform;
+}
+
+.viv4__headline--2{
+  font-size: clamp(44px, 5.9vw, 104px);
+}
+
+.viv4__rail-window{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.viv4__rail-window--top{
+  top: 5.2vh;
+  height: 34vh;
+}
+
+.viv4__rail-window--bottom{
+  bottom: 4.8vh;
+  height: 34vh;
+}
+
+.viv4__rail{
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--viv4-gap);
+  width: max-content;
+  transform: translate3d(0, -50%, 0);
+  will-change: transform;
+}
+
+.viv4__card{
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--viv4-card-w);
+  aspect-ratio: 4 / 5;
+  padding: 7px;
+  border-radius: 24px;
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(255,255,255,.4);
+  box-shadow: 0 22px 60px rgba(76, 43, 67, .24);
+  transform: rotate(var(--viv4-rot, 0deg)) translateY(var(--viv4-y, 0px));
+}
+
+.viv4__card.is-landscape{
+  width: calc(var(--viv4-card-w) * 1.35);
+  aspect-ratio: 4 / 3;
+}
+
+.viv4__media{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 17px;
+  background: rgba(78, 51, 73, .18);
+}
+
+.viv4__photo{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: rgba(78, 51, 73, .15);
+  opacity: 0;
+}
+
+.viv4__card.is-loaded .viv4__photo{ opacity: 1; }
+
+.viv4__gloss{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.viv4__gloss::before{
+  content: "";
+  position: absolute;
+  top: -35%;
+  left: -50%;
+  width: 30%;
+  height: 175%;
+  transform: rotate(16deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+  animation: viv4Gloss var(--viv4-gloss-duration, 9s) linear var(--viv4-gloss-delay, 1s) infinite;
+}
+
+@keyframes viv4Gloss{
+  0%,72%{transform:translateX(0) rotate(16deg);opacity:0}
+  76%{opacity:1}
+  90%{transform:translateX(520%) rotate(16deg);opacity:0}
+  100%{transform:translateX(520%) rotate(16deg);opacity:0}
+}
+
+.viv4__progress{
+  position: absolute;
+  left: clamp(18px, 2.3vw, 42px);
+  bottom: clamp(18px, 2.3vw, 36px);
+  z-index: 48;
+  width: 110px;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255,255,255,.2);
+}
+.viv4__progress span{
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  transform: scaleX(var(--viv4-progress));
+  transform-origin: left center;
+}
+
+.viv4__ending{
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: rgb(var(--viv4-end-rgb, 199 165 205));
+  transform: translateY(105%);
+  will-change: transform, background;
+}
+
+.viv4__ending-copy{
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  transform: translateX(-50%);
+  z-index: 72;
+  width: min(82vw, 1180px);
+  margin: 0;
+  text-align: center;
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(54px, 6.1vw, 102px);
+  font-weight: 700;
+  line-height: .92;
+  letter-spacing: -.055em;
+  text-wrap: balance;
+  text-shadow: 0 7px 30px rgba(88, 56, 89, .14);
+  will-change: transform;
+}
+
+.viv4__bubble{
+  position: absolute;
+  left: 50%;
+  top: 65%;
+  z-index: 75;
+  width: min(76vw, 900px, calc(68vh * 968 / 720));
+  aspect-ratio: 968 / 720;
+  height: auto;
+  transform: translate(-50%, 115vh);
+  padding: 10px;
+  background: #fff;
+  border: 0;
+  border-radius: 22px;
+  box-shadow: 0 26px 70px rgba(66, 31, 54, .22);
+  will-change: transform;
+}
+
+.viv4__bubble::after{
+  display: none;
+}
+
+.viv4__video-wrap{
+  position: absolute;
+  inset: 10px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #111;
+}
+
+.viv4__video{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #111;
+}
+
+.viv4__video-msg{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  text-align: center;
+  color: rgba(255,255,255,.55);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.viv4__video.has-source + .viv4__video-msg{display:none}
+
+@media (max-width:860px){
+  .viv4{
+    --viv4-card-w: 68vw;
+    --viv4-gap: 9vw;
+    height: 930vh;
+    min-height: 930vh;
+  }
+
+  .viv4__headline-viewport{
+    width: 92vw;
+    height: 44vw;
+    min-height: 142px;
+    max-height: 220px;
+  }
+
+  .viv4__headline{
+    padding: 0 2vw;
+    font-size: clamp(42px, 12vw, 72px);
+    line-height: .86;
+  }
+
+  .viv4__headline--2{
+    font-size: clamp(34px, 9.8vw, 58px);
+  }
+
+  .viv4__rail-window--top{
+    top: 7vh;
+    height: 31vh;
+  }
+
+  .viv4__rail-window--bottom{
+    bottom: 6vh;
+    height: 31vh;
+  }
+
+  .viv4__card{
+    padding: 5px;
+    border-radius: 18px;
+    box-shadow: 0 16px 42px rgba(76, 43, 67, .25);
+  }
+
+  .viv4__card.is-landscape{
+    width: 80vw;
+  }
+
+  .viv4__media{ border-radius: 13px; }
+
+  .viv4__progress{
+    left: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: 64px;
+  }
+
+  .viv4__ending-copy{
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 88vw;
+    font-size: clamp(48px, 12vw, 76px);
+    line-height: .95;
+  }
+
+  /* Assim que o VÍDEO 1 começa, a frase deixa o centro e fica
+     centralizada no alto da viewport, sem ficar atrás do vídeo. */
+  .viv4__ending.is-first-video-playing .viv4__ending-copy{
+    position: absolute;
+    left: 50%;
+    top: max(18px, calc(env(safe-area-inset-top) + 10px));
+    width: 92vw;
+    font-size: clamp(38px, 9.8vw, 58px);
+    line-height: .90;
+    transform: translateX(-50%) !important;
+    z-index: 90;
+  }
+
+  .viv4__bubble{
+    top: 58%;
+    width: min(90vw, calc(var(--viv4-mobile-vh, 100svh) * .60 * 968 / 720));
+    aspect-ratio: 968 / 720;
+    height: auto;
+    padding: 7px;
+    border-radius: 18px;
+  }
+
+  .viv4__bubble::after{
+    display: none;
+  }
+
+  .viv4__video-wrap{
+    inset: 7px;
+    border-radius: 12px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .viv4__gloss::before{animation:none!important}
+}
+
+
+/* ========================================================================== 
+   V4P8 — PONTE ENTRE A TELA ATUAL E O VIDEO FINAL
+
+   A tela "e é só o começo da nossa história" acima NÃO é alterada.
+   A nova tela entra por baixo. O balaofala.png fica preso à BORDA SUPERIOR
+   do vídeo final: metade do balão invade a tela anterior e metade fica sobre
+   o vídeo. Depois o balão sai para cima e sobra somente o vídeo fullscreen.
+   ========================================================================== */
+
+.viv4-bridge{
+  position: relative;
+  z-index: 120;
+  width: 100%;
+  height: 300vh;
+  min-height: 300vh;
+
+  /* começa enquanto a última viewport da cena anterior ainda está presa */
+  margin-top: -100vh;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.viv4-bridge__sticky{
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+}
+
+.viv4-bridge__final-screen{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: visible;
+  background: #000;
+  transform: translate3d(0,100%,0);
+  will-change: transform;
+  pointer-events: auto;
+}
+
+.viv4-bridge__video-host{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  background:#000;
+}
+
+.viv4-bridge__video{
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: #000;
+}
+
+.viv4-bridge__balloon{
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: 3;
+
+  /* O balão serve somente como um corte visual muito rápido entre as telas. */
+  width: max(112vw, 1680px);
+  max-width: none;
+  height: auto;
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-50%,-64%,0) scale(.985);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  user-select: none;
+  pointer-events: none;
+}
+
+.viv4-bridge__final-screen.is-balloon-flash .viv4-bridge__balloon{
+  visibility: visible;
+  animation: viv4BalloonFlash 420ms cubic-bezier(.22,.7,.2,1) both;
+}
+
+@keyframes viv4BalloonFlash{
+  0%{ opacity:0; transform:translate3d(-50%,-60%,0) scale(.975); }
+  18%{ opacity:1; }
+  58%{ opacity:.96; transform:translate3d(-50%,-66%,0) scale(1); }
+  100%{ opacity:0; transform:translate3d(-50%,-76%,0) scale(1.015); }
+}
+
+.viv4-bridge__final-screen.is-video-only .viv4-bridge__balloon{
+  pointer-events: none;
+}
+
+@media (max-width:860px){
+  .viv4-bridge{
+    height: var(--viv4-bridge-h, 330svh);
+    min-height: var(--viv4-bridge-h, 330svh);
+
+    /* Geometria congelada em px pelo JS: a barra do navegador móvel não
+       muda o ponto de emenda enquanto o usuário está rolando. */
+    margin-top: var(--viv4-bridge-mt, -130svh);
+  }
+
+  .viv4-bridge__sticky{
+    height: var(--viv4-bridge-vh, 100svh);
+    /* Fallback visual igual ao último tom da tela anterior. */
+    background: rgb(156 195 214);
+  }
+
+  .viv4-bridge__balloon{
+    /* O PNG é 16:9 e o recorte foi pensado para a emenda horizontal.
+       No telefone ele precisa ser bem maior para manter o mesmo efeito. */
+    width: 230vw;
+  }
+
+  .viv4-bridge__video{
+    object-fit: cover;
+  }
+}
+
+
+/* ==========================================================================
+   V5 — GATE ENTRE OS DOIS VÍDEOS
+   A ponte existe no layout, mas fica completamente invisível até
+   vivencias-final.mp4 terminar.
+   ========================================================================== */
+
+.viv4-bridge.is-locked{
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.viv4-bridge.is-unlocked{
+  visibility: visible;
+}
+
+
+/* ==========================================================================
+   V6 — entrada/reentrada estável do vivencias-final.mp4
+   ========================================================================== */
+.viv4__video{
+  display:block;
+  opacity:1;
+  visibility:visible;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+}
+
+.viv4__bubble,
+.viv4__ending-copy{
+  backface-visibility:hidden;
+}
+
+@media (max-width:860px){
+  .viv4__sticky{
+    height:var(--viv4-mobile-vh, 100svh);
+  }
+
+  .viv4__ending{
+    height:var(--viv4-mobile-vh, 100svh);
+  }
+}
+
+/* Mobile V6: a frase mantém o MESMO sistema de coordenadas antes, durante e
+   depois do play. Não existe mais troca relative -> absolute no clique/play. */
+@media (max-width:860px){
+  .viv4__ending-copy,
+  .viv4__ending.is-first-video-playing .viv4__ending-copy{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:90vw;
+    font-size:clamp(46px, 11.6vw, 72px);
+    line-height:.94;
+    transform:translateX(-50%) translateY(-50%);
+    transform-origin:50% 50%;
+    z-index:90;
+  }
+}

@@ -1,0 +1,307 @@
+.smile-v5,
+.smile-v5 * { box-sizing: border-box; }
+
+.smile-v5 {
+  --paper: #eadfce;
+  --ink: #2b221d;
+  position: relative;
+  width: 100%;
+  color: var(--ink);
+  overflow-x: clip;
+  background: var(--paper);
+  isolation: isolate;
+}
+
+.smile-v5__section {
+  position: relative;
+  height: 430svh;
+}
+
+.smile-v5__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.smile-v5__next-style-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.45), transparent 16%),
+    radial-gradient(circle at 82% 26%, rgba(255,255,255,.22), transparent 18%),
+    linear-gradient(180deg, #f1d9de 0%, #efd3da 32%, #e9cfd8 100%);
+}
+
+.smile-v5__next-style-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 18%, rgba(255,255,255,.12) 18% 19%, transparent 19% 100%),
+    linear-gradient(transparent 0 13%, rgba(255,255,255,.08) 13% 14%, transparent 14% 100%);
+  background-size: 180px 180px, 180px 180px;
+  opacity: .55;
+}
+
+.smile-v5__scene-stage {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.smile-v5__paper {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255,255,255,.17), transparent 26%),
+    linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,0) 14%, rgba(129,93,62,.05) 100%),
+    var(--paper) url('/assets/fundos/fundo-sorriso.webp') center center / cover no-repeat;
+}
+
+.smile-v5__canvas {
+  position: relative;
+  width: min(100vw, calc(100svh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.smile-v5__spread {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.smile-v5__item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: center center;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+
+.smile-v5__item.is-photo { z-index: 10; }
+.smile-v5__item.is-deco { z-index: 14; }
+.smile-v5__item.is-title { z-index: 18; }
+
+.smile-v5__img,
+.smile-v5__photo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.smile-v5__img { object-fit: contain; user-select: none; -webkit-user-drag: none; }
+
+.smile-v5__photo { position: relative; width: 100%; height: 100%; }
+.smile-v5__frame {
+  position: absolute; inset: 0;
+  border-radius: 10px;
+  background: #f8f3eb;
+  box-shadow: 0 14px 24px rgba(78, 57, 38, .14), 0 2px 4px rgba(78,57,38,.08);
+}
+.smile-v5__photo[data-cutout="true"] .smile-v5__frame { background: transparent; box-shadow: none; }
+
+.smile-v5__photo-img {
+  position: absolute;
+  inset: 3.6%; width: 92.8%; height: 92.8%; object-fit: contain;
+}
+.smile-v5__photo[data-cutout="true"] .smile-v5__photo-img { inset: 0; width: 100%; height: 100%; }
+.smile-v5__photo-img { z-index: 2; opacity: 0; }
+.smile-v5__item.is-loaded .smile-v5__photo-img { opacity: 1; }
+
+
+.smile-v5__gloss { position:absolute; inset:3.6%; overflow:hidden; border-radius:8px; z-index:4; pointer-events:none; }
+.smile-v5__photo[data-cutout="true"] .smile-v5__gloss { inset:0; border-radius:18px; }
+.smile-v5__gloss::before {
+  content:''; position:absolute; inset:-40% -70%; transform:translateX(-100%) rotate(15deg);
+  background:linear-gradient(100deg, transparent 44%, rgba(255,255,255,0) 47%, rgba(255,255,255,.24) 49%, rgba(255,255,255,.07) 52%, transparent 56%);
+  animation: smile-v5-gloss var(--gloss-duration, 10s) ease-in-out infinite;
+  animation-delay: var(--gloss-delay, 0s);
+}
+
+@keyframes smile-v5-gloss {
+  0%, 68% { transform: translateX(-100%) rotate(15deg); opacity: 0; }
+  72% { opacity: .65; }
+  82% { transform: translateX(95%) rotate(15deg); opacity: .14; }
+  100% { transform: translateX(95%) rotate(15deg); opacity: 0; }
+}
+
+.smile-v5__fastener {
+  position:absolute; z-index:5; width:34%; height:auto; pointer-events:none;
+  filter: drop-shadow(0 2px 2px rgba(62,46,31,.10));
+}
+.smile-v5__fastener--tl { left:-3%; top:-5%; }
+.smile-v5__fastener--tc { left:33%; top:-7%; }
+.smile-v5__fastener--tr { right:-3%; top:-5%; }
+.smile-v5__fastener--br { right:-3%; bottom:-3%; }
+.smile-v5__fastener--bl { left:-3%; bottom:-3%; }
+.smile-v5__fastener--rm { right:-7%; top:38%; width:24%; }
+.smile-v5__fastener--lm { left:-7%; top:38%; width:24%; }
+
+/* desktop positions */
+.smile-v5__spread--s01 [data-item="amoseusorriso"] { left: 5%; top: 5%; width: 24%; }
+.smile-v5__spread--s01 [data-item="sorriso-04"] { left: 33.2%; top: 18%; width: 19.2%; }
+.smile-v5__spread--s01 [data-item="sorriso-01"] { left: 7.8%; top: 42.5%; width: 16.5%; }
+.smile-v5__spread--s01 [data-item="sorriso-02"] { left: 60.8%; top: 14.5%; width: 12.3%; }
+.smile-v5__spread--s01 [data-item="sorriso-03"] { left: 77%; top: 19%; width: 12.1%; }
+.smile-v5__spread--s01 [data-item="sorriso-10"] { left: 50.6%; top: 59%; width: 28%; }
+.smile-v5__spread--s01 [data-item="sorriso-16"] { left: 84%; top: 59.5%; width: 10.2%; }
+.smile-v5__spread--s01 [data-item="flor-01"] { left: 0.2%; top: 48%; width: 11%; }
+.smile-v5__spread--s01 [data-item="rosa"] { left: 1.2%; top: 62.5%; width: 10%; }
+.smile-v5__spread--s01 [data-item="angel-01"] { left: 27.2%; top: 10.8%; width: 7%; }
+.smile-v5__spread--s01 [data-item="youaremysunshine"] { left: 56.6%; top: 44.5%; width: 15.6%; }
+.smile-v5__spread--s01 [data-item="carta-01"] { left: 25.6%; top: 64.2%; width: 12.5%; }
+.smile-v5__spread--s01 [data-item="ribbon-01"] { left: 71%; top: 63.8%; width: 8%; }
+.smile-v5__spread--s01 [data-item="selo-01"] { left: 89%; top: 48.5%; width: 5.6%; }
+.smile-v5__spread--s01 [data-item="laco-01"] { left: 86.3%; top: 5.5%; width: 10.2%; }
+.smile-v5__spread--s01 [data-item="miniheart"] { left: 54.4%; top: 11%; width: 2.2%; }
+.smile-v5__spread--s01 [data-item="miniheart-02"] { left: 44.8%; top: 79%; width: 2.4%; }
+
+.smile-v5__spread--s02 [data-item="pessoafavorita"] { left: 26.8%; top: 5.8%; width: 18.6%; }
+.smile-v5__spread--s02 [data-item="sorriso-05"] { left: 7%; top: 12%; width: 18%; }
+.smile-v5__spread--s02 [data-item="sorriso-06"] { left: 74%; top: 12%; width: 16.8%; }
+.smile-v5__spread--s02 [data-item="sorriso-07"] { left: 30.5%; top: 17.2%; width: 13%; }
+.smile-v5__spread--s02 [data-item="sorriso-08"] { left: 49.8%; top: 19.4%; width: 13.2%; }
+.smile-v5__spread--s02 [data-item="sorriso-09"] { left: 29.4%; top: 52.8%; width: 14%; }
+.smile-v5__spread--s02 [data-item="sorriso-13"] { left: 45.3%; top: 58.8%; width: 30.8%; }
+.smile-v5__spread--s02 [data-item="colar"] { left: 4.2%; top: 4.2%; width: 11.2%; }
+.smile-v5__spread--s02 [data-item="chave"] { left: 43%; top: 42.6%; width: 6.5%; }
+.smile-v5__spread--s02 [data-item="carta"] { left: 5.3%; top: 70%; width: 12.2%; }
+.smile-v5__spread--s02 [data-item="bear-01"] { left: 84.4%; top: 77.4%; width: 10.2%; }
+.smile-v5__spread--s02 [data-item="kiss-01"] { left: 55.6%; top: 48.5%; width: 7.8%; }
+.smile-v5__spread--s02 [data-item="laco-02"] { left: 73.8%; top: 4%; width: 11.4%; }
+.smile-v5__spread--s02 [data-item="selo-02"] { left: 18.8%; top: 79.5%; width: 5.8%; }
+.smile-v5__spread--s02 [data-item="miniheart"] { left: 67.2%; top: 22.8%; width: 2.1%; }
+.smile-v5__spread--s02 [data-item="miniheart-02"] { left: 83.5%; top: 69.5%; width: 2.4%; }
+
+.smile-v5__spread--s03 [data-item="sorriso-11"] { left: 7%; top: 11.5%; width: 17.2%; }
+.smile-v5__spread--s03 [data-item="sorriso-12"] { left: 28.8%; top: 8%; width: 14.5%; }
+.smile-v5__spread--s03 [data-item="sorriso-14"] { left: 17%; top: 57.8%; width: 28%; }
+.smile-v5__spread--s03 [data-item="sorriso-15"] { left: 72%; top: 11%; width: 17.8%; }
+.smile-v5__spread--s03 [data-item="sorriso-17"] { left: 46.2%; top: 18.5%; width: 18.5%; }
+.smile-v5__spread--s03 [data-item="sorriso-18"] { left: 73%; top: 58.5%; width: 12%; }
+.smile-v5__spread--s03 [data-item="anatomico"] { left: 54.8%; top: 4.2%; width: 10.2%; }
+.smile-v5__spread--s03 [data-item="lolipop"] { left: 84.5%; top: 40.8%; width: 7%; }
+.smile-v5__spread--s03 [data-item="lovesongstape"] { left: 3%; top: 74%; width: 15.5%; }
+.smile-v5__spread--s03 [data-item="angel-02"] { left: 65.2%; top: 5.5%; width: 8.7%; }
+.smile-v5__spread--s03 [data-item="rosa"] { left: -0.6%; top: 34%; width: 12.5%; }
+.smile-v5__spread--s03 [data-item="flor-01"] { left: 89.2%; top: 74.8%; width: 8%; }
+.smile-v5__spread--s03 [data-item="carta"] { left: 84.6%; top: 7.2%; width: 11.2%; }
+.smile-v5__spread--s03 [data-item="laco-03"] { left: 34.5%; top: 47.8%; width: 8.2%; }
+.smile-v5__spread--s03 [data-item="selo-01"] { left: 63.5%; top: 76.5%; width: 5.2%; }
+.smile-v5__spread--s03 [data-item="miniheart"] { left: 67.6%; top: 78.6%; width: 2.1%; }
+.smile-v5__spread--s03 [data-item="miniheart-02"] { left: 5.2%; top: 29%; width: 2.4%; }
+
+@media (max-width: 860px) {
+  .smile-v5__section { height: 455svh; }
+  .smile-v5__paper { background-size: 540px auto; }
+  .smile-v5__canvas { width: 100vw; }
+
+  .smile-v5__spread--s01 [data-item="amoseusorriso"] { left: 7%; top: 6.2%; width: 43%; }
+  .smile-v5__spread--s01 [data-item="sorriso-04"] { left: 34%; top: 19.5%; width: 31%; }
+  .smile-v5__spread--s01 [data-item="sorriso-01"] { left: 6%; top: 42%; width: 24%; }
+  .smile-v5__spread--s01 [data-item="sorriso-02"] { left: 68%; top: 18%; width: 20%; }
+  .smile-v5__spread--s01 [data-item="sorriso-03"] { left: 60%; top: 56%; width: 25%; }
+  .smile-v5__spread--s01 [data-item="sorriso-10"] { left: 14%; top: 73%; width: 48%; }
+  .smile-v5__spread--s01 [data-item="sorriso-16"] { left: 74%; top: 79%; width: 15.5%; }
+  .smile-v5__spread--s01 [data-item="flor-01"] { left: -1%; top: 49%; width: 18%; }
+  .smile-v5__spread--s01 [data-item="rosa"] { left: -1%; top: 64%; width: 16%; }
+  .smile-v5__spread--s01 [data-item="angel-01"] { left: 55%; top: 13%; width: 10%; }
+  .smile-v5__spread--s01 [data-item="youaremysunshine"] { left: 61%; top: 48.2%; width: 24%; }
+  .smile-v5__spread--s01 [data-item="carta-01"] { left: 25%; top: 63%; width: 18%; }
+  .smile-v5__spread--s01 [data-item="ribbon-01"] { left: 84%; top: 63.8%; width: 9%; }
+  .smile-v5__spread--s01 [data-item="selo-01"] { left: 80.5%; top: 48.8%; width: 8.5%; }
+  .smile-v5__spread--s01 [data-item="laco-01"] { left: 78%; top: 5%; width: 15%; }
+  .smile-v5__spread--s01 [data-item="miniheart"] { left: 56%; top: 20%; width: 3.5%; }
+  .smile-v5__spread--s01 [data-item="miniheart-02"] { left: 46%; top: 88%; width: 3.7%; }
+
+  .smile-v5__spread--s02 [data-item="pessoafavorita"] { left: 28.2%; top: 14%; width: 35%; }
+  .smile-v5__spread--s02 [data-item="sorriso-05"] { left: 3.5%; top: 19%; width: 28%; }
+  .smile-v5__spread--s02 [data-item="sorriso-06"] { left: 67%; top: 21%; width: 25%; }
+  .smile-v5__spread--s02 [data-item="sorriso-07"] { left: 34.5%; top: 28.5%; width: 20%; }
+  .smile-v5__spread--s02 [data-item="sorriso-08"] { left: 59.5%; top: 31.2%; width: 20%; }
+  .smile-v5__spread--s02 [data-item="sorriso-09"] { left: 67%; top: 57%; width: 18%; }
+  .smile-v5__spread--s02 [data-item="sorriso-13"] { left: 25%; top: 75%; width: 49%; }
+  .smile-v5__spread--s02 [data-item="colar"] { left: 3.8%; top: 5.8%; width: 14.5%; }
+  .smile-v5__spread--s02 [data-item="chave"] { left: 43%; top: 46%; width: 10%; }
+  .smile-v5__spread--s02 [data-item="carta"] { left: 78%; top: 80%; width: 14%; }
+  .smile-v5__spread--s02 [data-item="bear-01"] { left: 79.5%; top: 85.5%; width: 14%; }
+  .smile-v5__spread--s02 [data-item="kiss-01"] { left: 55%; top: 60%; width: 10%; }
+  .smile-v5__spread--s02 [data-item="laco-02"] { left: 67%; top: 7%; width: 18%; }
+  .smile-v5__spread--s02 [data-item="selo-02"] { left: 30%; top: 93.5%; width: 8%; }
+  .smile-v5__spread--s02 [data-item="miniheart"] { left: 77%; top: 18%; width: 3.2%; }
+  .smile-v5__spread--s02 [data-item="miniheart-02"] { left: 65%; top: 69%; width: 3.4%; }
+
+  .smile-v5__spread--s03 [data-item="sorriso-11"] { left: 3%; top: 13%; width: 26%; }
+  .smile-v5__spread--s03 [data-item="sorriso-12"] { left: 36%; top: 9%; width: 24%; }
+  .smile-v5__spread--s03 [data-item="sorriso-14"] { left: 10%; top: 62%; width: 46%; }
+  .smile-v5__spread--s03 [data-item="sorriso-15"] { left: 70%; top: 18%; width: 22%; }
+  .smile-v5__spread--s03 [data-item="sorriso-17"] { left: 42%; top: 34%; width: 26%; }
+  .smile-v5__spread--s03 [data-item="sorriso-18"] { left: 72%; top: 74%; width: 16%; }
+  .smile-v5__spread--s03 [data-item="anatomico"] { left: 58%; top: 5%; width: 14%; }
+  .smile-v5__spread--s03 [data-item="lolipop"] { left: 82%; top: 49%; width: 10%; }
+  .smile-v5__spread--s03 [data-item="lovesongstape"] { left: 2%; top: 84%; width: 20%; }
+  .smile-v5__spread--s03 [data-item="angel-02"] { left: 71%; top: 8%; width: 12%; }
+  .smile-v5__spread--s03 [data-item="rosa"] { left: -1%; top: 38%; width: 18%; }
+  .smile-v5__spread--s03 [data-item="flor-01"] { left: 87%; top: 86%; width: 10%; }
+  .smile-v5__spread--s03 [data-item="carta"] { left: 82%; top: 8%; width: 14%; }
+  .smile-v5__spread--s03 [data-item="laco-03"] { left: 58%; top: 72%; width: 12%; }
+  .smile-v5__spread--s03 [data-item="selo-01"] { left: 56%; top: 91%; width: 8%; }
+  .smile-v5__spread--s03 [data-item="miniheart"] { left: 66%; top: 91%; width: 3.4%; }
+  .smile-v5__spread--s03 [data-item="miniheart-02"] { left: 5%; top: 31%; width: 3.6%; }
+}
+
+/* VERSÃO COMPLETA — título do sorriso permanece fixo no centro durante todo o ato */
+.smile-v5__center-title {
+  position: absolute;
+  z-index: 34;
+  left: 40.75%;
+  top: 29%;
+  width: 18.5%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 8px 12px rgba(61,42,29,.10));
+}
+
+/* libera o miolo para o título persistente sem desmontar a composição aprovada */
+.smile-v5__spread--s01 [data-item="sorriso-04"] { left: 22%; top: 15%; width: 15.5%; }
+.smile-v5__spread--s01 [data-item="sorriso-10"] { left: 66%; top: 59%; width: 26%; }
+.smile-v5__spread--s01 [data-item="youaremysunshine"] { left: 62%; top: 45%; width: 13.5%; }
+
+.smile-v5__spread--s02 [data-item="pessoafavorita"] { left: 19.5%; top: 5%; width: 18.8%; }
+.smile-v5__spread--s02 [data-item="sorriso-07"] { left: 22%; top: 17%; width: 13%; }
+.smile-v5__spread--s02 [data-item="sorriso-08"] { left: 66%; top: 18%; width: 13.2%; }
+.smile-v5__spread--s02 [data-item="sorriso-09"] { left: 19%; top: 54%; width: 14%; }
+.smile-v5__spread--s02 [data-item="sorriso-13"] { left: 63%; top: 59%; width: 29%; }
+.smile-v5__spread--s02 [data-item="chave"] { left: 32%; top: 43%; width: 6.5%; }
+.smile-v5__spread--s02 [data-item="kiss-01"] { left: 72%; top: 47%; width: 7.8%; }
+
+.smile-v5__spread--s03 [data-item="sorriso-14"] { left: 7%; top: 58%; width: 28%; }
+.smile-v5__spread--s03 [data-item="sorriso-17"] { left: 64%; top: 18%; width: 17%; }
+.smile-v5__spread--s03 [data-item="laco-03"] { left: 27%; top: 49%; width: 8.2%; }
+
+@media (max-width: 860px) {
+  .smile-v5__center-title { left: 33%; top: 33%; width: 34%; }
+  .smile-v5__spread--s01 [data-item="sorriso-04"] { left: 17%; top: 19%; width: 24%; }
+  .smile-v5__spread--s01 [data-item="sorriso-03"] { left: 72%; top: 54%; width: 22%; }
+  .smile-v5__spread--s01 [data-item="sorriso-10"] { left: 50%; top: 73%; width: 44%; }
+  .smile-v5__spread--s01 [data-item="youaremysunshine"] { left: 71%; top: 43%; width: 20%; }
+
+  .smile-v5__spread--s02 [data-item="pessoafavorita"] { left: 13%; top: 10%; width: 31%; }
+  .smile-v5__spread--s02 [data-item="sorriso-07"] { left: 18%; top: 26%; width: 19%; }
+  .smile-v5__spread--s02 [data-item="sorriso-08"] { left: 72%; top: 28%; width: 19%; }
+  .smile-v5__spread--s02 [data-item="sorriso-09"] { left: 8%; top: 62%; width: 18%; }
+  .smile-v5__spread--s02 [data-item="sorriso-13"] { left: 50%; top: 76%; width: 44%; }
+  .smile-v5__spread--s02 [data-item="chave"] { left: 22%; top: 50%; width: 9%; }
+  .smile-v5__spread--s02 [data-item="kiss-01"] { left: 78%; top: 52%; width: 9%; }
+
+  .smile-v5__spread--s03 [data-item="sorriso-12"] { left: 18%; top: 10%; width: 20%; }
+  .smile-v5__spread--s03 [data-item="sorriso-17"] { left: 71%; top: 22%; width: 22%; }
+  .smile-v5__spread--s03 [data-item="sorriso-14"] { left: 5%; top: 69%; width: 43%; }
+}

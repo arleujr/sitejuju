@@ -1,0 +1,392 @@
+.love-trio,
+.love-trio * { box-sizing: border-box; }
+
+.love-trio {
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  isolation: isolate;
+}
+
+.love-trio__smile,
+.love-trio__style,
+.love-trio__gym {
+  position: relative;
+  width: 100%;
+}
+
+.love-trio__smile { z-index: 3; }
+.love-trio__style {
+  z-index: 2;
+  margin-top: -129.7svh;
+}
+.love-trio__gym {
+  z-index: 1;
+  margin-top: -122svh;
+}
+
+/* A cena seguinte é a própria camada revelada por baixo nas transições entre atos. */
+.love-trio__smile .smile-v5,
+.love-trio__smile .smile-v5__next-style-bg,
+.love-trio__style .style-v1,
+.love-trio__style .style-v1__next-bg {
+  background: transparent !important;
+}
+
+.love-trio__smile .smile-v5__next-style-bg::before,
+.love-trio__style .style-v1__next-bg::before {
+  display: none !important;
+}
+
+.love-trio__gym .gym-v1 { position: relative; }
+
+/* --------------------------------------------------------------------------
+   WEB V3 — palco inteiro + composição manual/determinística
+   Base de direção de arte: 1920x1080. Percentuais mantêm a composição fluida
+   em 1366x768, 1536x864, 1920x1080 e 2560x1440.
+   -------------------------------------------------------------------------- */
+@media (min-width: 861px) {
+  .love-trio .smile-v5__canvas,
+  .love-trio .style-v1__canvas,
+  .love-trio .gym-v1__canvas {
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100svh !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+  }
+
+  .love-trio .smile-v5__paper,
+  .love-trio .style-v1__paper,
+  .love-trio .gym-v1__paper {
+    inset: 0 !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+  }
+
+  /* Centro protegido: os três logos ficam menores e realmente centralizados. */
+  .love-trio .smile-v5__center-title,
+  .love-trio .style-v1__center-title,
+  .love-trio .gym-v1__tapago {
+    left: 50% !important;
+    top: 50% !important;
+    height: auto !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 40 !important;
+  }
+
+  .love-trio .smile-v5__center-title { width: 16.2% !important; }
+  .love-trio .style-v1__center-title { width: 15.8% !important; }
+  .love-trio .gym-v1__tapago { width: 15.5% !important; }
+
+  /* O título duplicado da primeira composição não é necessário. */
+  .love-trio .smile-v5__spread--s01 [data-item="amoseusorriso"],
+  .love-trio .style-v1__spread--s01 [data-item="amocomovc-estilosa"] {
+    display: none !important;
+  }
+
+  /* Nada de reposicionamento automático: o CSS abaixo é a composição final. */
+  .love-trio .smile-v5__item,
+  .love-trio .style-v1__item,
+  .love-trio .gym-v1__item {
+    translate: none !important;
+  }
+
+  /* Enquanto a foto ainda não terminou de carregar, não mostramos caixa/debug. */
+  .love-trio .smile-v5__item.is-photo:not(.is-loaded) .smile-v5__frame,
+  .love-trio .smile-v5__item.is-photo:not(.is-loaded) .smile-v5__gloss,
+  .love-trio .style-v1__item.is-photo:not(.is-loaded) .style-v1__frame,
+  .love-trio .style-v1__item.is-photo:not(.is-loaded) .style-v1__gloss,
+  .love-trio .gym-v1__item.is-photo:not(.is-loaded) .gym-v1__frame,
+  .love-trio .gym-v1__item.is-photo:not(.is-loaded) .gym-v1__gloss {
+    opacity: 0 !important;
+  }
+
+  /* ================================ SORRISO ================================ */
+  /* S01 */
+  .smile-v5__spread--s01 [data-item="sorriso-01"] { left: 3%; top: 22%; width: 9.2%; }
+  .smile-v5__spread--s01 [data-item="sorriso-04"] { left: 15%; top: 6%; width: 13.5%; }
+  .smile-v5__spread--s01 [data-item="sorriso-16"] { left: 24%; top: 59%; width: 9.6%; }
+  .smile-v5__spread--s01 [data-item="sorriso-02"] { left: 68%; top: 7%; width: 11.5%; }
+  .smile-v5__spread--s01 [data-item="sorriso-03"] { left: 84%; top: 9%; width: 10.2%; }
+  .smile-v5__spread--s01 [data-item="sorriso-10"] { left: 66%; top: 66%; width: 27%; }
+  .smile-v5__spread--s01 [data-item="angel-01"] { left: 30.2%; top: 5%; width: 5.6%; }
+  .smile-v5__spread--s01 [data-item="flor-01"] { left: .6%; top: 73%; width: 7.2%; }
+  .smile-v5__spread--s01 [data-item="rosa"] { left: 11.8%; top: 75%; width: 7.2%; }
+  .smile-v5__spread--s01 [data-item="carta-01"] { left: 15%; top: 49%; width: 8.2%; }
+  .smile-v5__spread--s01 [data-item="youaremysunshine"] { left: 70%; top: 48%; width: 10.5%; }
+  .smile-v5__spread--s01 [data-item="ribbon-01"] { left: 58.5%; top: 80%; width: 5.4%; }
+  .smile-v5__spread--s01 [data-item="selo-01"] { left: 93.2%; top: 47%; width: 4.1%; }
+  .smile-v5__spread--s01 [data-item="laco-01"] { left: 88.2%; top: 1.5%; width: 7.2%; }
+  .smile-v5__spread--s01 [data-item="miniheart"] { left: 31.5%; top: 20%; width: 1.8%; }
+  .smile-v5__spread--s01 [data-item="miniheart-02"] { left: 60.8%; top: 88%; width: 2%; }
+
+  /* S02 */
+  .smile-v5__spread--s02 [data-item="sorriso-05"] { left: 3%; top: 7%; width: 11.5%; }
+  .smile-v5__spread--s02 [data-item="sorriso-07"] { left: 19%; top: 13%; width: 10.8%; }
+  .smile-v5__spread--s02 [data-item="sorriso-09"] { left: 18.5%; top: 59%; width: 12.5%; }
+  .smile-v5__spread--s02 [data-item="sorriso-06"] { left: 84%; top: 7%; width: 11%; }
+  .smile-v5__spread--s02 [data-item="sorriso-08"] { left: 69%; top: 12%; width: 10.8%; }
+  .smile-v5__spread--s02 [data-item="sorriso-13"] { left: 66%; top: 67%; width: 27%; }
+  .smile-v5__spread--s02 [data-item="pessoafavorita"] { left: 14%; top: 1.5%; width: 13.5%; }
+  .smile-v5__spread--s02 [data-item="colar"] { left: 1.2%; top: 57%; width: 7.2%; }
+  .smile-v5__spread--s02 [data-item="chave"] { left: 31.5%; top: 8%; width: 4.5%; }
+  .smile-v5__spread--s02 [data-item="carta"] { left: 3%; top: 81%; width: 7.8%; }
+  .smile-v5__spread--s02 [data-item="bear-01"] { left: 90%; top: 80%; width: 6.2%; }
+  .smile-v5__spread--s02 [data-item="kiss-01"] { left: 81.5%; top: 51%; width: 5.3%; }
+  .smile-v5__spread--s02 [data-item="laco-02"] { left: 88.5%; top: .8%; width: 7.2%; }
+  .smile-v5__spread--s02 [data-item="selo-02"] { left: 30.5%; top: 80%; width: 4.1%; }
+  .smile-v5__spread--s02 [data-item="miniheart"] { left: 31.5%; top: 45%; width: 1.8%; }
+  .smile-v5__spread--s02 [data-item="miniheart-02"] { left: 63%; top: 84%; width: 2%; }
+
+  /* S03 */
+  .smile-v5__spread--s03 [data-item="sorriso-11"] { left: 3%; top: 7%; width: 11.7%; }
+  .smile-v5__spread--s03 [data-item="sorriso-12"] { left: 18.5%; top: 7%; width: 11.5%; }
+  .smile-v5__spread--s03 [data-item="sorriso-14"] { left: 4%; top: 69%; width: 26%; }
+  .smile-v5__spread--s03 [data-item="sorriso-15"] { left: 68%; top: 8%; width: 13.5%; }
+  .smile-v5__spread--s03 [data-item="sorriso-17"] { left: 85%; top: 8%; width: 10.2%; }
+  .smile-v5__spread--s03 [data-item="sorriso-18"] { left: 70%; top: 58%; width: 10.5%; }
+  .smile-v5__spread--s03 [data-item="anatomico"] { left: 30.8%; top: 2%; width: 6.4%; }
+  .smile-v5__spread--s03 [data-item="lolipop"] { left: 91%; top: 68%; width: 5.4%; }
+  .smile-v5__spread--s03 [data-item="lovesongstape"] { left: 18%; top: 87%; width: 10.8%; }
+  .smile-v5__spread--s03 [data-item="angel-02"] { left: 88%; top: 52%; width: 5.5%; }
+  .smile-v5__spread--s03 [data-item="rosa"] { left: .5%; top: 48%; width: 7%; }
+  .smile-v5__spread--s03 [data-item="flor-01"] { left: 90%; top: 84%; width: 6%; }
+  .smile-v5__spread--s03 [data-item="carta"] { left: 81.8%; top: 69%; width: 7.5%; }
+  .smile-v5__spread--s03 [data-item="laco-03"] { left: 30.5%; top: 70%; width: 5.8%; }
+  .smile-v5__spread--s03 [data-item="selo-01"] { left: 62.5%; top: 83%; width: 3.8%; }
+  .smile-v5__spread--s03 [data-item="miniheart"] { left: 66.8%; top: 86%; width: 1.8%; }
+  .smile-v5__spread--s03 [data-item="miniheart-02"] { left: 31.5%; top: 25%; width: 2%; }
+
+  /* ================================= ESTILO ================================ */
+  /* E01 */
+  .style-v1__spread--s01 [data-item="estilo-01"] { left: 3%; top: 7%; width: 11.3%; }
+  .style-v1__spread--s01 [data-item="estilo-10"] { left: 18%; top: 7%; width: 12.5%; }
+  .style-v1__spread--s01 [data-item="estilo-11"] { left: 18.5%; top: 58%; width: 10.5%; }
+  .style-v1__spread--s01 [data-item="estilo-02"] { left: 69%; top: 7%; width: 10.8%; }
+  .style-v1__spread--s01 [data-item="estilo-03"] { left: 84%; top: 8%; width: 10.5%; }
+  .style-v1__spread--s01 [data-item="estilo-16"] { left: 71%; top: 61%; width: 12.5%; }
+  .style-v1__spread--s01 [data-item="styleicon"] { left: 3%; top: 68%; width: 5.2%; }
+  .style-v1__spread--s01 [data-item="teamo"] { left: 12%; top: 83%; width: 9%; }
+  .style-v1__spread--s01 [data-item="vogue"] { left: 91%; top: 54%; width: 5.5%; }
+  .style-v1__spread--s01 [data-item="tiger02"] { left: 1.5%; top: 82%; width: 7.5%; }
+  .style-v1__spread--s01 [data-item="boca02"] { left: 82%; top: 49%; width: 4.8%; }
+  .style-v1__spread--s01 [data-item="camera"] { left: 87%; top: 79%; width: 6.3%; }
+  .style-v1__spread--s01 [data-item="flor-02"] { left: 64%; top: 82%; width: 5.5%; }
+  .style-v1__spread--s01 [data-item="coracao-01"] { left: 31%; top: 80%; width: 3.8%; }
+  .style-v1__spread--s01 [data-item="pin"] { left: 31.5%; top: 12%; width: 3.4%; }
+
+  /* E02 */
+  .style-v1__spread--s02 [data-item="estilo-04"] { left: 3%; top: 7%; width: 11.2%; }
+  .style-v1__spread--s02 [data-item="estilo-05"] { left: 18%; top: 8%; width: 10.8%; }
+  .style-v1__spread--s02 [data-item="estilo-12"] { left: 18%; top: 58%; width: 10.7%; }
+  .style-v1__spread--s02 [data-item="estilo-06"] { left: 84%; top: 7%; width: 11%; }
+  .style-v1__spread--s02 [data-item="estilo-07"] { left: 69%; top: 8%; width: 10.7%; }
+  .style-v1__spread--s02 [data-item="estilo-14"] { left: 72%; top: 57%; width: 8.8%; }
+  .style-v1__spread--s02 [data-item="channel"] { left: 1.5%; top: 66%; width: 6%; }
+  .style-v1__spread--s02 [data-item="prada"] { left: 86%; top: 60%; width: 7%; }
+  .style-v1__spread--s02 [data-item="relogio"] { left: 91%; top: 35%; width: 5.5%; }
+  .style-v1__spread--s02 [data-item="vogue02"] { left: 17%; top: 82%; width: 8.5%; }
+  .style-v1__spread--s02 [data-item="model-02"] { left: 29.5%; top: 72%; width: 5.8%; }
+  .style-v1__spread--s02 [data-item="model-04"] { left: 64%; top: 75%; width: 5.8%; }
+  .style-v1__spread--s02 [data-item="catfashion"] { left: 7%; top: 83%; width: 5.6%; }
+  .style-v1__spread--s02 [data-item="flor-04"] { left: 81.5%; top: 80%; width: 5.8%; }
+  .style-v1__spread--s02 [data-item="coracao-02"] { left: 64%; top: 9%; width: 3.6%; }
+  .style-v1__spread--s02 [data-item="laco-05"] { left: 30%; top: 3%; width: 6.3%; }
+  .style-v1__spread--s02 [data-item="vcdeixatudomaisbonito"] { left: 63%; top: 87%; width: 11%; }
+  .style-v1__spread--s02 [data-item="ficardecanto-01"] { left: 93%; top: 82%; width: 4.5%; }
+  .style-v1__spread--s02 [data-item="flor-01"] { left: .5%; top: 89%; width: 4.5%; }
+
+  /* E03 */
+  .style-v1__spread--s03 [data-item="estilo-08"] { left: 3%; top: 7%; width: 11.2%; }
+  .style-v1__spread--s03 [data-item="estilo-09"] { left: 18%; top: 8%; width: 10.8%; }
+  .style-v1__spread--s03 [data-item="estilo-19"] { left: 18%; top: 58%; width: 10.8%; }
+  .style-v1__spread--s03 [data-item="estilo-17"] { left: 69%; top: 7%; width: 12%; }
+  .style-v1__spread--s03 [data-item="estilo-18"] { left: 84.5%; top: 8%; width: 10.5%; }
+  .style-v1__spread--s03 [data-item="estilo-22"] { left: 72%; top: 59%; width: 9.5%; }
+  .style-v1__spread--s03 [data-item="dontflash"] { left: 1%; top: 64%; width: 6.5%; }
+  .style-v1__spread--s03 [data-item="coke"] { left: 31%; top: 79%; width: 4%; }
+  .style-v1__spread--s03 [data-item="coke2"] { left: 92%; top: 79%; width: 3.4%; }
+  .style-v1__spread--s03 [data-item="botas"] { left: 92%; top: 39%; width: 4.2%; }
+  .style-v1__spread--s03 [data-item="boca"] { left: 30.5%; top: 3%; width: 4.7%; }
+  .style-v1__spread--s03 [data-item="coracao-04"] { left: 64%; top: 83%; width: 4.5%; }
+  .style-v1__spread--s03 [data-item="revistas"] { left: 17%; top: 84%; width: 8.5%; }
+  .style-v1__spread--s03 [data-item="cinema"] { left: 1%; top: 82%; width: 7.2%; }
+  .style-v1__spread--s03 [data-item="flor-03"] { left: 83%; top: 82%; width: 7%; }
+  .style-v1__spread--s03 [data-item="laco-03"] { left: 30%; top: 59%; width: 5.5%; }
+  .style-v1__spread--s03 [data-item="model-01"] { left: 89%; top: 58%; width: 5.3%; }
+
+  /* E04 */
+  .style-v1__spread--s04 [data-item="estilo-13"] { left: 3%; top: 7%; width: 11.5%; }
+  .style-v1__spread--s04 [data-item="estilo-15"] { left: 18.5%; top: 8%; width: 10.8%; }
+  .style-v1__spread--s04 [data-item="estilo-23"] { left: 18.5%; top: 59%; width: 10.3%; }
+  .style-v1__spread--s04 [data-item="estilo-20"] { left: 69%; top: 7%; width: 10.8%; }
+  .style-v1__spread--s04 [data-item="estilo-21"] { left: 84%; top: 8%; width: 10.5%; }
+  .style-v1__spread--s04 [data-item="botas-02"] { left: 1.5%; top: 62%; width: 6.5%; }
+  .style-v1__spread--s04 [data-item="cantoinferiordireito"] { left: 90%; top: 78%; width: 6.5%; }
+  .style-v1__spread--s04 [data-item="model-03"] { left: 5%; top: 81%; width: 6%; }
+  .style-v1__spread--s04 [data-item="model-05"] { left: 69%; top: 61%; width: 5.8%; }
+  .style-v1__spread--s04 [data-item="model-06"] { left: 78%; top: 61%; width: 5.6%; }
+  .style-v1__spread--s04 [data-item="flor-05"] { left: 30.5%; top: 6%; width: 4.7%; }
+  .style-v1__spread--s04 [data-item="tiger"] { left: 88%; top: 53%; width: 6.5%; }
+  .style-v1__spread--s04 [data-item="camera"] { left: 16%; top: 84%; width: 7.5%; }
+  .style-v1__spread--s04 [data-item="teamo"] { left: 63%; top: 84%; width: 9%; }
+  .style-v1__spread--s04 [data-item="styleicon"] { left: 76%; top: 86%; width: 5%; }
+
+  /* =============================== ACADEMIA ================================ */
+  /* A01 */
+  .gym-v1__spread--a01 [data-item="academia-01"] { left: 3%; top: 6%; width: 10.8%; }
+  .gym-v1__spread--a01 [data-item="academia-02"] { left: 18%; top: 8%; width: 10.8%; }
+  .gym-v1__spread--a01 [data-item="academia-05"] { left: 18%; top: 60%; width: 11.5%; }
+  .gym-v1__spread--a01 [data-item="academia-03"] { left: 69%; top: 6%; width: 10.8%; }
+  .gym-v1__spread--a01 [data-item="academia-04"] { left: 84%; top: 8%; width: 10.5%; }
+  .gym-v1__spread--a01 [data-item="academia-06"] { left: 72%; top: 58%; width: 10.8%; }
+  .gym-v1__spread--a01 [data-item="cat-01"] { left: 1%; top: 80%; width: 6.3%; }
+  .gym-v1__spread--a01 [data-item="cat-02"] { left: 91%; top: 2%; width: 5.5%; }
+  .gym-v1__spread--a01 [data-item="cat-03"] { left: 29.5%; top: 82%; width: 5.6%; }
+  .gym-v1__spread--a01 [data-item="dog01"] { left: 91%; top: 72%; width: 4.7%; }
+  .gym-v1__spread--a01 [data-item="halter02"] { left: 64%; top: 83%; width: 6.2%; }
+  .gym-v1__spread--a01 [data-item="garrafa"] { left: 1%; top: 47%; width: 3.8%; }
+  .gym-v1__spread--a01 [data-item="heart"] { left: 31%; top: 48%; width: 3%; }
+
+  /* A02 */
+  .gym-v1__spread--a02 [data-item="academia-07"] { left: 3%; top: 5%; width: 10%; }
+  .gym-v1__spread--a02 [data-item="academia-08"] { left: 16.5%; top: 6%; width: 10%; }
+  .gym-v1__spread--a02 [data-item="academia-11"] { left: 3%; top: 58%; width: 10%; }
+  .gym-v1__spread--a02 [data-item="academia-12"] { left: 16.5%; top: 59%; width: 10%; }
+  .gym-v1__spread--a02 [data-item="academia-09"] { left: 69%; top: 5%; width: 10.8%; }
+  .gym-v1__spread--a02 [data-item="academia-10"] { left: 84%; top: 6%; width: 9.2%; }
+  .gym-v1__spread--a02 [data-item="academia-13"] { left: 72%; top: 59%; width: 11.8%; }
+  .gym-v1__spread--a02 [data-item="vceumsabor"] { left: 84%; top: 78%; width: 10.5%; }
+  .gym-v1__spread--a02 [data-item="cat-04"] { left: 1%; top: 82%; width: 5.5%; }
+  .gym-v1__spread--a02 [data-item="cat-05"] { left: 92%; top: 67%; width: 4.8%; }
+  .gym-v1__spread--a02 [data-item="cat-06"] { left: 91%; top: 2%; width: 5.5%; }
+  .gym-v1__spread--a02 [data-item="fire"] { left: 29.5%; top: 82%; width: 4.6%; }
+  .gym-v1__spread--a02 [data-item="luva"] { left: 1%; top: 48%; width: 5.5%; }
+  .gym-v1__spread--a02 [data-item="halter01"] { left: 90%; top: 48%; width: 6%; }
+  .gym-v1__spread--a02 [data-item="heart2"] { left: 64%; top: 83%; width: 5.5%; }
+
+  /* A03 */
+  .gym-v1__spread--a03 [data-item="academia-14"] { left: 3%; top: 5%; width: 11.5%; }
+  .gym-v1__spread--a03 [data-item="academia-15"] { left: 18.5%; top: 6%; width: 10%; }
+  .gym-v1__spread--a03 [data-item="academia-19"] { left: 3%; top: 58%; width: 10%; }
+  .gym-v1__spread--a03 [data-item="academia-17"] { left: 69%; top: 5%; width: 10%; }
+  .gym-v1__spread--a03 [data-item="academia-18"] { left: 84%; top: 6%; width: 10%; }
+  .gym-v1__spread--a03 [data-item="academia-20"] { left: 72%; top: 58%; width: 11.5%; }
+  .gym-v1__spread--a03 [data-item="academia-16"] { left: 17%; top: 80%; width: 20%; }
+  .gym-v1__spread--a03 [data-item="cat-07"] { left: 88%; top: 80%; width: 7%; }
+  .gym-v1__spread--a03 [data-item="rat01"] { left: 1%; top: 82%; width: 5.2%; }
+  .gym-v1__spread--a03 [data-item="rat02"] { left: 31%; top: 70%; width: 4.5%; }
+  .gym-v1__spread--a03 [data-item="rat03"] { left: 64%; top: 79%; width: 4.5%; }
+  .gym-v1__spread--a03 [data-item="rat04"] { left: 92%; top: 48%; width: 4.3%; }
+  .gym-v1__spread--a03 [data-item="rat05"] { left: 1%; top: 47%; width: 4.8%; }
+  .gym-v1__spread--a03 [data-item="trofeu"] { left: 77%; top: 82%; width: 7%; }
+}
+
+/* Mobile será refinado na próxima rodada. Mantemos a composição mobile existente
+   das cenas, sem aplicar as regras desktop acima. */
+@media (max-width: 860px) {
+  .love-trio__style { margin-top: -132svh; }
+  .love-trio__gym { margin-top: -124.25svh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .love-trio .smile-v5__gloss::before,
+  .love-trio .style-v1__gloss::before,
+  .love-trio .gym-v1__gloss::before {
+    animation: none !important;
+  }
+}
+
+/* Ajustes finais de espaçamento validados para 1920x1080: removem as últimas
+   colisões entre foto/foto e asset/asset sem depender de JavaScript. */
+@media (min-width: 861px) {
+  .smile-v5__spread--s01 [data-item="laco-01"] { left: 95%; top: .5%; width: 4.2%; }
+  .smile-v5__spread--s01 [data-item="miniheart-02"] { left: 63.5%; top: 89%; width: 1.8%; }
+
+  .smile-v5__spread--s02 [data-item="pessoafavorita"] { left: 15.5%; top: 1.5%; width: 12.5%; }
+  .smile-v5__spread--s02 [data-item="selo-02"] { left: 12%; top: 82%; width: 3.8%; }
+  .smile-v5__spread--s02 [data-item="laco-02"] { left: 79.5%; top: .5%; width: 5.2%; }
+  .smile-v5__spread--s02 [data-item="bear-01"] { left: 92%; top: 55%; width: 5.5%; }
+
+  .smile-v5__spread--s03 [data-item="lovesongstape"] { left: 31.5%; top: 87%; width: 6.5%; }
+
+  .style-v1__spread--s01 [data-item="teamo"] { left: 29.5%; top: 88%; width: 7%; }
+
+  .style-v1__spread--s02 [data-item="model-02"] { left: 2%; top: 72%; width: 5.5%; }
+  .style-v1__spread--s02 [data-item="vogue02"] { left: 29%; top: 84%; width: 6.3%; }
+  .style-v1__spread--s02 [data-item="relogio"] { left: 92%; top: 46%; width: 4.8%; }
+  .style-v1__spread--s02 [data-item="vcdeixatudomaisbonito"] { left: 29%; top: 87%; width: 10.5%; }
+
+  .style-v1__spread--s03 [data-item="revistas"] { left: 29%; top: 84%; width: 7.3%; }
+  .style-v1__spread--s03 [data-item="coke"] { left: 9%; top: 84%; width: 3.6%; }
+  .style-v1__spread--s03 [data-item="laco-03"] { left: 1%; top: 72%; width: 5%; }
+
+  .style-v1__spread--s04 [data-item="camera"] { left: 30%; top: 84%; width: 6.8%; }
+  .style-v1__spread--s04 [data-item="model-03"] { left: 11%; top: 83%; width: 5.5%; }
+
+  .gym-v1__spread--a01 [data-item="cat-02"] { left: 95%; top: 1%; width: 4%; }
+
+  .gym-v1__spread--a02 [data-item="vceumsabor"] { left: 85%; top: 72%; width: 9%; }
+  .gym-v1__spread--a02 [data-item="cat-04"] { left: 29%; top: 84%; width: 5%; }
+  .gym-v1__spread--a02 [data-item="cat-06"] { left: 95%; top: 1%; width: 4%; }
+
+  .gym-v1__spread--a03 [data-item="academia-16"] { left: 18%; top: 70%; width: 14.5%; }
+  .gym-v1__spread--a03 [data-item="rat01"] { left: 14%; top: 82%; width: 4.5%; }
+  .gym-v1__spread--a03 [data-item="rat02"] { left: 33%; top: 82%; width: 4%; }
+  .gym-v1__spread--a03 [data-item="rat05"] { left: 1%; top: 39%; width: 4.5%; }
+  .gym-v1__spread--a03 [data-item="trofeu"] { left: 64%; top: 84%; width: 5.5%; }
+}
+@media (min-width: 861px) {
+  .smile-v5__spread--s02 [data-item="laco-02"] { left: 78.5%; }
+
+  .style-v1__spread--s02 [data-item="model-02"] { left: 9%; top: 70%; }
+  .style-v1__spread--s02 [data-item="vogue02"] { left: 42%; top: 83.5%; width: 6.1%; }
+
+  .style-v1__spread--s03 [data-item="coke"] { top: 73%; }
+  .style-v1__spread--s03 [data-item="revistas"] { top: 80%; }
+  .style-v1__spread--s03 [data-item="laco-03"] { left: 9%; top: 72%; }
+
+  .gym-v1__spread--a02 [data-item="cat-05"] { left: 94.5%; top: 62%; }
+  .gym-v1__spread--a02 [data-item="fire"] { left: 35%; top: 84%; }
+
+  .gym-v1__spread--a03 [data-item="rat01"] { left: 12%; top: 82%; }
+  .gym-v1__spread--a03 [data-item="trofeu"] { left: 58.5%; top: 84%; }
+}
+@media (min-width: 861px) {
+  .style-v1__spread--s03 [data-item="laco-03"] { left: 30%; top: 70%; }
+  .gym-v1__spread--a03 [data-item="rat01"] { left: 1.5%; top: 90%; }
+}
+
+/* --------------------------------------------------------------------------
+   WEB V3P1 — ganho de presença sem desmontar a composição aprovada
+   - fotos +12%
+   - assets decorativos +15%
+   - logos centrais permanecem no tamanho/posição aprovados
+   - somente desktop; mobile não é alterado nesta rodada
+   O `scale` individual preserva os left/top manuais e continua compatível com
+   os transforms de entrada/saída controlados pelo JS.
+   -------------------------------------------------------------------------- */
+@media (min-width: 861px) {
+  .love-trio .smile-v5__item.is-photo,
+  .love-trio .style-v1__item.is-photo,
+  .love-trio .gym-v1__item.is-photo {
+    scale: 1.12;
+    transform-origin: center center;
+  }
+
+  .love-trio .smile-v5__item.is-deco,
+  .love-trio .style-v1__item.is-deco,
+  .love-trio .gym-v1__item.is-deco {
+    scale: 1.15;
+    transform-origin: center center;
+  }
+
+  /* Os títulos internos ocultos/centrais não entram no aumento. */
+  .love-trio .smile-v5__item.is-title,
+  .love-trio .style-v1__item.is-title,
+  .love-trio .gym-v1__item.is-title {
+    scale: 1;
+  }
+}

@@ -1,0 +1,245 @@
+.gym-v1,
+.gym-v1 * { box-sizing: border-box; }
+
+.gym-v1 {
+  --paper: #ded6c7;
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  background: var(--paper);
+  isolation: isolate;
+}
+
+.gym-v1__section {
+  position: relative;
+  height: 440svh;
+}
+
+.gym-v1__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.gym-v1__scene-stage {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.gym-v1__paper {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,.03), rgba(255,255,255,.03)),
+    var(--paper) url('/assets/fundos/fundo-academia.webp') center center / cover no-repeat;
+}
+
+.gym-v1__canvas {
+  position: relative;
+  width: min(100vw, calc(100svh * 16 / 9));
+  height: 100svh;
+  aspect-ratio: 16/9;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.gym-v1__spread {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gym-v1__tapago {
+  position: absolute;
+  z-index: 30;
+  left: 38.8%;
+  top: 22%;
+  width: 22.4%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 8px 12px rgba(39,31,24,.10));
+}
+
+.gym-v1__item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: center center;
+  will-change: transform;
+  opacity: 0;
+}
+
+.gym-v1__item.is-photo { z-index: 10; }
+.gym-v1__item.is-deco { z-index: 14; }
+.gym-v1__item.is-title { z-index: 18; }
+
+.gym-v1__img,
+.gym-v1__photo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gym-v1__img {
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.gym-v1__photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.gym-v1__frame {
+  position: absolute;
+  inset: 0;
+  background: #f7f4ee;
+  border-radius: 10px;
+  box-shadow: 0 14px 24px rgba(45,39,33,.15), 0 2px 4px rgba(45,39,33,.08);
+}
+
+.gym-v1__photo-img {
+  position: absolute;
+  inset: 3.6%;
+  width: 92.8%;
+  height: 92.8%;
+  object-fit: contain;
+}
+
+.gym-v1__photo-img { z-index: 2; opacity: 0; }
+.gym-v1__item.is-loaded .gym-v1__photo-img { opacity: 1; }
+
+
+.gym-v1__gloss {
+  position: absolute;
+  inset: 3.6%;
+  overflow: hidden;
+  border-radius: 8px;
+  z-index: 4;
+  pointer-events: none;
+}
+.gym-v1__gloss::before {
+  content:'';
+  position:absolute;
+  inset:-40% -70%;
+  transform:translateX(-100%) rotate(15deg);
+  background:linear-gradient(100deg, transparent 44%, rgba(255,255,255,0) 47%, rgba(255,255,255,.22) 49%, rgba(255,255,255,.06) 52%, transparent 56%);
+  animation:gym-v1-gloss var(--gloss-duration, 10s) ease-in-out infinite;
+  animation-delay:var(--gloss-delay,0s);
+}
+@keyframes gym-v1-gloss {
+  0%,68% { transform:translateX(-100%) rotate(15deg); opacity:0; }
+  72% { opacity:.58; }
+  82% { transform:translateX(95%) rotate(15deg); opacity:.12; }
+  100% { transform:translateX(95%) rotate(15deg); opacity:0; }
+}
+
+/* A01 — composição periférica ao redor do tapago */
+.gym-v1__spread--a01 [data-item="academia-01"] { left: 5%; top: 10%; width: 12%; }
+.gym-v1__spread--a01 [data-item="academia-02"] { left: 20%; top: 13%; width: 12%; }
+.gym-v1__spread--a01 [data-item="academia-03"] { left: 68%; top: 10%; width: 12%; }
+.gym-v1__spread--a01 [data-item="academia-04"] { left: 83%; top: 13%; width: 11%; }
+.gym-v1__spread--a01 [data-item="academia-05"] { left: 11%; top: 55%; width: 15%; }
+.gym-v1__spread--a01 [data-item="academia-06"] { left: 73%; top: 55%; width: 12%; }
+.gym-v1__spread--a01 [data-item="cat-01"] { left: 1.5%; top: 76%; width: 9%; }
+.gym-v1__spread--a01 [data-item="cat-02"] { left: 88%; top: 5%; width: 9%; }
+.gym-v1__spread--a01 [data-item="cat-03"] { left: 27%; top: 72%; width: 9%; }
+.gym-v1__spread--a01 [data-item="dog01"] { left: 88%; top: 74%; width: 7%; }
+.gym-v1__spread--a01 [data-item="halter02"] { left: 72%; top: 78%; width: 10%; }
+.gym-v1__spread--a01 [data-item="garrafa"] { left: 2%; top: 34%; width: 5.5%; }
+.gym-v1__spread--a01 [data-item="heart"] { left: 28%; top: 47%; width: 4.5%; }
+
+/* A02 — composição periférica ao redor do tapago */
+.gym-v1__spread--a02 [data-item="academia-07"] { left: 5%; top: 10%; width: 12%; }
+.gym-v1__spread--a02 [data-item="academia-08"] { left: 20%; top: 13%; width: 12%; }
+.gym-v1__spread--a02 [data-item="academia-09"] { left: 67%; top: 10%; width: 14%; }
+.gym-v1__spread--a02 [data-item="academia-10"] { left: 84%; top: 13%; width: 10.5%; }
+.gym-v1__spread--a02 [data-item="academia-11"] { left: 5%; top: 55%; width: 12%; }
+.gym-v1__spread--a02 [data-item="academia-12"] { left: 21%; top: 57%; width: 12%; }
+.gym-v1__spread--a02 [data-item="academia-13"] { left: 72%; top: 55%; width: 15%; }
+.gym-v1__spread--a02 [data-item="vceumsabor"] { left: 75%; top: 79%; width: 16%; }
+.gym-v1__spread--a02 [data-item="cat-04"] { left: 1.5%; top: 78%; width: 8.5%; }
+.gym-v1__spread--a02 [data-item="cat-05"] { left: 89%; top: 64%; width: 7%; }
+.gym-v1__spread--a02 [data-item="cat-06"] { left: 89%; top: 4%; width: 8%; }
+.gym-v1__spread--a02 [data-item="fire"] { left: 28%; top: 79%; width: 6%; }
+.gym-v1__spread--a02 [data-item="luva"] { left: 1.5%; top: 35%; width: 8%; }
+.gym-v1__spread--a02 [data-item="halter01"] { left: 88%; top: 37%; width: 9%; }
+.gym-v1__spread--a02 [data-item="heart2"] { left: 66%; top: 80%; width: 7%; }
+
+/* A03 — composição periférica ao redor do tapago */
+.gym-v1__spread--a03 [data-item="academia-14"] { left: 5%; top: 10%; width: 14%; }
+.gym-v1__spread--a03 [data-item="academia-15"] { left: 22%; top: 13%; width: 12%; }
+.gym-v1__spread--a03 [data-item="academia-17"] { left: 67%; top: 11%; width: 12%; }
+.gym-v1__spread--a03 [data-item="academia-18"] { left: 83%; top: 13%; width: 11%; }
+.gym-v1__spread--a03 [data-item="academia-19"] { left: 6%; top: 55%; width: 12%; }
+.gym-v1__spread--a03 [data-item="academia-20"] { left: 76%; top: 55%; width: 14%; }
+.gym-v1__spread--a03 [data-item="academia-16"] { left: 17%; top: 78%; width: 22%; }
+.gym-v1__spread--a03 [data-item="cat-07"] { left: 88%; top: 75%; width: 9%; }
+.gym-v1__spread--a03 [data-item="rat01"] { left: 1%; top: 77%; width: 7.5%; }
+.gym-v1__spread--a03 [data-item="rat02"] { left: 29%; top: 70%; width: 6.5%; }
+.gym-v1__spread--a03 [data-item="rat03"] { left: 66%; top: 72%; width: 6.5%; }
+.gym-v1__spread--a03 [data-item="rat04"] { left: 91%; top: 36%; width: 6%; }
+.gym-v1__spread--a03 [data-item="rat05"] { left: 1%; top: 31%; width: 7%; }
+.gym-v1__spread--a03 [data-item="trofeu"] { left: 77%; top: 79%; width: 9%; }
+
+@media (max-width: 860px) {
+  .gym-v1__section { height: 470svh; }
+  .gym-v1__canvas { width: 100vw; }
+  .gym-v1__paper { background-size: cover; }
+
+  .gym-v1__tapago { left: 29%; top: 31%; width: 42%; }
+
+  /* A01 mobile — bordas livres ao redor do centro */
+  .gym-v1__spread--a01 [data-item="academia-01"] { left: 3%; top: 8%; width: 17%; }
+  .gym-v1__spread--a01 [data-item="academia-02"] { left: 22%; top: 10%; width: 16%; }
+  .gym-v1__spread--a01 [data-item="academia-03"] { left: 63%; top: 9%; width: 16%; }
+  .gym-v1__spread--a01 [data-item="academia-04"] { left: 81%; top: 10%; width: 16%; }
+  .gym-v1__spread--a01 [data-item="academia-05"] { left: 3%; top: 65%; width: 20%; }
+  .gym-v1__spread--a01 [data-item="academia-06"] { left: 77%; top: 65%; width: 18%; }
+  .gym-v1__spread--a01 [data-item="cat-01"] { left: 2%; top: 86%; width: 10%; }
+  .gym-v1__spread--a01 [data-item="cat-02"] { left: 87%; top: 3%; width: 10%; }
+  .gym-v1__spread--a01 [data-item="cat-03"] { left: 18%; top: 83%; width: 10%; }
+  .gym-v1__spread--a01 [data-item="dog01"] { left: 88%; top: 85%; width: 8%; }
+  .gym-v1__spread--a01 [data-item="halter02"] { left: 72%; top: 84%; width: 11%; }
+  .gym-v1__spread--a01 [data-item="garrafa"] { left: 2%; top: 38%; width: 7%; }
+  .gym-v1__spread--a01 [data-item="heart"] { left: 20%; top: 52%; width: 6%; }
+
+  /* A02 mobile */
+  .gym-v1__spread--a02 [data-item="academia-07"] { left: 3%; top: 8%; width: 17%; }
+  .gym-v1__spread--a02 [data-item="academia-08"] { left: 22%; top: 10%; width: 16%; }
+  .gym-v1__spread--a02 [data-item="academia-09"] { left: 62%; top: 8%; width: 17%; }
+  .gym-v1__spread--a02 [data-item="academia-10"] { left: 81%; top: 10%; width: 16%; }
+  .gym-v1__spread--a02 [data-item="academia-11"] { left: 3%; top: 64%; width: 17%; }
+  .gym-v1__spread--a02 [data-item="academia-12"] { left: 22%; top: 67%; width: 16%; }
+  .gym-v1__spread--a02 [data-item="academia-13"] { left: 78%; top: 64%; width: 18%; }
+  .gym-v1__spread--a02 [data-item="vceumsabor"] { left: 67%; top: 86%; width: 27%; }
+  .gym-v1__spread--a02 [data-item="cat-04"] { left: 2%; top: 86%; width: 9%; }
+  .gym-v1__spread--a02 [data-item="cat-05"] { left: 88%; top: 74%; width: 8%; }
+  .gym-v1__spread--a02 [data-item="cat-06"] { left: 88%; top: 3%; width: 9%; }
+  .gym-v1__spread--a02 [data-item="fire"] { left: 21%; top: 87%; width: 8%; }
+  .gym-v1__spread--a02 [data-item="luva"] { left: 1%; top: 41%; width: 9%; }
+  .gym-v1__spread--a02 [data-item="halter01"] { left: 88%; top: 41%; width: 10%; }
+  .gym-v1__spread--a02 [data-item="heart2"] { left: 58%; top: 87%; width: 8%; }
+
+  /* A03 mobile */
+  .gym-v1__spread--a03 [data-item="academia-14"] { left: 3%; top: 8%; width: 18%; }
+  .gym-v1__spread--a03 [data-item="academia-15"] { left: 23%; top: 10%; width: 16%; }
+  .gym-v1__spread--a03 [data-item="academia-17"] { left: 62%; top: 9%; width: 16%; }
+  .gym-v1__spread--a03 [data-item="academia-18"] { left: 81%; top: 10%; width: 16%; }
+  .gym-v1__spread--a03 [data-item="academia-19"] { left: 3%; top: 65%; width: 17%; }
+  .gym-v1__spread--a03 [data-item="academia-20"] { left: 79%; top: 64%; width: 18%; }
+  .gym-v1__spread--a03 [data-item="academia-16"] { left: 14%; top: 84%; width: 27%; }
+  .gym-v1__spread--a03 [data-item="cat-07"] { left: 87%; top: 84%; width: 9%; }
+  .gym-v1__spread--a03 [data-item="rat01"] { left: 1%; top: 86%; width: 8%; }
+  .gym-v1__spread--a03 [data-item="rat02"] { left: 31%; top: 79%; width: 7%; }
+  .gym-v1__spread--a03 [data-item="rat03"] { left: 64%; top: 79%; width: 7%; }
+  .gym-v1__spread--a03 [data-item="rat04"] { left: 91%; top: 41%; width: 6%; }
+  .gym-v1__spread--a03 [data-item="rat05"] { left: 1%; top: 41%; width: 7%; }
+  .gym-v1__spread--a03 [data-item="trofeu"] { left: 75%; top: 86%; width: 9%; }
+}

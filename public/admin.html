@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Painel — Arleu & Juliana</title>
+  <style>
+    :root{font-family:Inter,system-ui,sans-serif;color:#f7f7f7;background:#0a0a0a}
+    *{box-sizing:border-box} body{margin:0;background:#0a0a0a;color:#f7f7f7}
+    main{width:min(1100px,calc(100% - 28px));margin:0 auto;padding:34px 0 70px}
+    h1{font:400 clamp(34px,6vw,58px)/1 Georgia,serif;margin:0 0 8px} .sub{color:#999;margin:0 0 28px}
+    .panel{background:#131313;border:1px solid #262626;border-radius:18px;padding:18px;margin-bottom:16px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{min-width:0}
+    input,button{font:inherit;border-radius:12px;border:1px solid #333;min-height:44px;padding:0 13px}
+    input{background:#0d0d0d;color:white;flex:1;min-width:210px}button{background:#f4f4f4;color:#111;cursor:pointer;font-weight:650}
+    button.secondary{background:#171717;color:#eee}.status{font-size:13px;color:#999;margin-top:10px;min-height:18px}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.card{background:#111;border:1px solid #242424;border-radius:15px;padding:16px}.card strong{display:block;font-size:28px}.card span{color:#929292;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #242424;vertical-align:top}th{color:#999;font-size:11px;text-transform:uppercase;letter-spacing:.08em}td small{display:block;color:#858585;margin-top:4px}
+    .yes{color:#8be39b}.no{color:#ff9d9d}.pill{display:inline-block;padding:4px 8px;border:1px solid #333;border-radius:999px;font-size:12px}.empty{color:#888;padding:30px 4px}
+    code{word-break:break-all;color:#e8b8c0}.notice{color:#aaa;font-size:12px;line-height:1.5;margin-top:10px}
+    @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr)}.table-wrap{overflow:auto}table{min-width:780px}}
+  </style>
+  <script src="/analytics-config.js"></script>
+</head>
+<body>
+<main>
+  <h1>Painel do site</h1>
+  <p class="sub">Acessos, até onde a pessoa chegou e voto final.</p>
+
+  <section class="panel">
+    <div class="row">
+      <input id="secret" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN" />
+      <input id="recipientFilter" placeholder="Filtrar destinatário (opcional)" />
+      <button id="load">Atualizar</button>
+    </div>
+    <div id="status" class="status"></div>
+  </section>
+
+  <section class="panel">
+    <strong>Gerar link marcado</strong>
+    <p class="notice">O marcador identifica o link, não comprova quem estava usando o aparelho caso ele seja encaminhado.</p>
+    <div class="row">
+      <input id="recipientName" placeholder="Ex.: juju" />
+      <button id="generate" class="secondary">Gerar link</button>
+    </div>
+    <div id="shareLink" class="status"></div>
+  </section>
+
+  <div class="cards">
+    <div class="card"><strong id="countVisits">—</strong><span>Acessos</span></div>
+    <div class="card"><strong id="countCompleted">—</strong><span>Chegaram ao fim</span></div>
+    <div class="card"><strong id="countYes">—</strong><span>Sim</span></div>
+    <div class="card"><strong id="countNo">—</strong><span>Não</span></div>
+  </div>
+
+  <section class="panel table-wrap">
+    <table>
+      <thead><tr><th>Destinatário</th><th>Primeiro acesso</th><th>Última atividade</th><th>Até onde chegou</th><th>Dispositivo</th><th>Voto</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div id="empty" class="empty">Informe o token e clique em Atualizar.</div>
+  </section>
+</main>
+<script>
+  const apiBase=String(window.__LOVE_ANALYTICS__?.apiBase||'/api').replace(/\/$/,'');
+  const $=s=>document.querySelector(s);
+  const secret=$('#secret'), filter=$('#recipientFilter'), status=$('#status'), rows=$('#rows'), empty=$('#empty');
+  secret.value=sessionStorage.getItem('love-admin-token')||'';
+  function fmt(v){if(!v)return '—'; const d=new Date(v+'Z'); return Number.isNaN(d.getTime())?v:d.toLocaleString('pt-BR')}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+  async function load(){
+    const token=secret.value.trim(); if(!token){status.textContent='Informe o ADMIN_TOKEN.';return}
+    sessionStorage.setItem('love-admin-token',token); status.textContent='Carregando...';
+    const q=filter.value.trim()?`?recipient=${encodeURIComponent(filter.value.trim())}`:'';
+    try{
+      const r=await fetch(`${apiBase}/admin/summary${q}`,{headers:{authorization:`Bearer ${token}`}});
+      const data=await r.json(); if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);
+      $('#countVisits').textContent=data.totals.visits; $('#countCompleted').textContent=data.totals.completed; $('#countYes').textContent=data.totals.yes; $('#countNo').textContent=data.totals.no;
+      rows.innerHTML=data.visits.map(v=>`<tr><td><strong>${esc(v.recipient)}</strong><small>${esc(v.visit_id.slice(0,8))}…</small></td><td>${fmt(v.first_seen)}</td><td>${fmt(v.last_seen)}</td><td><span class="pill">${esc(v.max_stage_label||'Hero')} · ${Number(v.max_stage_progress||0)}%</span>${v.completed?'<small>Chegou em Continua...</small>':''}</td><td>${esc(v.device)}</td><td class="${v.vote==='yes'?'yes':v.vote==='no'?'no':''}">${v.vote==='yes'?'Sim':v.vote==='no'?'Não':'—'}</td></tr>`).join('');
+      empty.style.display=data.visits.length?'none':'block'; status.textContent=`Atualizado às ${new Date().toLocaleTimeString('pt-BR')}.`;
+    }catch(e){status.textContent=`Erro: ${e.message}`}
+  }
+  $('#load').addEventListener('click',load);
+  $('#generate').addEventListener('click',()=>{
+    const name=($('#recipientName').value||'amor').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||'amor';
+    const bytes=new Uint8Array(4); crypto.getRandomValues(bytes); const suffix=[...bytes].map(b=>b.toString(16).padStart(2,'0')).join('');
+    const url=new URL(location.origin+'/'); url.searchParams.set('r',`${name}-${suffix}`);
+    $('#shareLink').innerHTML=`Compartilhe este link: <code>${esc(url.href)}</code>`;
+  });
+</script>
+</body>
+</html>

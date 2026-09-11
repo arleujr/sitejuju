@@ -1,0 +1,391 @@
+.style-v1,
+.style-v1 * { box-sizing: border-box; }
+
+.style-v1 {
+  --paper: #e7d9cf;
+  --ink: #2b221d;
+  position: relative;
+  width: 100%;
+  color: var(--ink);
+  overflow-x: clip;
+  background: var(--paper);
+  isolation: isolate;
+}
+
+.style-v1__section {
+  position: relative;
+  height: 540svh;
+}
+
+.style-v1__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.style-v1__next-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.32), transparent 18%),
+    linear-gradient(180deg, #dbe6df 0%, #cfe0d5 35%, #c4d5cc 100%);
+}
+
+.style-v1__next-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 24%, rgba(255,255,255,.12) 24% 25%, transparent 25% 100%),
+    linear-gradient(transparent 0 16%, rgba(255,255,255,.08) 16% 17%, transparent 17% 100%);
+  background-size: 180px 180px, 180px 180px;
+  opacity: .55;
+}
+
+.style-v1__scene-stage {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.style-v1__paper {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 14%, rgba(255,255,255,.18), transparent 24%),
+    linear-gradient(to bottom, rgba(255,255,255,.07), rgba(255,255,255,0) 16%, rgba(104,74,54,.05) 100%),
+    var(--paper) url('/assets/fundos/fundo-estilo.webp') center center / cover no-repeat;
+}
+
+.style-v1__canvas {
+  position: relative;
+  width: min(100vw, calc(100svh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.style-v1__spread {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.style-v1__item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: center center;
+  will-change: transform;
+  opacity: 0;
+}
+
+.style-v1__item.is-photo { z-index: 10; }
+.style-v1__item.is-deco { z-index: 14; }
+.style-v1__item.is-title { z-index: 18; }
+
+.style-v1__img,
+.style-v1__photo-img { display: block; width: 100%; height: 100%; }
+.style-v1__img { object-fit: contain; user-select: none; -webkit-user-drag: none; }
+
+.style-v1__photo { position: relative; width: 100%; height: 100%; }
+.style-v1__frame {
+  position: absolute; inset: 0;
+  border-radius: 10px;
+  background: #f8f3ed;
+  box-shadow: 0 14px 24px rgba(78,57,38,.14), 0 2px 4px rgba(78,57,38,.08);
+}
+.style-v1__photo[data-cutout="true"] .style-v1__frame {
+  background: transparent; box-shadow: none;
+}
+
+.style-v1__photo-img {
+  position: absolute; inset: 3.6%; width: 92.8%; height: 92.8%; object-fit: contain;
+}
+.style-v1__photo[data-cutout="true"] .style-v1__photo-img {
+  inset: 0; width: 100%; height: 100%;
+}
+.style-v1__photo-img { z-index: 2; opacity: 0; }
+.style-v1__item.is-loaded .style-v1__photo-img { opacity: 1; }
+
+.style-v1__gloss { position:absolute; inset:3.6%; overflow:hidden; border-radius:8px; z-index:4; pointer-events:none; }
+.style-v1__photo[data-cutout="true"] .style-v1__gloss { inset:0; border-radius:18px; }
+.style-v1__gloss::before {
+  content:''; position:absolute; inset:-40% -70%; transform:translateX(-100%) rotate(15deg);
+  background:linear-gradient(100deg, transparent 44%, rgba(255,255,255,0) 47%, rgba(255,255,255,.24) 49%, rgba(255,255,255,.07) 52%, transparent 56%);
+  animation: style-v1-gloss var(--gloss-duration, 10s) ease-in-out infinite;
+  animation-delay: var(--gloss-delay, 0s);
+}
+@keyframes style-v1-gloss {
+  0%, 68% { transform: translateX(-100%) rotate(15deg); opacity: 0; }
+  72% { opacity: .65; }
+  82% { transform: translateX(95%) rotate(15deg); opacity: .14; }
+  100% { transform: translateX(95%) rotate(15deg); opacity: 0; }
+}
+
+.style-v1__fastener {
+  position: absolute; z-index: 5; pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(62,46,31,.10));
+}
+.style-v1__fastener--tl { left:-4%; top:-6%; width: 28%; }
+.style-v1__fastener--tc { left:32%; top:-8%; width: 36%; }
+.style-v1__fastener--tr { right:-4%; top:-6%; width: 28%; }
+.style-v1__fastener--bl { left:-4%; bottom:-4%; width: 28%; }
+.style-v1__fastener--br { right:-4%; bottom:-4%; width: 28%; }
+.style-v1__fastener--rm { right:-7%; top:38%; width: 22%; }
+.style-v1__fastener--lm { left:-7%; top:38%; width: 22%; }
+
+.style-v1__text-card {
+  display: flex;
+  flex-direction: column;
+  gap: .4em;
+  padding: clamp(10px, 1.1vw, 16px) clamp(16px, 1.7vw, 24px);
+  border-radius: 18px;
+  background: rgba(250,245,239,.92);
+  box-shadow: 0 10px 18px rgba(92,66,50,.12), 0 1px 2px rgba(92,66,50,.10);
+  border: 1px solid rgba(145,112,91,.16);
+}
+.style-v1__text-card--title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(26px, 3vw, 48px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+}
+.style-v1__text-card--subtitle {
+  background: rgba(247,240,231,.96);
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+  font-size: clamp(15px, 1.28vw, 22px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+.style-v1__text-card small {
+  display:block;
+  opacity:.68;
+  font-size:.42em;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.style-v1__text-card em {
+  font-style: normal;
+  color: #8b4b55;
+}
+
+/* ---------- DESKTOP POSITIONS ---------- */
+/* S01 */
+
+.style-v1__spread--s01 [data-item="amocomovc-estilosa"] { left: 4.2%; top: 3.2%; width: 23.8%; }
+.style-v1__spread--s01 [data-item="estilo-01"] { left: 34%; top: 11%; width: 16%; }
+.style-v1__spread--s01 [data-item="estilo-02"] { left: 53%; top: 16%; width: 12.4%; }
+.style-v1__spread--s01 [data-item="estilo-03"] { left: 69%; top: 13%; width: 12.8%; }
+.style-v1__spread--s01 [data-item="estilo-10"] { left: 78%; top: 50%; width: 14.6%; }
+.style-v1__spread--s01 [data-item="estilo-11"] { left: 31.5%; top: 52%; width: 14.4%; }
+.style-v1__spread--s01 [data-item="estilo-16"] { left: 50.4%; top: 56.5%; width: 12.2%; }
+.style-v1__spread--s01 [data-item="styleicon"] { left: 18.3%; top: 41%; width: 8.2%; }
+.style-v1__spread--s01 [data-item="teamo"] { left: 20.2%; top: 74%; width: 14%; }
+.style-v1__spread--s01 [data-item="vogue"] { left: 86.3%; top: 18%; width: 8.5%; }
+.style-v1__spread--s01 [data-item="tiger02"] { left: 4.2%; top: 73.2%; width: 12%; }
+.style-v1__spread--s01 [data-item="boca02"] { left: 63%; top: 7%; width: 7%; }
+.style-v1__spread--s01 [data-item="camera"] { left: 66.5%; top: 82.5%; width: 10.5%; }
+.style-v1__spread--s01 [data-item="flor-02"] { left: 86.8%; top: 78.5%; width: 7%; }
+.style-v1__spread--s01 [data-item="coracao-01"] { left: 71.4%; top: 47.4%; width: 5.2%; }
+.style-v1__spread--s01 [data-item="pin"] { left: 46.6%; top: 46.3%; width: 4.8%; }
+
+/* S02 */
+.style-v1__spread--s02 [data-item="estilo-04"] { left: 7%; top: 10%; width: 14%; }
+.style-v1__spread--s02 [data-item="estilo-05"] { left: 24.8%; top: 13%; width: 14%; }
+.style-v1__spread--s02 [data-item="estilo-06"] { left: 73.5%; top: 12%; width: 15%; }
+.style-v1__spread--s02 [data-item="estilo-07"] { left: 44.4%; top: 16%; width: 13.6%; }
+.style-v1__spread--s02 [data-item="estilo-12"] { left: 9%; top: 50.6%; width: 14.4%; }
+.style-v1__spread--s02 [data-item="estilo-14"] { left: 60.4%; top: 47.8%; width: 14%; }
+.style-v1__spread--s02 [data-item="channel"] { left: 2.8%; top: 3.8%; width: 9.2%; }
+.style-v1__spread--s02 [data-item="prada"] { left: 80.4%; top: 47%; width: 10.8%; }
+.style-v1__spread--s02 [data-item="relogio"] { left: 84.4%; top: 9.8%; width: 9.8%; }
+.style-v1__spread--s02 [data-item="vogue02"] { left: 41.6%; top: 52.4%; width: 13%; }
+.style-v1__spread--s02 [data-item="model-02"] { left: 33.8%; top: 62%; width: 10.5%; }
+.style-v1__spread--s02 [data-item="model-04"] { left: 49.8%; top: 58.2%; width: 10.6%; }
+.style-v1__spread--s02 [data-item="catfashion"] { left: 21.4%; top: 71.4%; width: 8.8%; }
+.style-v1__spread--s02 [data-item="flor-04"] { left: 73%; top: 69%; width: 8.6%; }
+.style-v1__spread--s02 [data-item="coracao-02"] { left: 58%; top: 9.6%; width: 5%; }
+.style-v1__spread--s02 [data-item="laco-05"] { left: 23.5%; top: 5.4%; width: 12%; }
+.style-v1__spread--s02 [data-item="vcdeixatudomaisbonito"] { left: 38.2%; top: 5%; width: 20%; }
+.style-v1__spread--s02 [data-item="ficardecanto-01"] { left: 91.5%; top: 72%; width: 6.5%; }
+.style-v1__spread--s02 [data-item="flor-01"] { left: 2.5%; top: 84%; width: 7%; }
+
+/* S03 */
+.style-v1__spread--s03 [data-item="estilo-08"] { left: 8%; top: 11.5%; width: 14.2%; }
+.style-v1__spread--s03 [data-item="estilo-09"] { left: 26.5%; top: 11%; width: 14.1%; }
+.style-v1__spread--s03 [data-item="estilo-17"] { left: 45.2%; top: 13%; width: 16%; }
+.style-v1__spread--s03 [data-item="estilo-18"] { left: 67.2%; top: 11%; width: 15%; }
+.style-v1__spread--s03 [data-item="estilo-19"] { left: 21.4%; top: 56%; width: 14.6%; }
+.style-v1__spread--s03 [data-item="estilo-22"] { left: 72.6%; top: 57%; width: 12.6%; }
+.style-v1__spread--s03 [data-item="dontflash"] { left: 0.8%; top: 58.4%; width: 10.8%; }
+.style-v1__spread--s03 [data-item="coke"] { left: 58.2%; top: 57.2%; width: 5.8%; }
+.style-v1__spread--s03 [data-item="coke2"] { left: 68.4%; top: 78.2%; width: 4.8%; }
+.style-v1__spread--s03 [data-item="botas"] { left: 88.2%; top: 18.5%; width: 6.2%; }
+.style-v1__spread--s03 [data-item="boca"] { left: 40.5%; top: 7%; width: 7.4%; }
+.style-v1__spread--s03 [data-item="coracao-04"] { left: 83%; top: 73.8%; width: 6.8%; }
+.style-v1__spread--s03 [data-item="revistas"] { left: 37.4%; top: 63.2%; width: 12.6%; }
+.style-v1__spread--s03 [data-item="cinema"] { left: 1.5%; top: 42.5%; width: 10.5%; }
+.style-v1__spread--s03 [data-item="flor-03"] { left: 84.5%; top: 52%; width: 10.5%; }
+.style-v1__spread--s03 [data-item="laco-03"] { left: 48.6%; top: 77.2%; width: 8.4%; }
+.style-v1__spread--s03 [data-item="model-01"] { left: 2.3%; top: 70.5%; width: 8.5%; }
+
+/* S04 */
+.style-v1__spread--s04 [data-item="estilo-13"] { left: 8.5%; top: 13%; width: 15%; }
+.style-v1__spread--s04 [data-item="estilo-15"] { left: 28.8%; top: 14%; width: 14.2%; }
+.style-v1__spread--s04 [data-item="estilo-20"] { left: 50.2%; top: 13%; width: 14%; }
+.style-v1__spread--s04 [data-item="estilo-21"] { left: 72.6%; top: 11.5%; width: 14.8%; }
+.style-v1__spread--s04 [data-item="estilo-23"] { left: 39.8%; top: 55%; width: 14%; }
+.style-v1__spread--s04 [data-item="botas-02"] { left: 7%; top: 61.6%; width: 9%; }
+.style-v1__spread--s04 [data-item="cantoinferiordireito"] { left: 81.2%; top: 69.8%; width: 8.2%; }
+.style-v1__spread--s04 [data-item="model-03"] { left: 22%; top: 58%; width: 9.4%; }
+.style-v1__spread--s04 [data-item="model-05"] { left: 55.4%; top: 56%; width: 8.4%; }
+.style-v1__spread--s04 [data-item="model-06"] { left: 65.4%; top: 54%; width: 8%; }
+.style-v1__spread--s04 [data-item="flor-05"] { left: 2.6%; top: 45.5%; width: 6.8%; }
+.style-v1__spread--s04 [data-item="tiger"] { left: 86.8%; top: 42.5%; width: 9.2%; }
+.style-v1__spread--s04 [data-item="camera"] { left: 3.2%; top: 84.5%; width: 10.8%; }
+.style-v1__spread--s04 [data-item="teamo"] { left: 57.6%; top: 84%; width: 12.2%; }
+.style-v1__spread--s04 [data-item="coraçao-legacy"] { display:none; }
+.style-v1__spread--s04 [data-item="styleicon"] { left: 75.5%; top: 84.5%; width: 7.2%; }
+
+@media (max-width: 860px) {
+  .style-v1__section { height: 585svh; }
+  .style-v1__paper { background-size: 540px auto; }
+  .style-v1__canvas { width: 100vw; }
+
+  /* S01 mobile */
+
+  .style-v1__spread--s01 [data-item="amocomovc-estilosa"] { left: 4.5%; top: 4.5%; width: 39%; }
+  .style-v1__spread--s01 [data-item="estilo-01"] { left: 48%; top: 14%; width: 21%; }
+  .style-v1__spread--s01 [data-item="estilo-02"] { left: 72%; top: 15%; width: 16%; }
+  .style-v1__spread--s01 [data-item="estilo-03"] { left: 60%; top: 44%; width: 18%; }
+  .style-v1__spread--s01 [data-item="estilo-10"] { left: 74%; top: 63%; width: 18%; }
+  .style-v1__spread--s01 [data-item="estilo-11"] { left: 28%; top: 56%; width: 22%; }
+  .style-v1__spread--s01 [data-item="estilo-16"] { left: 49%; top: 74%; width: 16%; }
+  .style-v1__spread--s01 [data-item="styleicon"] { left: 18%; top: 38%; width: 12%; }
+  .style-v1__spread--s01 [data-item="teamo"] { left: 17%; top: 87%; width: 18%; }
+  .style-v1__spread--s01 [data-item="vogue"] { left: 84%; top: 30%; width: 10%; }
+  .style-v1__spread--s01 [data-item="tiger02"] { left: 2%; top: 78%; width: 15%; }
+  .style-v1__spread--s01 [data-item="boca02"] { left: 69%; top: 9%; width: 10%; }
+  .style-v1__spread--s01 [data-item="camera"] { left: 62%; top: 90%; width: 13%; }
+  .style-v1__spread--s01 [data-item="flor-02"] { left: 87%; top: 88%; width: 7%; }
+  .style-v1__spread--s01 [data-item="coracao-01"] { left: 83%; top: 57%; width: 7%; }
+  .style-v1__spread--s01 [data-item="pin"] { left: 45%; top: 49%; width: 6%; }
+
+  /* S02 mobile */
+  .style-v1__spread--s02 [data-item="estilo-04"] { left: 5%; top: 14%; width: 19%; }
+  .style-v1__spread--s02 [data-item="estilo-05"] { left: 27%; top: 18%; width: 18%; }
+  .style-v1__spread--s02 [data-item="estilo-06"] { left: 72%; top: 17%; width: 18%; }
+  .style-v1__spread--s02 [data-item="estilo-07"] { left: 47%; top: 26%; width: 17%; }
+  .style-v1__spread--s02 [data-item="estilo-12"] { left: 8%; top: 61%; width: 20%; }
+  .style-v1__spread--s02 [data-item="estilo-14"] { left: 62%; top: 59%; width: 16%; }
+  .style-v1__spread--s02 [data-item="channel"] { left: 2%; top: 4%; width: 13%; }
+  .style-v1__spread--s02 [data-item="prada"] { left: 78%; top: 60%; width: 14%; }
+  .style-v1__spread--s02 [data-item="relogio"] { left: 82%; top: 6%; width: 12%; }
+  .style-v1__spread--s02 [data-item="vogue02"] { left: 38%; top: 63%; width: 17%; }
+  .style-v1__spread--s02 [data-item="model-02"] { left: 29%; top: 77%; width: 14%; }
+  .style-v1__spread--s02 [data-item="model-04"] { left: 48%; top: 74%; width: 14%; }
+  .style-v1__spread--s02 [data-item="catfashion"] { left: 23%; top: 88%; width: 11%; }
+  .style-v1__spread--s02 [data-item="flor-04"] { left: 73%; top: 85%; width: 10%; }
+  .style-v1__spread--s02 [data-item="coracao-02"] { left: 62%; top: 18%; width: 7%; }
+  .style-v1__spread--s02 [data-item="laco-05"] { left: 18%; top: 8%; width: 18%; }
+  .style-v1__spread--s02 [data-item="vcdeixatudomaisbonito"] { left: 35%; top: 7%; width: 29%; }
+  .style-v1__spread--s02 [data-item="ficardecanto-01"] { left: 88%; top: 79%; width: 9%; }
+  .style-v1__spread--s02 [data-item="flor-01"] { left: 2%; top: 92%; width: 8%; }
+
+  /* S03 mobile */
+  .style-v1__spread--s03 [data-item="estilo-08"] { left: 4%; top: 16%; width: 19%; }
+  .style-v1__spread--s03 [data-item="estilo-09"] { left: 27%; top: 14%; width: 19%; }
+  .style-v1__spread--s03 [data-item="estilo-17"] { left: 49%; top: 16%; width: 22%; }
+  .style-v1__spread--s03 [data-item="estilo-18"] { left: 72%; top: 15%; width: 18%; }
+  .style-v1__spread--s03 [data-item="estilo-19"] { left: 18%; top: 62%; width: 20%; }
+  .style-v1__spread--s03 [data-item="estilo-22"] { left: 70%; top: 69%; width: 16%; }
+  .style-v1__spread--s03 [data-item="dontflash"] { left: 1%; top: 68%; width: 15%; }
+  .style-v1__spread--s03 [data-item="coke"] { left: 56%; top: 70%; width: 7%; }
+  .style-v1__spread--s03 [data-item="coke2"] { left: 67%; top: 86%; width: 7%; }
+  .style-v1__spread--s03 [data-item="botas"] { left: 87%; top: 23%; width: 8%; }
+  .style-v1__spread--s03 [data-item="boca"] { left: 40%; top: 8%; width: 10%; }
+  .style-v1__spread--s03 [data-item="coracao-04"] { left: 82%; top: 83%; width: 8%; }
+  .style-v1__spread--s03 [data-item="revistas"] { left: 36%; top: 72%; width: 18%; }
+  .style-v1__spread--s03 [data-item="cinema"] { left: 1.5%; top: 46%; width: 12%; }
+  .style-v1__spread--s03 [data-item="flor-03"] { left: 82%; top: 58%; width: 12%; }
+  .style-v1__spread--s03 [data-item="laco-03"] { left: 49%; top: 87%; width: 10%; }
+  .style-v1__spread--s03 [data-item="model-01"] { left: 2%; top: 75%; width: 11%; }
+
+  /* S04 mobile */
+  .style-v1__spread--s04 [data-item="estilo-13"] { left: 5%; top: 18%; width: 19%; }
+  .style-v1__spread--s04 [data-item="estilo-15"] { left: 29%; top: 18%; width: 18%; }
+  .style-v1__spread--s04 [data-item="estilo-20"] { left: 52%; top: 18%; width: 17%; }
+  .style-v1__spread--s04 [data-item="estilo-21"] { left: 73%; top: 16%; width: 18%; }
+  .style-v1__spread--s04 [data-item="estilo-23"] { left: 39%; top: 62%; width: 18%; }
+  .style-v1__spread--s04 [data-item="botas-02"] { left: 4%; top: 72%; width: 11%; }
+  .style-v1__spread--s04 [data-item="cantoinferiordireito"] { left: 80%; top: 80%; width: 10%; }
+  .style-v1__spread--s04 [data-item="model-03"] { left: 20%; top: 68%; width: 12%; }
+  .style-v1__spread--s04 [data-item="model-05"] { left: 57%; top: 66%; width: 10%; }
+  .style-v1__spread--s04 [data-item="model-06"] { left: 68%; top: 66%; width: 10%; }
+  .style-v1__spread--s04 [data-item="flor-05"] { left: 1%; top: 53%; width: 9%; }
+  .style-v1__spread--s04 [data-item="tiger"] { left: 84%; top: 52%; width: 11%; }
+  .style-v1__spread--s04 [data-item="camera"] { left: 3%; top: 91%; width: 12%; }
+  .style-v1__spread--s04 [data-item="teamo"] { left: 57%; top: 90%; width: 17%; }
+  .style-v1__spread--s04 [data-item="styleicon"] { left: 78%; top: 91%; width: 9%; }
+}
+
+/* VERSÃO COMPLETA — título do estilo permanece fixo no centro durante todo o ato */
+.style-v1__center-title {
+  position: absolute;
+  z-index: 34;
+  left: 40.75%;
+  top: 28%;
+  width: 18.5%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 8px 12px rgba(74,46,56,.10));
+}
+
+/* libera o miolo para o título persistente */
+.style-v1__spread--s01 [data-item="estilo-01"] { left: 22%; top: 12%; width: 14.5%; }
+.style-v1__spread--s01 [data-item="estilo-02"] { left: 64%; top: 15%; width: 12%; }
+.style-v1__spread--s01 [data-item="estilo-11"] { left: 22%; top: 56%; width: 13.5%; }
+.style-v1__spread--s01 [data-item="estilo-16"] { left: 65%; top: 57%; width: 11%; }
+.style-v1__spread--s01 [data-item="pin"] { left: 31%; top: 46%; width: 4.5%; }
+
+.style-v1__spread--s02 [data-item="estilo-07"] { left: 63%; top: 17%; width: 13%; }
+.style-v1__spread--s02 [data-item="vogue02"] { left: 25%; top: 54%; width: 12%; }
+.style-v1__spread--s02 [data-item="model-04"] { left: 64%; top: 58%; width: 9.8%; }
+
+.style-v1__spread--s03 [data-item="estilo-17"] { left: 62%; top: 14%; width: 15%; }
+.style-v1__spread--s03 [data-item="estilo-18"] { left: 79%; top: 13%; width: 13%; }
+.style-v1__spread--s03 [data-item="revistas"] { left: 27%; top: 64%; width: 11.5%; }
+
+.style-v1__spread--s04 [data-item="estilo-20"] { left: 64%; top: 13%; width: 13%; }
+.style-v1__spread--s04 [data-item="estilo-21"] { left: 80%; top: 12%; width: 13%; }
+.style-v1__spread--s04 [data-item="estilo-23"] { left: 28%; top: 63%; width: 13%; }
+.style-v1__spread--s04 [data-item="model-05"] { left: 64%; top: 58%; width: 8%; }
+.style-v1__spread--s04 [data-item="model-06"] { left: 74%; top: 55%; width: 7.5%; }
+
+@media (max-width: 860px) {
+  .style-v1__center-title { left: 33%; top: 34%; width: 34%; }
+  .style-v1__spread--s01 [data-item="estilo-01"] { left: 8%; top: 20%; width: 18%; }
+  .style-v1__spread--s01 [data-item="estilo-02"] { left: 75%; top: 19%; width: 16%; }
+  .style-v1__spread--s01 [data-item="estilo-11"] { left: 8%; top: 65%; width: 20%; }
+  .style-v1__spread--s01 [data-item="estilo-16"] { left: 74%; top: 67%; width: 15%; }
+
+  .style-v1__spread--s02 [data-item="estilo-07"] { left: 73%; top: 27%; width: 17%; }
+  .style-v1__spread--s02 [data-item="vogue02"] { left: 20%; top: 67%; width: 15%; }
+  .style-v1__spread--s02 [data-item="model-04"] { left: 73%; top: 72%; width: 12%; }
+
+  .style-v1__spread--s03 [data-item="estilo-17"] { left: 72%; top: 21%; width: 19%; }
+  .style-v1__spread--s03 [data-item="estilo-18"] { left: 78%; top: 50%; width: 16%; }
+  .style-v1__spread--s03 [data-item="revistas"] { left: 22%; top: 75%; width: 15%; }
+
+  .style-v1__spread--s04 [data-item="estilo-20"] { left: 72%; top: 20%; width: 17%; }
+  .style-v1__spread--s04 [data-item="estilo-21"] { left: 78%; top: 49%; width: 15%; }
+  .style-v1__spread--s04 [data-item="estilo-23"] { left: 20%; top: 70%; width: 16%; }
+  .style-v1__spread--s04 [data-item="model-05"] { left: 70%; top: 71%; width: 9%; }
+  .style-v1__spread--s04 [data-item="model-06"] { left: 81%; top: 70%; width: 9%; }
+}

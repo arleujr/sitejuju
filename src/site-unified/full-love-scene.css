@@ -1,0 +1,124 @@
+.full-love,
+.full-love * { box-sizing: border-box; }
+
+.full-love {
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  isolation: isolate;
+  background: #000;
+}
+
+.full-love__trio,
+.full-love__vivencias {
+  position: relative;
+  width: 100%;
+}
+
+.full-love__trio { z-index: 1; }
+.full-love__vivencias { z-index: 1; }
+
+/* ========================================================================== 
+   ACADEMIA -> VIVÊNCIAS V2
+   --------------------------------------------------------------------------
+   Ponte autocontida e reversível. Nenhuma cena real vira fixed e nenhum
+   wrapper troca de modo no meio da rolagem. Isso elimina o principal ponto
+   frágil no mobile (dvh/barra do navegador/compositor).
+   ========================================================================== */
+.full-love__chapter-link {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  height: 205svh;
+  margin: -100svh 0 -55svh;
+  overflow: visible;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.full-love__chapter-link-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background: rgb(152 114 146);
+  contain: paint;
+}
+
+.full-love__chapter-link-next,
+.full-love__chapter-link-current {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transform: translate3d(0,0,0);
+  backface-visibility: hidden;
+}
+
+.full-love__chapter-link-next {
+  z-index: 1;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.14), transparent 26%),
+    radial-gradient(circle at 82% 76%, rgba(255,214,227,.12), transparent 24%),
+    radial-gradient(circle at 54% 54%, rgba(255,255,255,.05), transparent 36%),
+    linear-gradient(135deg, rgba(255,255,255,.05), rgba(255,255,255,0)),
+    rgb(152 114 146);
+}
+
+.full-love__chapter-link-current {
+  z-index: 2;
+  will-change: transform;
+  box-shadow: 24px 0 52px rgba(31, 18, 28, .18);
+}
+
+/* Último frame da Academia dentro da ponte. */
+.full-love__chapter-link-current .full-love__gym-preview,
+.full-love__chapter-link-current .gym-v1,
+.full-love__chapter-link-current .gym-v1__section,
+.full-love__chapter-link-current .gym-v1__sticky,
+.full-love__chapter-link-current .gym-v1__scene-stage {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+}
+
+.full-love__chapter-link-current .gym-v1__sticky {
+  top: 0 !important;
+  overflow: hidden !important;
+}
+
+/*
+  A próxima camada é apenas um backdrop cromático. A Vivências real assume logo
+  em seguida; não exibimos mais a prévia estática com headline/placeholders.
+*/
+.full-love__chapter-link-next--backdrop {
+  opacity: 1;
+}
+
+@media (max-width: 860px) {
+  .full-love__chapter-link {
+    height: var(--full-love-link-h, 205svh);
+    margin-top: var(--full-love-link-mt, -100svh);
+    margin-bottom: var(--full-love-link-mb, -100svh);
+  }
+
+  .full-love__chapter-link-sticky {
+    height: var(--full-love-mobile-vh, 100svh);
+  }
+
+  .full-love__chapter-link-current {
+    box-shadow: 16px 0 32px rgba(31, 18, 28, .16);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .full-love__chapter-link-current,
+  .full-love__chapter-link-next { will-change: auto; }
+}

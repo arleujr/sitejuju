@@ -1,0 +1,565 @@
+/* ==========================================================================
+   MOBILE V4 — composição manual/determinística para telefone em retrato
+   Base de direção de arte: 390x844.
+   O desktop permanece exatamente como na V3P1 aprovada.
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  .love-trio { width: 100%; overflow-x: clip; }
+
+  .love-trio .smile-v5__sticky,
+  .love-trio .style-v1__sticky,
+  .love-trio .gym-v1__sticky {
+    height: 100svh;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
+  .love-trio .smile-v5__canvas,
+  .love-trio .style-v1__canvas,
+  .love-trio .gym-v1__canvas {
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100svh !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .love-trio .smile-v5__paper,
+  .love-trio .style-v1__paper,
+  .love-trio .gym-v1__paper {
+    inset: 0 !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .love-trio .smile-v5__center-title,
+  .love-trio .style-v1__center-title,
+  .love-trio .gym-v1__tapago {
+    left: 50% !important;
+    top: 50% !important;
+    height: auto !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 40 !important;
+    pointer-events: none;
+  }
+
+  .love-trio .smile-v5__center-title { width: 31vw !important; max-width: 138px; }
+  .love-trio .style-v1__center-title { width: 31vw !important; max-width: 138px; }
+  .love-trio .gym-v1__tapago { width: 30vw !important; max-width: 132px; }
+
+  .love-trio .smile-v5__item.is-photo:not(.is-loaded) .smile-v5__frame,
+  .love-trio .smile-v5__item.is-photo:not(.is-loaded) .smile-v5__gloss,
+  .love-trio .style-v1__item.is-photo:not(.is-loaded) .style-v1__frame,
+  .love-trio .style-v1__item.is-photo:not(.is-loaded) .style-v1__gloss,
+  .love-trio .gym-v1__item.is-photo:not(.is-loaded) .gym-v1__frame,
+  .love-trio .gym-v1__item.is-photo:not(.is-loaded) .gym-v1__gloss {
+    opacity: 0 !important;
+  }
+
+  .love-trio .smile-v5__frame,
+  .love-trio .style-v1__frame,
+  .love-trio .gym-v1__frame {
+    border-radius: 7px;
+    box-shadow: 0 9px 17px rgba(45,39,33,.14), 0 2px 3px rgba(45,39,33,.07);
+  }
+
+  .love-trio .smile-v5__fastener,
+  .love-trio .style-v1__fastener { width: 30%; }
+
+  .love-trio .smile-v5__item,
+  .love-trio .style-v1__item,
+  .love-trio .gym-v1__item {
+    translate: none !important;
+    transform-origin: center center;
+  }
+
+  /* ============================== SMILE ============================== */
+  /* S01 */
+  .smile-v5__spread--s01 [data-item="sorriso-04"] { left:4% !important; top:4% !important; width:23% !important; }
+  .smile-v5__spread--s01 [data-item="sorriso-02"] { left:74% !important; top:5% !important; width:22% !important; }
+  .smile-v5__spread--s01 [data-item="sorriso-01"] { left:3% !important; top:31% !important; width:15% !important; }
+  .smile-v5__spread--s01 [data-item="sorriso-03"] { left:78% !important; top:31% !important; width:19% !important; }
+  .smile-v5__spread--s01 [data-item="sorriso-16"] { left:5% !important; top:70% !important; width:21% !important; }
+  .smile-v5__spread--s01 [data-item="sorriso-10"] { left:54% !important; top:80% !important; width:41% !important; }
+  .smile-v5__spread--s01 [data-item="carta-01"] { left:84.6% !important; top:91.8% !important; width:14.0% !important; }
+  .smile-v5__spread--s01 [data-item="flor-01"] { left:85.8% !important; top:72.7% !important; width:9.0% !important; }
+  .smile-v5__spread--s01 [data-item="youaremysunshine"] { left:1.4% !important; top:19.5% !important; width:22.0% !important; }
+  .smile-v5__spread--s01 [data-item="rosa"] { left:86.5% !important; top:47.8% !important; width:8.0% !important; }
+  .smile-v5__spread--s01 [data-item="laco-01"] { left:62.5% !important; top:3.5% !important; width:10.0% !important; }
+  .smile-v5__spread--s01 [data-item="angel-01"] { left:75.5% !important; top:93.1% !important; width:8.0% !important; }
+  .smile-v5__spread--s01 [data-item="ribbon-01"] { left:89.9% !important; top:24.4% !important; width:8.0% !important; }
+  .smile-v5__spread--s01 [data-item="selo-01"] { left:46.7% !important; top:4.0% !important; width:6.0% !important; }
+  .smile-v5__spread--s01 [data-item="miniheart"] { left:1.0% !important; top:23.6% !important; width:4.0% !important; }
+  .smile-v5__spread--s01 [data-item="miniheart-02"] { left:1.0% !important; top:52.5% !important; width:4.0% !important; }
+
+  /* S02 */
+  .smile-v5__spread--s02 [data-item="sorriso-05"] { left:4% !important; top:4% !important; width:22% !important; }
+  .smile-v5__spread--s02 [data-item="sorriso-06"] { left:74% !important; top:4% !important; width:22% !important; }
+  .smile-v5__spread--s02 [data-item="sorriso-07"] { left:3% !important; top:33% !important; width:20% !important; }
+  .smile-v5__spread--s02 [data-item="sorriso-08"] { left:77% !important; top:33% !important; width:20% !important; }
+  .smile-v5__spread--s02 [data-item="sorriso-09"] { left:5% !important; top:70% !important; width:23% !important; }
+  .smile-v5__spread--s02 [data-item="sorriso-13"] { left:54% !important; top:80% !important; width:41% !important; }
+  .smile-v5__spread--s02 [data-item="pessoafavorita"] { left:2.5% !important; top:26.0% !important; width:27.0% !important; }
+  .smile-v5__spread--s02 [data-item="carta"] { left:85.2% !important; top:23.1% !important; width:13.0% !important; }
+  .smile-v5__spread--s02 [data-item="colar"] { left:64.8% !important; top:2.9% !important; width:8.0% !important; }
+  .smile-v5__spread--s02 [data-item="bear-01"] { left:72.3% !important; top:23.1% !important; width:9.0% !important; }
+  .smile-v5__spread--s02 [data-item="laco-02"] { left:87.6% !important; top:91.9% !important; width:10.0% !important; }
+  .smile-v5__spread--s02 [data-item="chave"] { left:6.1% !important; top:87.8% !important; width:7.0% !important; }
+  .smile-v5__spread--s02 [data-item="kiss-01"] { left:6.9% !important; top:93.7% !important; width:7.0% !important; }
+  .smile-v5__spread--s02 [data-item="selo-02"] { left:27.1% !important; top:2.0% !important; width:6.0% !important; }
+  .smile-v5__spread--s02 [data-item="miniheart"] { left:27.1% !important; top:18.1% !important; width:4.0% !important; }
+  .smile-v5__spread--s02 [data-item="miniheart-02"] { left:1.2% !important; top:50.8% !important; width:4.0% !important; }
+
+  /* S03 */
+  .smile-v5__spread--s03 [data-item="sorriso-11"] { left:4% !important; top:4% !important; width:21% !important; }
+  .smile-v5__spread--s03 [data-item="sorriso-12"] { left:74% !important; top:5% !important; width:22% !important; }
+  .smile-v5__spread--s03 [data-item="sorriso-15"] { left:3% !important; top:33% !important; width:20% !important; }
+  .smile-v5__spread--s03 [data-item="sorriso-17"] { left:78% !important; top:32% !important; width:19% !important; }
+  .smile-v5__spread--s03 [data-item="sorriso-18"] { left:5% !important; top:71% !important; width:21% !important; }
+  .smile-v5__spread--s03 [data-item="sorriso-14"] { left:54% !important; top:80% !important; width:41% !important; }
+  .smile-v5__spread--s03 [data-item="lovesongstape"] { left:81.9% !important; top:19.7% !important; width:17.0% !important; }
+  .smile-v5__spread--s03 [data-item="flor-01"] { left:88.1% !important; top:91.7% !important; width:9.0% !important; }
+  .smile-v5__spread--s03 [data-item="carta"] { left:59.7% !important; top:1.0% !important; width:13.0% !important; }
+  .smile-v5__spread--s03 [data-item="rosa"] { left:86.3% !important; top:49.0% !important; width:8.0% !important; }
+  .smile-v5__spread--s03 [data-item="anatomico"] { left:44.8% !important; top:87.2% !important; width:8.0% !important; }
+  .smile-v5__spread--s03 [data-item="laco-03"] { left:1.4% !important; top:48.9% !important; width:10.0% !important; }
+  .smile-v5__spread--s03 [data-item="lolipop"] { left:1.3% !important; top:53.7% !important; width:7.0% !important; }
+  .smile-v5__spread--s03 [data-item="angel-02"] { left:78.0% !important; top:91.9% !important; width:9.0% !important; }
+  .smile-v5__spread--s03 [data-item="selo-01"] { left:46.7% !important; top:4.5% !important; width:6.0% !important; }
+  .smile-v5__spread--s03 [data-item="miniheart"] { left:1.4% !important; top:22.4% !important; width:4.0% !important; }
+  .smile-v5__spread--s03 [data-item="miniheart-02"] { left:1.7% !important; top:45.7% !important; width:4.0% !important; }
+
+  /* ============================== STYLE ============================== */
+  /* S01 */
+  .style-v1__spread--s01 [data-item="estilo-01"] { left:4% !important; top:4% !important; width:21% !important; }
+  .style-v1__spread--s01 [data-item="estilo-02"] { left:69% !important; top:4% !important; width:24% !important; }
+  .style-v1__spread--s01 [data-item="estilo-10"] { left:2% !important; top:30.5% !important; width:22% !important; }
+  .style-v1__spread--s01 [data-item="estilo-03"] { left:72% !important; top:31% !important; width:20% !important; }
+  .style-v1__spread--s01 [data-item="estilo-11"] { left:5% !important; top:71% !important; width:21% !important; }
+  .style-v1__spread--s01 [data-item="estilo-16"] { left:69% !important; top:70% !important; width:24% !important; }
+  .style-v1__spread--s01 [data-item="teamo"] { left:1.1% !important; top:22.4% !important; width:15.0% !important; }
+  .style-v1__spread--s01 [data-item="camera"] { left:80.5% !important; top:48.0% !important; width:13.5% !important; }
+  .style-v1__spread--s01 [data-item="tiger02"] { left:4.7% !important; top:89.5% !important; width:11.0% !important; }
+  .style-v1__spread--s01 [data-item="vogue"] { left:6.3% !important; top:93.8% !important; width:7.0% !important; }
+  .style-v1__spread--s01 [data-item="flor-02"] { left:1.2% !important; top:46.2% !important; width:8.0% !important; }
+  .style-v1__spread--s01 [data-item="styleicon"] { left:79.8% !important; top:52.1% !important; width:9.0% !important; }
+  .style-v1__spread--s01 [data-item="boca02"] { left:67.0% !important; top:4.0% !important; width:7.0% !important; }
+  .style-v1__spread--s01 [data-item="pin"] { left:26.1% !important; top:1.2% !important; width:6.0% !important; }
+  .style-v1__spread--s01 [data-item="coracao-01"] { left:92.9% !important; top:53.7% !important; width:6.0% !important; }
+
+  /* S02 */
+  .style-v1__spread--s02 [data-item="estilo-04"] { left:4% !important; top:4% !important; width:21% !important; }
+  .style-v1__spread--s02 [data-item="estilo-06"] { left:69% !important; top:4% !important; width:24% !important; }
+  .style-v1__spread--s02 [data-item="estilo-05"] { left:3% !important; top:32% !important; width:19% !important; }
+  .style-v1__spread--s02 [data-item="estilo-07"] { left:72% !important; top:31% !important; width:21% !important; }
+  .style-v1__spread--s02 [data-item="estilo-12"] { left:5% !important; top:71% !important; width:21% !important; }
+  .style-v1__spread--s02 [data-item="estilo-14"] { left:71% !important; top:69.5% !important; width:22% !important; }
+  .style-v1__spread--s02 [data-item="vcdeixatudomaisbonito"] { left:71.0% !important; top:48.2% !important; width:25.0% !important; }
+  .style-v1__spread--s02 [data-item="model-04"] { left:87.0% !important; top:90.4% !important; width:8.0% !important; }
+  .style-v1__spread--s02 [data-item="vogue02"] { left:66.0% !important; top:1.2% !important; width:8.0% !important; }
+  .style-v1__spread--s02 [data-item="laco-05"] { left:87.3% !important; top:22.3% !important; width:9.0% !important; }
+  .style-v1__spread--s02 [data-item="prada"] { left:74.0% !important; top:22.3% !important; width:9.0% !important; }
+  .style-v1__spread--s02 [data-item="model-02"] { left:1.0% !important; top:49.0% !important; width:8.0% !important; }
+  .style-v1__spread--s02 [data-item="flor-04"] { left:84.5% !important; top:54.4% !important; width:10.0% !important; }
+  .style-v1__spread--s02 [data-item="flor-01"] { left:73.2% !important; top:90.3% !important; width:9.0% !important; }
+  .style-v1__spread--s02 [data-item="catfashion"] { left:45.3% !important; top:4.2% !important; width:9.0% !important; }
+  .style-v1__spread--s02 [data-item="channel"] { left:5.6% !important; top:89.6% !important; width:7.0% !important; }
+  .style-v1__spread--s02 [data-item="relogio"] { left:68.6% !important; top:81.8% !important; width:7.0% !important; }
+  .style-v1__spread--s02 [data-item="ficardecanto-01"] { left:14.0% !important; top:89.9% !important; width:7.0% !important; }
+  .style-v1__spread--s02 [data-item="coracao-02"] { left:67.6% !important; top:14.3% !important; width:6.0% !important; }
+
+  /* S03 */
+  .style-v1__spread--s03 [data-item="estilo-08"] { left:4% !important; top:4% !important; width:21% !important; }
+  .style-v1__spread--s03 [data-item="estilo-18"] { left:69% !important; top:4% !important; width:24% !important; }
+  .style-v1__spread--s03 [data-item="estilo-09"] { left:3% !important; top:32% !important; width:19% !important; }
+  .style-v1__spread--s03 [data-item="estilo-17"] { left:72% !important; top:30.5% !important; width:21% !important; }
+  .style-v1__spread--s03 [data-item="estilo-19"] { left:5% !important; top:71% !important; width:21% !important; }
+  .style-v1__spread--s03 [data-item="estilo-22"] { left:69% !important; top:69.5% !important; width:24% !important; }
+  .style-v1__spread--s03 [data-item="revistas"] { left:80.7% !important; top:89.0% !important; width:10.0% !important; }
+  .style-v1__spread--s03 [data-item="cinema"] { left:1.6% !important; top:48.6% !important; width:8.0% !important; }
+  .style-v1__spread--s03 [data-item="dontflash"] { left:1.1% !important; top:23.3% !important; width:8.0% !important; }
+  .style-v1__spread--s03 [data-item="model-01"] { left:81.0% !important; top:46.2% !important; width:9.0% !important; }
+  .style-v1__spread--s03 [data-item="coke"] { left:1.9% !important; top:54.7% !important; width:4.5% !important; }
+  .style-v1__spread--s03 [data-item="flor-03"] { left:45.3% !important; top:4.0% !important; width:9.0% !important; }
+  .style-v1__spread--s03 [data-item="laco-03"] { left:10.8% !important; top:49.3% !important; width:10.0% !important; }
+  .style-v1__spread--s03 [data-item="boca"] { left:8.0% !important; top:54.8% !important; width:7.0% !important; }
+  .style-v1__spread--s03 [data-item="coke2"] { left:46.1% !important; top:8.6% !important; width:7.0% !important; }
+  .style-v1__spread--s03 [data-item="botas"] { left:6.3% !important; top:89.6% !important; width:5.5% !important; }
+  .style-v1__spread--s03 [data-item="coracao-04"] { left:13.5% !important; top:22.3% !important; width:6.0% !important; }
+
+  /* S04 */
+  .style-v1__spread--s04 [data-item="estilo-13"] { left:4% !important; top:4% !important; width:22% !important; }
+  .style-v1__spread--s04 [data-item="estilo-21"] { left:69% !important; top:4% !important; width:24% !important; }
+  .style-v1__spread--s04 [data-item="estilo-15"] { left:3% !important; top:32% !important; width:19% !important; }
+  .style-v1__spread--s04 [data-item="estilo-20"] { left:72% !important; top:31% !important; width:21% !important; }
+  .style-v1__spread--s04 [data-item="estilo-23"] { left:68% !important; top:70% !important; width:24% !important; }
+  .style-v1__spread--s04 [data-item="teamo"] { left:2.0% !important; top:23.2% !important; width:15.0% !important; }
+  .style-v1__spread--s04 [data-item="camera"] { left:80.3% !important; top:48.7% !important; width:13.5% !important; }
+  .style-v1__spread--s04 [data-item="model-03"] { left:46.3% !important; top:87.8% !important; width:7.0% !important; }
+  .style-v1__spread--s04 [data-item="tiger"] { left:27.1% !important; top:1.6% !important; width:7.0% !important; }
+  .style-v1__spread--s04 [data-item="model-05"] { left:6.5% !important; top:87.9% !important; width:7.0% !important; }
+  .style-v1__spread--s04 [data-item="styleicon"] { left:80.8% !important; top:52.8% !important; width:9.0% !important; }
+  .style-v1__spread--s04 [data-item="botas-02"] { left:82.5% !important; top:90.3% !important; width:6.5% !important; }
+  .style-v1__spread--s04 [data-item="model-06"] { left:47.6% !important; top:83.1% !important; width:7.0% !important; }
+  .style-v1__spread--s04 [data-item="cantoinferiordireito"] { left:75.0% !important; top:90.7% !important; width:7.0% !important; }
+  .style-v1__spread--s04 [data-item="flor-05"] { left:1.2% !important; top:48.7% !important; width:5.0% !important; }
+
+  /* ============================== GYM ============================== */
+  /* A01 */
+  .gym-v1__spread--a01 [data-item="academia-01"] { left:4% !important; top:4% !important; width:21% !important; }
+  .gym-v1__spread--a01 [data-item="academia-04"] { left:75% !important; top:4% !important; width:21% !important; }
+  .gym-v1__spread--a01 [data-item="academia-02"] { left:3% !important; top:32% !important; width:19% !important; }
+  .gym-v1__spread--a01 [data-item="academia-03"] { left:78% !important; top:32% !important; width:19% !important; }
+  .gym-v1__spread--a01 [data-item="academia-05"] { left:5% !important; top:71% !important; width:23% !important; }
+  .gym-v1__spread--a01 [data-item="academia-06"] { left:75% !important; top:71% !important; width:21% !important; }
+  .gym-v1__spread--a01 [data-item="halter02"] { left:63.8% !important; top:3.2% !important; width:10.0% !important; }
+  .gym-v1__spread--a01 [data-item="cat-03"] { left:5.6% !important; top:87.6% !important; width:9.0% !important; }
+  .gym-v1__spread--a01 [data-item="cat-02"] { left:1.1% !important; top:49.9% !important; width:9.0% !important; }
+  .gym-v1__spread--a01 [data-item="cat-01"] { left:45.0% !important; top:4.1% !important; width:10.0% !important; }
+  .gym-v1__spread--a01 [data-item="dog01"] { left:47.2% !important; top:9.0% !important; width:7.0% !important; }
+  .gym-v1__spread--a01 [data-item="garrafa"] { left:8.6% !important; top:93.4% !important; width:5.5% !important; }
+  .gym-v1__spread--a01 [data-item="heart"] { left:87.1% !important; top:89.6% !important; width:7.0% !important; }
+
+  /* A02 */
+  .gym-v1__spread--a02 [data-item="academia-07"] { left:3% !important; top:4% !important; width:19% !important; }
+  .gym-v1__spread--a02 [data-item="academia-08"] { left:25% !important; top:5% !important; width:18% !important; }
+  .gym-v1__spread--a02 [data-item="academia-09"] { left:57% !important; top:4% !important; width:20% !important; }
+  .gym-v1__spread--a02 [data-item="academia-10"] { left:80% !important; top:5% !important; width:17% !important; }
+  .gym-v1__spread--a02 [data-item="academia-11"] { left:3% !important; top:31% !important; width:19% !important; }
+  .gym-v1__spread--a02 [data-item="academia-13"] { left:78% !important; top:31% !important; width:19% !important; }
+  .gym-v1__spread--a02 [data-item="academia-12"] { left:4% !important; top:72% !important; width:21% !important; }
+  .gym-v1__spread--a02 [data-item="vceumsabor"] { left:77.5% !important; top:73.5% !important; width:17.0% !important; }
+  .gym-v1__spread--a02 [data-item="halter01"] { left:45.5% !important; top:3.8% !important; width:9.0% !important; }
+  .gym-v1__spread--a02 [data-item="cat-06"] { left:1.9% !important; top:20.9% !important; width:9.0% !important; }
+  .gym-v1__spread--a02 [data-item="luva"] { left:85.7% !important; top:46.1% !important; width:9.0% !important; }
+  .gym-v1__spread--a02 [data-item="cat-05"] { left:82.7% !important; top:20.0% !important; width:8.0% !important; }
+  .gym-v1__spread--a02 [data-item="cat-04"] { left:46.0% !important; top:9.2% !important; width:7.0% !important; }
+  .gym-v1__spread--a02 [data-item="fire"] { left:49.0% !important; top:15.0% !important; width:7.0% !important; }
+  .gym-v1__spread--a02 [data-item="heart2"] { left:13.4% !important; top:20.6% !important; width:8.0% !important; }
+
+  /* A03 */
+  .gym-v1__spread--a03 [data-item="academia-14"] { left:3% !important; top:4% !important; width:20% !important; }
+  .gym-v1__spread--a03 [data-item="academia-15"] { left:25% !important; top:5% !important; width:18% !important; }
+  .gym-v1__spread--a03 [data-item="academia-17"] { left:58% !important; top:4% !important; width:18% !important; }
+  .gym-v1__spread--a03 [data-item="academia-18"] { left:80% !important; top:5% !important; width:17% !important; }
+  .gym-v1__spread--a03 [data-item="academia-19"] { left:3% !important; top:31% !important; width:19% !important; }
+  .gym-v1__spread--a03 [data-item="academia-20"] { left:78% !important; top:31% !important; width:19% !important; }
+  .gym-v1__spread--a03 [data-item="academia-16"] { left:31% !important; top:79% !important; width:38% !important; }
+  .gym-v1__spread--a03 [data-item="trofeu"] { left:85.4% !important; top:87.9% !important; width:9.0% !important; }
+  .gym-v1__spread--a03 [data-item="cat-07"] { left:1.8% !important; top:17.5% !important; width:10.0% !important; }
+  .gym-v1__spread--a03 [data-item="rat03"] { left:86.5% !important; top:46.3% !important; width:7.0% !important; }
+  .gym-v1__spread--a03 [data-item="rat02"] { left:13.6% !important; top:17.5% !important; width:8.0% !important; }
+  .gym-v1__spread--a03 [data-item="rat05"] { left:47.6% !important; top:73.3% !important; width:7.0% !important; }
+  .gym-v1__spread--a03 [data-item="rat01"] { left:5.5% !important; top:88.0% !important; width:8.0% !important; }
+  .gym-v1__spread--a03 [data-item="rat04"] { left:82.5% !important; top:20.0% !important; width:6.0% !important; }
+
+}
+
+/* Telefones mais baixos (SE/mini e viewport curta): preserva o desenho e evita colisões. */
+@media (max-width: 600px) and (max-height: 740px) {
+  .love-trio .smile-v5__item,
+  .love-trio .style-v1__item,
+  .love-trio .gym-v1__item { scale: .75; }
+
+  .love-trio .smile-v5__center-title,
+  .love-trio .style-v1__center-title,
+  .love-trio .gym-v1__tapago { scale: .85; }
+}
+
+/* Tablets em retrato: mesma linguagem, em escala própria. */
+@media (min-width: 601px) and (max-width: 860px) {
+  .love-trio .smile-v5__item,
+  .love-trio .style-v1__item,
+  .love-trio .gym-v1__item { scale: .38; }
+
+  .love-trio .smile-v5__center-title,
+  .love-trio .style-v1__center-title,
+  .love-trio .gym-v1__tapago { scale: .68; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .love-trio .smile-v5__gloss::before,
+  .love-trio .style-v1__gloss::before,
+  .love-trio .gym-v1__gloss::before { animation: none !important; }
+}
+
+/* ==========================================================================
+   MOBILE V4P1 — correção de viewport + escala visual
+   --------------------------------------------------------------------------
+   1) Usa a altura dinâmica real do navegador (dvh) para impedir que o ato
+      atual fique menor do que a área visível e revele o próximo ato/um vazio
+      pela borda inferior quando as barras do navegador mudam de tamanho.
+   2) Mantém exatamente a composição/posições da V4 e aumenta a presença das
+      fotos e assets via scale, sem mexer no layout WEB.
+   ========================================================================== */
+@media (max-width: 860px) {
+  /* Altura dos três percursos usando viewport dinâmica. `vh` fica como
+     fallback para navegadores antigos; `dvh` vence quando suportado. */
+  .love-trio .smile-v5__section {
+    height: 455vh !important;
+    height: 455dvh !important;
+  }
+  .love-trio .style-v1__section {
+    height: 585vh !important;
+    height: 585dvh !important;
+  }
+  .love-trio .gym-v1__section {
+    height: 470vh !important;
+    height: 470dvh !important;
+  }
+
+  /* As sobreposições entre atos usam a MESMA unidade da viewport. Assim a
+     próxima cena só fica por baixo durante a transição horizontal prevista,
+     e nunca aparece como uma faixa na parte inferior. */
+  .love-trio__style {
+    margin-top: -132vh !important;
+    margin-top: -132dvh !important;
+  }
+  .love-trio__gym {
+    margin-top: -124.25vh !important;
+    margin-top: -124.25dvh !important;
+  }
+
+  .love-trio .smile-v5__sticky,
+  .love-trio .style-v1__sticky,
+  .love-trio .gym-v1__sticky,
+  .love-trio .smile-v5__canvas,
+  .love-trio .style-v1__canvas,
+  .love-trio .gym-v1__canvas {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+  }
+
+  .love-trio .smile-v5__sticky,
+  .love-trio .style-v1__sticky,
+  .love-trio .gym-v1__sticky {
+    top: 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    contain: paint;
+  }
+
+  .love-trio .smile-v5__scene-stage,
+  .love-trio .style-v1__scene-stage,
+  .love-trio .gym-v1__scene-stage,
+  .love-trio .smile-v5__paper,
+  .love-trio .style-v1__paper,
+  .love-trio .gym-v1__paper {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Mais presença no telefone sem trocar as posições aprovadas. */
+  .love-trio .smile-v5__item.is-photo,
+  .love-trio .style-v1__item.is-photo,
+  .love-trio .gym-v1__item.is-photo {
+    scale: 1.20;
+  }
+
+  .love-trio .smile-v5__item.is-deco,
+  .love-trio .style-v1__item.is-deco,
+  .love-trio .gym-v1__item.is-deco {
+    scale: 1.30;
+  }
+
+  .love-trio .smile-v5__item.is-title,
+  .love-trio .style-v1__item.is-title,
+  .love-trio .gym-v1__item.is-title {
+    scale: 1.16;
+  }
+
+  /* Logos centrais também ganham presença, mas continuam com área de respiro. */
+  .love-trio .smile-v5__center-title {
+    width: 36vw !important;
+    max-width: 160px !important;
+  }
+  .love-trio .style-v1__center-title {
+    width: 37vw !important;
+    max-width: 164px !important;
+  }
+  .love-trio .gym-v1__tapago {
+    width: 35vw !important;
+    max-width: 158px !important;
+  }
+
+  /* As duas fileiras de quatro fotos da Academia precisavam de poucos pixels
+     extras de separação para poder crescer 20% sem foto encostar em foto. */
+  .gym-v1__spread--a02 [data-item="academia-07"] { left: 2% !important; }
+  .gym-v1__spread--a02 [data-item="academia-08"] { left: 26% !important; }
+  .gym-v1__spread--a02 [data-item="academia-09"] { left: 57% !important; }
+  .gym-v1__spread--a02 [data-item="academia-10"] { left: 83% !important; }
+
+  .gym-v1__spread--a03 [data-item="academia-14"] { left: 2% !important; }
+  .gym-v1__spread--a03 [data-item="academia-15"] { left: 27% !important; }
+  .gym-v1__spread--a03 [data-item="academia-17"] { left: 58% !important; }
+  .gym-v1__spread--a03 [data-item="academia-18"] { left: 81% !important; }
+}
+
+/* Celulares realmente baixos: ainda maiores do que na V4 antiga (.75), mas
+   com uma margem de segurança para não criar colisões verticais. */
+@media (max-width: 600px) and (max-height: 740px) {
+  .love-trio .smile-v5__item.is-photo,
+  .love-trio .style-v1__item.is-photo,
+  .love-trio .gym-v1__item.is-photo { scale: 1.10; }
+
+  .love-trio .smile-v5__item.is-deco,
+  .love-trio .style-v1__item.is-deco,
+  .love-trio .gym-v1__item.is-deco { scale: 1.18; }
+
+  .love-trio .smile-v5__item.is-title,
+  .love-trio .style-v1__item.is-title,
+  .love-trio .gym-v1__item.is-title { scale: 1.08; }
+
+  .love-trio .smile-v5__center-title { width: 34vw !important; }
+  .love-trio .style-v1__center-title { width: 35vw !important; }
+  .love-trio .gym-v1__tapago { width: 34vw !important; }
+}
+
+/* Tablet em retrato: remove a redução extrema (.38) da V4. Os percentuais já
+   escalam naturalmente com a largura maior da tela. */
+@media (min-width: 601px) and (max-width: 860px) {
+  .love-trio .smile-v5__item.is-photo,
+  .love-trio .style-v1__item.is-photo,
+  .love-trio .gym-v1__item.is-photo { scale: 1.05; }
+
+  .love-trio .smile-v5__item.is-deco,
+  .love-trio .style-v1__item.is-deco,
+  .love-trio .gym-v1__item.is-deco { scale: 1.12; }
+
+  .love-trio .smile-v5__item.is-title,
+  .love-trio .style-v1__item.is-title,
+  .love-trio .gym-v1__item.is-title { scale: 1.03; }
+}
+
+/* ==========================================================================
+   MOBILE V4P3 — UM ÚNICO PALCO STICKY PARA OS 3 ATOS
+   ========================================================================== */
+@media (max-width: 860px) {
+  .love-trio {
+    position: relative !important;
+    height: var(--love-trio-mobile-track-h) !important;
+    min-height: var(--love-trio-mobile-track-h) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+    isolation: isolate;
+  }
+
+  .love-trio__smile,
+  .love-trio__style,
+  .love-trio__gym {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .love-trio__smile { z-index: 3 !important; }
+  .love-trio__style { z-index: 2 !important; }
+  .love-trio__gym   { z-index: 1 !important; }
+
+  .love-trio .smile-v5,
+  .love-trio .style-v1,
+  .love-trio .gym-v1,
+  .love-trio .smile-v5__section,
+  .love-trio .style-v1__section,
+  .love-trio .gym-v1__section {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  .love-trio .smile-v5__sticky,
+  .love-trio .style-v1__sticky,
+  .love-trio .gym-v1__sticky {
+    position: sticky !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    contain: paint;
+  }
+
+  .love-trio .smile-v5__scene-stage,
+  .love-trio .style-v1__scene-stage,
+  .love-trio .gym-v1__scene-stage,
+  .love-trio .smile-v5__paper,
+  .love-trio .style-v1__paper,
+  .love-trio .gym-v1__paper {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* V4P4: restaura o canvas mobile à largura inteira. A V4P3 retirava 10px
+     dos DOIS lados, alterando visualmente também a esquerda. Agora não há
+     shrink/margem lateral: a proteção é aplicada apenas aos itens que
+     ultrapassam a borda DIREITA, via JS. */
+  .love-trio .smile-v5__canvas,
+  .love-trio .style-v1__canvas,
+  .love-trio .gym-v1__canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    aspect-ratio: auto !important;
+    overflow: hidden !important;
+  }
+
+  .love-trio .smile-v5__fastener--tr,
+  .love-trio .style-v1__fastener--tr,
+  .love-trio .smile-v5__fastener--rm,
+  .love-trio .style-v1__fastener--rm { right: 0 !important; }
+
+  .love-trio .smile-v5__fastener--tl,
+  .love-trio .style-v1__fastener--tl,
+  .love-trio .smile-v5__fastener--lm,
+  .love-trio .style-v1__fastener--lm { left: 0 !important; }
+
+  /* Mantém os tamanhos maiores aprovados da V4P1. Itens próximos das bordas
+     recebem transform-origin interno pelo JS e crescem para dentro da tela. */
+  .love-trio .smile-v5__item.is-photo,
+  .love-trio .style-v1__item.is-photo,
+  .love-trio .gym-v1__item.is-photo { scale: 1.20; }
+
+  .love-trio .smile-v5__item.is-deco,
+  .love-trio .style-v1__item.is-deco,
+  .love-trio .gym-v1__item.is-deco { scale: 1.30; }
+
+  .love-trio .smile-v5__item.is-title,
+  .love-trio .style-v1__item.is-title,
+  .love-trio .gym-v1__item.is-title { scale: 1.16; }
+}
+
+@media (max-width: 860px) {
+  .love-trio .smile-v5__item,
+  .love-trio .style-v1__item,
+  .love-trio .gym-v1__item {
+    margin-left: var(--love-trio-mobile-right-nudge-x, 0px) !important;
+  }
+}
+
+
+/* ==========================================================================\n   MOBILE V4P5 — correção cirúrgica do lado de academia-04\n   --------------------------------------------------------------------------\n   A composição da V4P4 é preservada. O JS mede a caixa renderizada (incluindo\n   scale + rotação) e, SOMENTE na metade direita, desloca para dentro aquilo\n   que ultrapassaria o gutter seguro. O lado esquerdo não recebe correção.\n   ========================================================================== */
+@media (max-width: 860px) {
+  .love-trio .smile-v5__item,
+  .love-trio .style-v1__item,
+  .love-trio .gym-v1__item {
+    margin-left: var(--love-trio-mobile-right-nudge-x, 0px) !important;
+    transform-origin: center center !important;
+  }
+}
