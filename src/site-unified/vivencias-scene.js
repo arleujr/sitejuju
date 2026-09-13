@@ -1,4 +1,4 @@
-import { createScrollFrameDriver } from './performance-runtime.js';
+import { createScrollFrameDriver, createViewportFrameDriver } from './performance-runtime.js';
 
 
 const clamp=(v,min=0,max=1)=>Math.max(min,Math.min(max,v));
@@ -799,8 +799,7 @@ export function initVivenciasScene(root,options={}){
     last=-1;
     frameDriver?.schedule();
   };
-  window.addEventListener('resize',onResize,{passive:true});
-  window.addEventListener('orientationchange',onResize,{passive:true});
+  const viewportDriver=createViewportFrameDriver(onResize);
 
   syncMobileGeometry(true);
   frameDriver=createScrollFrameDriver(update,{root:host,rootMargin:'125% 0px'});
@@ -822,8 +821,7 @@ export function initVivenciasScene(root,options={}){
       destroyed=true;
       frameDriver?.destroy();
       releaseFirstVideoGate();
-      window.removeEventListener('resize',onResize);
-      window.removeEventListener('orientationchange',onResize);
+      viewportDriver.destroy();
       video.removeEventListener('ended',finishFirstVideo);
       video.pause();
       video.removeAttribute('src');

@@ -1,4 +1,4 @@
-import { createScrollFrameDriver } from './performance-runtime.js';
+import { createScrollFrameDriver, createViewportFrameDriver } from './performance-runtime.js';
 
 const PHOTO_MANIFEST = {
   'estilo-01': { file: 'estilo-01.webp', width: 900, height: 1600 },
@@ -344,9 +344,8 @@ export function initStyleScene(root, options = {}) {
   const render = () => updateScene(host, spreadMap);
   const frameDriver = createScrollFrameDriver(render, { root: host, rootMargin: '125% 0px' });
 
-  const onResize = () => frameDriver.flush();
-  window.addEventListener('resize', onResize, { passive: true });
-  cleanups.push(() => window.removeEventListener('resize', onResize));
+  const viewportDriver = createViewportFrameDriver(() => frameDriver.flush());
+  cleanups.push(() => viewportDriver.destroy());
 
   return {
     root: host,

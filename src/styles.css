@@ -344,6 +344,14 @@ button { color: inherit; }
 .memory-heart__tag::before { left: 4px; transform: rotate(-7deg); }
 .memory-heart__tag::after { right: 4px; transform: rotate(7deg); }
 .memory-heart__tag i { color: var(--rose); font-style: normal; margin-left: 5px; }
+.memory-heart--left-bottom .memory-heart__tag {
+  width: min(220px, 24vw);
+  min-width: 0;
+  padding-inline: 14px;
+  text-align: center;
+  line-height: 1.25;
+  white-space: normal;
+}
 
 .note {
   position: absolute;
@@ -530,6 +538,7 @@ button { color: inherit; }
   .nav { gap: 23px; }
   .memory-heart--left { --size: 31vmin !important; }
   .memory-heart--right-top, .memory-heart--right-bottom { --size: 23vmin !important; }
+  .memory-heart--left-bottom { --size: 22vmin !important; }
   .note--left, .note--right { opacity: .72; }
 }
 
@@ -543,6 +552,8 @@ button { color: inherit; }
   .hero-copy__subtitle { font-size: 19px; }
   .memory-heart--left { --size: 34vmin !important; }
   .memory-heart--right-top, .memory-heart--right-bottom { --size: 29vmin !important; }
+  .memory-heart--left-bottom { --size: 24vmin !important; }
+  .memory-heart--left-bottom .memory-heart__tag { width: min(168px, 44vw); font-size: 10px; }
   .note--top-left { left: 5vw; top: 9vh; font-size: 12px; }
   .note--left { display: none; }
   .note--right { display: none; }
@@ -565,6 +576,8 @@ button { color: inherit; }
   .drag-hint { font-size: 10px; }
   .memory-heart--left { --size: 36vmin !important; }
   .memory-heart--right-top, .memory-heart--right-bottom { --size: 29vmin !important; }
+  .memory-heart--left-bottom { --size: 25vmin !important; }
+  .memory-heart--left-bottom .memory-heart__tag { width: min(164px, 44vw); }
   .note--top-left, .note--bottom-left, .note--bottom-right { display: none; }
   .paint-heart--5 { display: none; }
 }
@@ -899,11 +912,13 @@ body.is-transitioning .cursor-aura { opacity: 0 !important; }
   .hero-copy { width: min(82vw, 520px); }
   .memory-heart--left { --size: 39vmin !important; }
   .memory-heart--right-top, .memory-heart--right-bottom { --size: 31vmin !important; }
+  .memory-heart--left-bottom { --size: 25vmin !important; }
 }
 
 @media (max-width: 560px) {
   .memory-heart--left { --size: 40vmin !important; }
   .memory-heart--right-top, .memory-heart--right-bottom { --size: 31vmin !important; }
+  .memory-heart--left-bottom { --size: 26vmin !important; }
   .heart-portal { width: 96px; height: 87px; }
 }
 

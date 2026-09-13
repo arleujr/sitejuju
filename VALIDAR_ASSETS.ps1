@@ -3,6 +3,7 @@ $required = @(
   "jujucarnaval02.jpeg",
   "jujuformatura.jpeg",
   "jujucasamento.jpg",
+  "juju-crianca.jpg",
   "festa-show-neon.png",
   "encontro-01-juntos.png",
   "encontro-02-pergunta.png",
@@ -31,6 +32,7 @@ $required = @(
   "romance/trabalho-frase-02-user.png",
   "romance/trabalho-frase-03-user.png",
   "sounds/notification.mp3",
+  "sounds/musica-fundo.mp3",
 )
 $missing = @()
 foreach ($item in $required) {

@@ -1,7 +1,7 @@
 import { initSmileScene } from './smile-scene.js';
 import { initStyleScene } from './style-scene.js';
 import { initGymScene } from './gym-scene.js';
-import { createScrollFrameDriver } from './performance-runtime.js';
+import { createScrollFrameDriver, createViewportFrameDriver } from './performance-runtime.js';
 
 /**
  * Cena completa: Sorriso -> Estilo -> Academia.
@@ -178,8 +178,7 @@ export function initLoveTrioScene(root, options = {}) {
   updateMobileProgress();
   const frameDriver = createScrollFrameDriver(updateMobileProgress, { root: host, rootMargin: '125% 0px' });
 
-  window.addEventListener('resize', onResize, { passive: true });
-  window.addEventListener('orientationchange', onResize, { passive: true });
+  const viewportDriver = createViewportFrameDriver(onResize);
   host.querySelectorAll('img').forEach((img) => img.addEventListener('load', fitMobileHorizontalEdges, { passive: true }));
 
   return {
@@ -198,8 +197,7 @@ export function initLoveTrioScene(root, options = {}) {
     destroy() {
       frameDriver.destroy();
       cancelAnimationFrame(layoutRaf);
-      window.removeEventListener('resize', onResize);
-      window.removeEventListener('orientationchange', onResize);
+      viewportDriver.destroy();
       host.querySelectorAll('img').forEach((img) => img.removeEventListener('load', fitMobileHorizontalEdges));
       smileScene.destroy?.();
       styleScene.destroy?.();

@@ -7,7 +7,8 @@ Regra única: **arquivo físico em `public/assets/...`; URL no código em `/asse
 - `public/assets/jujucarnaval02.jpeg`
 - `public/assets/jujuformatura.jpeg`
 - `public/assets/jujucasamento.jpg`
-- `public/assets/festa-show-neon.png` — **já incluído neste ZIP**
+- `public/assets/juju-crianca.jpg` — foto da nova memória da Hero (legenda: “Espero que nossa filha seja assim.”)
+- `public/assets/festa-show-neon.png`
 - `public/assets/encontro-01-juntos.png`
 - `public/assets/encontro-02-pergunta.png`
 - `public/assets/encontro-03-beijo.png`
@@ -50,6 +51,7 @@ Regra única: **arquivo físico em `public/assets/...`; URL no código em `/asse
 - `public/assets/romance/trabalho-frase-02-user.png`
 - `public/assets/romance/trabalho-frase-03-user.png`
 - `public/assets/sounds/notification.mp3`
+- `public/assets/sounds/musica-fundo.mp3`
 
 ## Sorriso
 

@@ -1,70 +1,28 @@
-/* ==========================================================================
-   SITE ÚNICO — V2 -> SORRISO
-   O primeiro frame de Sorriso já vive dentro do player. Ele fica congelado,
-   expande junto com o player e mascara a troca para o topo LOCAL da continuação.
+/* ========================================================================== 
+   FLUXO ÚNICO — Trabalho -> Sorriso
+   --------------------------------------------------------------------------
+   A continuação é uma seção normal do mesmo documento. O player de Trabalho
+   mostra somente uma prévia visual do primeiro frame de Sorriso; não existe
+   clone fullscreen de navegação, DOM promovido para <body> ou rebase de scroll.
    ========================================================================== */
 
 .love-continuation-shell {
   overflow-anchor: none;
   position: relative;
   width: 100%;
-  height: 0;
   min-height: 0;
-  overflow: hidden;
-  visibility: hidden;
-  pointer-events: none;
-  background: #eadfce;
-}
-
-.love-continuation-shell.is-prepared {
-  display: block;
-}
-
-.love-continuation-shell.is-active {
-  height: auto;
   overflow: visible;
   visibility: visible;
   pointer-events: auto;
-}
-
-/* A continuação real não anima enquanto ainda é apenas material de preview. */
-.love-continuation-shell:not(.is-active) *,
-.love-continuation-shell:not(.is-active) *::before,
-.love-continuation-shell:not(.is-active) *::after,
-.main-continuation-preview *,
-.main-continuation-preview *::before,
-.main-continuation-preview *::after {
-  animation-play-state: paused !important;
-}
-
-/* V3.5 — fluxo único de verdade.
-   Hero + Ato I + Rotina + Trabalho NUNCA são convertidos em fixed e NUNCA
-   recebem display:none durante Trabalho <-> Sorriso. Eles permanecem no fluxo
-   normal do documento. A película fullscreen mascara apenas o reposicionamento
-   para o topo local da continuação; isso evita reflow/composição catastróficos. */
-html.is-love-continuation-active [data-prelove-flow] {
-  overflow-anchor: none;
-}
-
-html.is-love-continuation-active,
-html.is-love-continuation-active body {
   background: #eadfce;
 }
 
-/* --------------------------------------------------------------------------
-   Preview dentro do player e película temporária do handoff
-   -------------------------------------------------------------------------- */
-.transition-next-scene,
-.site-handoff-overlay {
-  container-type: size;
-}
-
 .transition-next-scene {
+  container-type: size;
   z-index: 2 !important;
   pointer-events: none !important;
 }
 
-/* O frame 0 já aparece ANTES do clique no play. */
 .work-gallery.is-video-stage .transition-next-scene.is-preview-ready,
 .work-gallery.is-next-scene-ready .transition-next-scene.is-preview-ready {
   opacity: 1;
@@ -72,28 +30,20 @@ html.is-love-continuation-active body {
   transition-delay: 0s;
 }
 
-/* O play e a barrinha continuam sobre o frame real de Sorriso. */
 .transition-play { z-index: 6 !important; }
 .transition-video-progress { z-index: 5 !important; }
 
-.transition-video-frame.has-next-preview .transition-video-poster {
+.transition-video-frame.has-next-preview .transition-video-poster,
+.work-gallery.is-next-scene-ready .transition-video-poster {
   opacity: 0;
   transition: opacity .22s ease;
 }
 
-/* Mesmo DOM visual em dois contextos:
-   1) miniatura dentro do player;
-   2) fullscreen fixed enquanto o scroll é zerado. */
 .transition-next-scene .main-continuation-preview,
 .transition-next-scene .main-continuation-preview .love-trio__smile,
 .transition-next-scene .main-continuation-preview .smile-v5,
 .transition-next-scene .main-continuation-preview .smile-v5__section,
-.transition-next-scene .main-continuation-preview .smile-v5__sticky,
-.site-handoff-overlay .main-continuation-preview,
-.site-handoff-overlay .main-continuation-preview .love-trio__smile,
-.site-handoff-overlay .main-continuation-preview .smile-v5,
-.site-handoff-overlay .main-continuation-preview .smile-v5__section,
-.site-handoff-overlay .main-continuation-preview .smile-v5__sticky {
+.transition-next-scene .main-continuation-preview .smile-v5__sticky {
   position: absolute !important;
   inset: 0 !important;
   width: 100% !important;
@@ -103,8 +53,7 @@ html.is-love-continuation-active body {
   overflow: hidden !important;
 }
 
-.transition-next-scene .main-continuation-preview,
-.site-handoff-overlay .main-continuation-preview {
+.transition-next-scene .main-continuation-preview {
   isolation: isolate;
   background: #eadfce;
 }
@@ -112,69 +61,28 @@ html.is-love-continuation-active body {
 .transition-next-scene .main-continuation-preview .smile-v5__scene-stage,
 .transition-next-scene .main-continuation-preview .smile-v5__paper,
 .transition-next-scene .main-continuation-preview .smile-v5__canvas,
-.transition-next-scene .main-continuation-preview .smile-v5__spread,
-.site-handoff-overlay .main-continuation-preview .smile-v5__scene-stage,
-.site-handoff-overlay .main-continuation-preview .smile-v5__paper,
-.site-handoff-overlay .main-continuation-preview .smile-v5__canvas,
-.site-handoff-overlay .main-continuation-preview .smile-v5__spread {
+.transition-next-scene .main-continuation-preview .smile-v5__spread {
   height: 100% !important;
   min-height: 0 !important;
 }
 
-/* Container queries fazem o palco 16:9 encolher de verdade dentro do player.
-   Ao chegar a fullscreen, cqw/cqh viram as dimensões do viewport e o frame
-   fica geometricamente igual à cena real. */
-.transition-next-scene .main-continuation-preview .smile-v5__canvas,
-.site-handoff-overlay .main-continuation-preview .smile-v5__canvas {
+.transition-next-scene .main-continuation-preview .smile-v5__canvas {
   width: min(100cqw, calc(100cqh * 16 / 9)) !important;
   max-width: none !important;
   aspect-ratio: 16 / 9 !important;
   margin: 0 auto !important;
 }
 
-.site-handoff-overlay {
-  position: fixed;
-  overflow-anchor: none;
-  inset: auto;
-  left: 0;
-  top: 0;
-  z-index: 2147483000;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-  border-radius: 0;
-  pointer-events: none;
-  background: #eadfce;
-  opacity: 1;
-  transform: translate3d(0,0,0);
-  will-change: left, top, width, height, border-radius, opacity;
-  transition: opacity .18s linear;
-}
-
-.site-handoff-overlay.is-leaving {
-  opacity: 0;
-}
-
-/* Na volta a película não some: ela encolhe do fullscreen para o player.
-   A opacidade fica travada em 1 até o preview já estar recolocado no DOM. */
-.site-handoff-overlay.is-returning {
-  opacity: 1 !important;
-  transition: none !important;
-}
-
 @media (max-width: 860px) {
   .transition-next-scene .main-continuation-preview,
-  .transition-next-scene .main-continuation-preview .smile-v5__sticky,
-  .site-handoff-overlay .main-continuation-preview,
-  .site-handoff-overlay .main-continuation-preview .smile-v5__sticky {
+  .transition-next-scene .main-continuation-preview .smile-v5__sticky {
     height: 100% !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-handoff-overlay,
-  .transition-video-frame.has-next-preview .transition-video-poster {
+  .transition-video-frame.has-next-preview .transition-video-poster,
+  .work-gallery.is-next-scene-ready .transition-video-poster {
     transition: none !important;
   }
 }

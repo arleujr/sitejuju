@@ -1,6 +1,5 @@
 .site-unified-story,
-.love-continuation-shell,
-.site-handoff-overlay {
+.love-continuation-shell {
   --paper: #efeae2;
   --ink: #171717;
   --sage: #d9fdd3;
@@ -15,8 +14,7 @@
 }
 
 .site-unified-story, .site-unified-story *,
-.love-continuation-shell, .love-continuation-shell *,
-.site-handoff-overlay, .site-handoff-overlay * { box-sizing: border-box; }
+.love-continuation-shell, .love-continuation-shell * { box-sizing: border-box; }
 .site-unified-story, .love-continuation-shell {
   color: var(--ink);
   background: var(--paper);

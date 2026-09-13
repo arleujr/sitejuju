@@ -9,6 +9,9 @@ import './site-unified/vivencias-scene.css';
 import './site-unified/full-love-scene.css';
 import './site-unified/site-continuation-bridge.css';
 import './site-unified/end-feedback.css';
+import { createScrollFrameDriver, createViewportFrameDriver } from './site-unified/performance-runtime.js';
+import { initStoryRuntime } from './site-unified/runtime.js';
+import { initSiteContinuation } from './site-unified/site-continuation-entry.js';
 
 const REPLAY_SESSION_KEY='love-story-replay-v1';
 try{
@@ -85,6 +88,18 @@ const memoryHearts = [
     size: 27,
     rotate: -4,
     depth: 1,
+  },
+  {
+    id: 'filha',
+    src: '/assets/juju-crianca.jpg',
+    alt: 'Foto de infância',
+    label: 'Espero que nossa filha seja assim.',
+    side: 'left-bottom',
+    x: 17,
+    y: 58,
+    size: 22,
+    rotate: 4,
+    depth: .95,
   },
 ];
 
@@ -674,16 +689,19 @@ app.innerHTML = `
     <div data-love-continuation-root></div>
   </section>
 
-  <audio id="title-chime" preload="auto" src="/assets/sounds/notification.mp3"></audio>
-  <audio id="background-music" preload="auto" loop src="/assets/sounds/musica-fundo.mp3"></audio>
+  <audio id="title-chime" preload="metadata" src="/assets/sounds/notification.mp3"></audio>
+  <audio id="background-music" preload="none" loop src="/assets/sounds/musica-fundo.mp3"></audio>
 `;
 
-// A V3.2 continua modular, mas já nasce dentro deste mesmo documento.
-// Os módulos são carregados após a criação do DOM para que seus seletores
-// encontrem a rotina real, sem iframe e sem segundo site.
-void import('./site-unified/runtime.js')
-  .then(() => import('./site-unified/site-continuation-entry.js'))
-  .catch((error) => console.error('[site-unified] Falha ao iniciar a continuação:', error));
+// Bootstrap único: todos os módulos pertencem à mesma aplicação e são
+// inicializados somente depois que o DOM principal existe. Sem corrida entre
+// imports dinâmicos e sem uma segunda aplicação assumindo o scroll depois.
+try {
+  initStoryRuntime();
+  initSiteContinuation();
+} catch (error) {
+  console.error('[site-unified] Falha ao iniciar a história:', error);
+}
 
 void import('./engagement-tracker.js')
   .catch((error) => console.warn('[analytics] indisponível:', error));
@@ -881,11 +899,6 @@ window.addEventListener('keydown', cancelAutoJourneyFromUser, { capture: true })
 document.addEventListener('nextscene:transition-start', () => { autoJourneyTransitionHold = true; });
 document.addEventListener('nextscene:ready', () => { autoJourneyTransitionHold = true; });
 document.addEventListener('nextscene:entered', () => {
-  autoJourneyTransitionHold = false;
-  autoJourneyLastTs = performance.now();
-});
-document.addEventListener('nextscene:returning', () => { autoJourneyTransitionHold = true; });
-document.addEventListener('nextscene:returned', () => {
   autoJourneyTransitionHold = false;
   autoJourneyLastTs = performance.now();
 });
@@ -1194,7 +1207,7 @@ if (loveCanvas && !reducedMotion) {
   });
 
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas, { passive: true });
+  createViewportFrameDriver(resizeCanvas);
   createVisibleAnimationLoop(hero, draw, '20% 0px');
 }
 
@@ -1223,10 +1236,7 @@ const bell = (progress, start, peak, end) => {
 };
 
 let encounterProgress = 0;
-let encounterTicking = false;
-
 function renderEncounter() {
-  encounterTicking = false;
   if (!chapterOne || !encounterStage) return;
 
   const start = chapterOne.offsetTop;
@@ -1309,15 +1319,12 @@ function renderEncounter() {
   encounterStage.style.setProperty('--hint-opacity', `${(1 - range(encounterProgress, 0, .14)).toFixed(3)}`);
 }
 
-function requestEncounterRender() {
-  if (encounterTicking) return;
-  encounterTicking = true;
-  requestAnimationFrame(renderEncounter);
-}
-
-window.addEventListener('scroll', requestEncounterRender, { passive: true });
-window.addEventListener('resize', requestEncounterRender, { passive: true });
-requestEncounterRender();
+const encounterScrollDriver = createScrollFrameDriver(renderEncounter, {
+  root: chapterOne,
+  rootMargin: '110% 0px',
+});
+createViewportFrameDriver(encounterScrollDriver.schedule);
+encounterScrollDriver.schedule();
 
 // Two rain planes create depth: small/slower rain behind the characters,
 // long/bright drops in front. No external animation dependency is needed.
@@ -1384,7 +1391,7 @@ function createRain(canvas, options = {}) {
   };
 
   resize();
-  window.addEventListener('resize', resize, { passive: true });
+  createViewportFrameDriver(resize);
   createVisibleAnimationLoop(canvas, draw, '45% 0px');
 }
 
@@ -1414,7 +1421,6 @@ const tearNextSlot = document.querySelector('[data-tear-next]');
 const tearEdge = document.querySelector('[data-tear-edge]');
 const unifiedStory = document.querySelector('[data-story]');
 const unifiedFirstScene = unifiedStory?.querySelector('.chat-scene');
-let tearTicking = false;
 let tearSnapshotBuilt = false;
 let tearNextBuilt = false;
 let tearVisualMode = null;
@@ -1490,7 +1496,6 @@ function resetTearVisual() {
 }
 
 function renderTear() {
-  tearTicking = false;
   if (!chapterTear || !tearStage || !tearPage || !unifiedStory) return;
 
   // O Ato I sticky deixa de ocupar a viewport exatamente um viewport antes
@@ -1536,27 +1541,26 @@ function renderTear() {
   if (tearEdge) tearEdge.style.opacity = `${edgeOpacity}`;
 }
 
-function requestTearRender() {
-  if (tearTicking) return;
-  tearTicking = true;
-  requestAnimationFrame(renderTear);
-}
+const tearScrollDriver = createScrollFrameDriver(renderTear, {
+  root: chapterTear || unifiedStory,
+  rootMargin: '110% 0px',
+});
 
-window.addEventListener('scroll', requestTearRender, { passive: true });
-window.addEventListener('resize', () => {
+createViewportFrameDriver(() => {
   tearSnapshotBuilt = false;
   tearNextBuilt = false;
   tearVisualMode = null;
   tearSnapshotSlot?.replaceChildren();
   tearNextSlot?.replaceChildren();
   resetTearVisual();
-  requestTearRender();
-}, { passive: true });
+  tearScrollDriver.schedule();
+});
 resetTearVisual();
-requestTearRender();
+tearScrollDriver.schedule();
 
 // Draggable heart memories. They remain where the user leaves them, with a tiny inertial settle.
 const heartNodes = memoryHeartNodes;
+const heartResizeHandlers = [];
 
 heartNodes.forEach((node) => {
   const xPct = Number(node.dataset.x);
@@ -1671,5 +1675,7 @@ heartNodes.forEach((node) => {
   });
 
   placeAtAnchor();
-  window.addEventListener('resize', placeAtAnchor, { passive: true });
+  heartResizeHandlers.push(placeAtAnchor);
 });
+
+createViewportFrameDriver(() => heartResizeHandlers.forEach((place) => place()));

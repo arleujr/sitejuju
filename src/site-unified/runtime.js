@@ -1,4 +1,6 @@
-(() => {
+import { createScrollFrameDriver, createViewportFrameDriver } from './performance-runtime.js';
+
+export function initStoryRuntime() {
   const story = document.querySelector('[data-story]');
   const title = document.querySelector('[data-title]');
   const chatScene = document.querySelector('[data-scene]');
@@ -62,8 +64,7 @@
   let touchStartX = null;
   let storyAdvanced = false;
   let nextScenePrepareDispatched = false;
-  let sceneSuspended = false;
-  let returnedFromContinuation = false;
+  let nextSceneActivated = false;
   let suppressAutoViewerPermanent = false;
   let viewerSequenceCompleted = false;
   let lastScrollY = window.scrollY;
@@ -250,7 +251,7 @@
   }
 
   function requestMeasure() {
-    if (sceneSuspended || measureRaf) return;
+    if (measureRaf) return;
     measureRaf = requestAnimationFrame(() => {
       measureRaf = 0;
       measure();
@@ -411,20 +412,23 @@
     }));
   }
 
-  function setVideoStageVisible(visible, pressing = false, fullscreen = false) {
+  function setVideoStageVisible(visible, pressing = false, fullscreen = false, ready = false) {
     if (!gallery || !transitionVideoStage) return;
-    gallery.classList.toggle('is-video-stage', visible);
-    gallery.classList.toggle('is-video-pressing', visible && pressing);
-    gallery.classList.toggle('is-video-fullscreen', visible && fullscreen);
-    if (!visible) {
-      gallery.classList.remove('is-next-scene-ready');
-      nextSceneRoot?.setAttribute('aria-hidden', 'true');
-    }
-    transitionVideoStage.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    const isVisible = Boolean(visible);
+    const isFullscreen = isVisible && Boolean(fullscreen);
+    const isReady = isFullscreen && Boolean(ready);
 
-    // O frame de Sorriso normalmente já foi pré-montado alguns instantes
-    // antes. Este call é apenas a garantia para entradas manuais/diretas.
-    if (visible) prepareNextScene();
+    gallery.classList.toggle('is-video-stage', isVisible);
+    gallery.classList.toggle('is-video-pressing', isVisible && Boolean(pressing));
+    gallery.classList.toggle('is-video-fullscreen', isFullscreen);
+    gallery.classList.toggle('is-next-scene-ready', isReady);
+
+    transitionVideoStage.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+    nextSceneRoot?.setAttribute('aria-hidden', isReady ? 'false' : 'true');
+
+    // O primeiro frame de Sorriso é só uma prévia visual dentro do player.
+    // A cena real já está montada logo abaixo no fluxo do documento.
+    if (isVisible) prepareNextScene();
   }
 
   function openTransitionVideoManual() {
@@ -463,37 +467,46 @@
   // o quadro cresce até ocupar o viewport inteiro. A próxima cena continua
   // DENTRO desse fullscreen — não existe mais uma tela preta extra abaixo.
   function triggerVideoPressAndAdvance() {
-    if (!transitionVideoStage || storyAdvanced || gallery?.classList.contains('is-video-fullscreen')) return;
+    if (!transitionVideoStage) return;
     clearVideoAdvanceTimer();
     document.dispatchEvent(new CustomEvent('nextscene:transition-start'));
-    manualVideoOpen = true;
-    setVideoStageVisible(true, true, false);
 
-    // 1) deixa o “clique/play” ser percebido
+    // Entrada manual e automática convergem para a MESMA coordenada de scroll.
+    // Nenhuma seção é movida/fixada e nenhum estado paralelo permanece preso.
+    manualVideoOpen = false;
+    manualViewerOpen = false;
+    manualGalleryOpen = false;
+    suppressAutoViewer = false;
+    suppressAutoViewerPermanent = false;
+    prepareNextScene();
+
+    const { videoPress: VIDEO_PRESS } = galleryTimings();
+    const target = storyTop + travel * Math.min(0.998, VIDEO_PRESS + 0.0015);
+
+    gallery?.classList.add('is-video-pressing');
     videoAdvanceTimer = window.setTimeout(() => {
       gallery?.classList.remove('is-video-pressing');
-      gallery?.classList.add('is-video-fullscreen');
+      videoAdvanceTimer = 0;
+    }, 520);
 
-      // 2) espera a expansão para tela cheia terminar e libera o mount
-      //    onde a próxima conversa/cena será encaixada depois.
-      videoAdvanceTimer = window.setTimeout(() => finishTransitionToNextScene(), 860);
-    }, 420);
+    try {
+      window.scrollTo({
+        top: target,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
+    } catch (_) {
+      window.scrollTo(0, target);
+    }
   }
 
 
   function finishTransitionToNextScene() {
-    clearVideoAdvanceTimer();
-    manualVideoOpen = true;
-    autoFullscreenTriggered = true;
-    gallery?.classList.remove('is-video-pressing');
-    gallery?.classList.add('is-active', 'is-video-stage', 'is-video-fullscreen', 'is-next-scene-ready');
-    gallery?.setAttribute('aria-hidden', 'false');
-    viewer?.setAttribute('aria-hidden', 'false');
-    nextSceneRoot?.setAttribute('aria-hidden', 'false');
-    syncRomanceOverlay(false, false);
+    if (nextSceneActivated) return;
+    nextSceneActivated = true;
+    prepareNextScene();
 
-    // Hook simples para a próxima cena. Um módulo futuro pode ouvir:
-    // document.addEventListener('nextscene:ready', ...).
+    // A continuação já ocupa o espaço real logo depois de Trabalho. Este evento
+    // serve somente para analytics/auto-journey e para garantir a prévia.
     document.dispatchEvent(new CustomEvent('nextscene:ready', {
       detail: { mount: nextSceneRoot }
     }));
@@ -567,25 +580,6 @@
     if (!gallery || !gallerySheet) return;
     const { viewerOpen: VIEWER_OPEN, viewerSequence: VIEWER_SEQUENCE, videoStage: VIDEO_STAGE, videoPress: VIDEO_PRESS, manualReleasePx, suppressReleasePx } = galleryTimings();
 
-    // Depois de voltar de Sorriso, o player fica exatamente no estado anterior
-    // ao play. A primeira rolagem decide naturalmente o próximo sentido:
-    // subir = volta para a última foto; descer = entra em Sorriso novamente.
-    if (returnedFromContinuation && manualVideoOpen) {
-      const delta = window.scrollY - lastScrollY;
-      if (delta < -3) {
-        returnedFromContinuation = false;
-        closeTransitionVideoToLastPhoto();
-        lastScrollY = window.scrollY;
-        return;
-      }
-      if (delta > 3) {
-        returnedFromContinuation = false;
-        lastScrollY = window.scrollY;
-        requestAnimationFrame(triggerVideoPressAndAdvance);
-        return;
-      }
-    }
-
     if (storyAdvanced && p < 0.93) storyAdvanced = false;
 
     // A transição agora se comporta como um clique real: o indicador encosta
@@ -648,16 +642,18 @@
     viewer?.setAttribute('aria-hidden', showViewer ? 'false' : 'true');
     gallery.classList.toggle('is-auto-viewer', autoViewer && !manualViewerOpen);
 
-    if (!manualVideoOpen) setVideoStageVisible(autoVideoStage, autoVideoPress, false);
+    if (!manualVideoOpen) {
+      // A própria posição do scroll é a fonte única de verdade da transição.
+      // Descer e subir produz exatamente os mesmos estados, sem timer travado.
+      setVideoStageVisible(autoVideoStage, false, autoVideoPress, autoVideoPress);
 
-    // No fluxo normal por scroll, continuar depois do cartão de “vídeo”
-    // simula o clique no play e expande a tela. Se a pessoa chegou por seta,
-    // o cartão espera o clique real dela.
-    if (autoVideoPress && !manualVideoOpen && !autoFullscreenTriggered) {
-      autoFullscreenTriggered = true;
-      requestAnimationFrame(triggerVideoPressAndAdvance);
-    } else if (!autoVideoPress && p < VIDEO_PRESS - 0.004) {
-      autoFullscreenTriggered = false;
+      if (autoVideoPress) {
+        autoFullscreenTriggered = true;
+        finishTransitionToNextScene();
+      } else if (p < VIDEO_PRESS - 0.004) {
+        autoFullscreenTriggered = false;
+        nextSceneActivated = false;
+      }
     }
 
     if (!storyAdvanced && !manualViewerOpen && !suppressAutoViewerPermanent && p >= VIEWER_SEQUENCE && p < VIDEO_STAGE) {
@@ -733,89 +729,9 @@
   }
 
   function requestRender() {
-    if (sceneSuspended || raf) return;
+    if (raf) return;
     raf = requestAnimationFrame(() => render());
   }
-
-  function suspendStoryRuntime() {
-    if (sceneSuspended) return;
-    sceneSuspended = true;
-    clearVideoAdvanceTimer();
-    if (raf) cancelAnimationFrame(raf);
-    if (measureRaf) cancelAnimationFrame(measureRaf);
-    raf = 0;
-    measureRaf = 0;
-
-    // A V2 não é destruída: ela apenas dorme enquanto a continuação está ativa.
-    // Isso mantém a ida leve e, ao mesmo tempo, permite uma volta 100% reversível.
-    itemResizeObserver?.disconnect();
-    window.removeEventListener('scroll', requestRender);
-    window.removeEventListener('resize', requestMeasure);
-    window.visualViewport?.removeEventListener?.('resize', requestMeasure);
-    mobileMedia.removeEventListener?.('change', requestMeasure);
-  }
-
-  function resumeStoryRuntime() {
-    if (!sceneSuspended) return;
-    sceneSuspended = false;
-
-    allItems.forEach((node) => itemResizeObserver?.observe(node));
-    window.addEventListener('scroll', requestRender, { passive: true });
-    window.addEventListener('resize', requestMeasure, { passive: true });
-    window.visualViewport?.addEventListener?.('resize', requestMeasure, { passive: true });
-    mobileMedia.addEventListener?.('change', requestMeasure);
-
-    layoutDirty = true;
-    renderBoundary = null;
-    lastScrollY = window.scrollY;
-    requestMeasure();
-  }
-
-  document.addEventListener('nextscene:activated', suspendStoryRuntime);
-
-  // Estado usado por trás da película fullscreen durante a volta. O player já
-  // reaparece pequeno no DOM antigo antes de a película começar a encolher.
-  document.addEventListener('nextscene:returning', (event) => {
-    clearVideoAdvanceTimer();
-    storyAdvanced = false;
-    manualGalleryOpen = false;
-    manualViewerOpen = true;
-    manualVideoOpen = true;
-    suppressAutoViewer = false;
-    suppressAutoViewerPermanent = false;
-    autoFullscreenTriggered = false;
-    returnedFromContinuation = false;
-
-    const restoreScroll = Number(event?.detail?.scrollY);
-    if (Number.isFinite(restoreScroll)) manualOpenScroll = restoreScroll;
-
-    gallery?.classList.remove(
-      'is-auto-viewer',
-      'is-video-fullscreen',
-      'is-video-pressing',
-      'is-next-scene-ready',
-      'is-manual-gallery'
-    );
-    gallery?.classList.add('is-active', 'is-manual-viewer');
-    gallery?.setAttribute('aria-hidden', 'false');
-    viewer?.setAttribute('aria-hidden', 'false');
-    setVideoStageVisible(true, false, false);
-    nextSceneRoot?.setAttribute('aria-hidden', 'false');
-    syncRomanceOverlay(false, false);
-
-    // NÃO acorda o runtime aqui. Durante a película fullscreen -> player o
-    // documento anterior acabou de voltar ao fluxo e o scroll está sendo
-    // restaurado. Se scroll/resize/measure voltarem neste ponto, eles competem
-    // com a WAAPI e podem disparar renders usando uma geometria intermediária.
-    // O runtime só acorda em nextscene:returned, depois da película terminar.
-  });
-
-  document.addEventListener('nextscene:returned', () => {
-    resumeStoryRuntime();
-    returnedFromContinuation = true;
-    lastScrollY = window.scrollY;
-    requestRender();
-  });
 
   function fadeBackgroundTo(target, duration = 360, pauseAtZero = false) {
     if (!backgroundMusic) return;
@@ -1050,13 +966,14 @@
     }
   });
 
-  window.addEventListener('scroll', requestRender, { passive: true });
-  window.addEventListener('resize', requestMeasure, { passive: true });
-  window.visualViewport?.addEventListener?.('resize', requestMeasure, { passive: true });
+  // O scroll da conversa participa do scheduler global compartilhado com as
+  // demais cenas. Isso evita vários listeners/rAFs competindo pelo mesmo frame.
+  const storyScrollDriver = createScrollFrameDriver(render, { root: story, rootMargin: '150% 0px' });
+  const storyViewportDriver = createViewportFrameDriver(requestMeasure, { visualViewport: true });
   mobileMedia.addEventListener?.('change', requestMeasure);
 
   buildGallery();
   setViewerIndex(0, false);
   syncGalleryScrollState();
   requestAnimationFrame(() => requestAnimationFrame(measure));
-})();
+}

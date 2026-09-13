@@ -1,138 +1,145 @@
-# Continua + enquete + acompanhamento de acesso
+# Analytics privado V2 + enquete
 
-## O que esta versão registra
+Esta versão separa **dispositivo provável** de **acesso individual**.
 
-A implementação foi propositalmente limitada:
+Exemplo: se o mesmo navegador abrir o site 8 vezes, o painel mostra:
 
-- abertura do link;
-- identificador do link (`?r=...`);
+- 1 dispositivo provável;
+- 8 acessos;
+- horário de cada abertura;
+- tempo visível aproximado em cada acesso;
+- etapa máxima alcançada;
+- finalização e voto;
+- cidade/região/país aproximados daquele acesso.
+
+Se um link marcado, por exemplo `?r=juju`, aparecer em dois IDs de navegador diferentes, o painel marca **possível compartilhamento**. Isso é apenas um indício: a mesma pessoa pode abrir o link no celular e no computador.
+
+## O que é registrado
+
+Por acesso:
+
+- marcador do link (`?r=...`);
+- ID aleatório persistente do navegador (`device_id`);
+- ID aleatório daquela abertura (`session_id`);
+- data/hora de entrada e última atividade;
+- saída aproximada quando o navegador informa;
+- tempo em que a página ficou visível;
 - mobile / desktop / tablet;
-- último capítulo máximo alcançado;
-- percentual máximo dentro daquele capítulo;
-- se chegou à tela `Continua...`;
-- voto `Sim` ou `Não`;
-- primeiro e último horário vistos pelo backend.
+- navegador e sistema operacional em categoria básica;
+- idioma/fuso do navegador;
+- cidade, região e país **aproximados** informados pela Cloudflare;
+- origem em nível de domínio, quando existe;
+- maior capítulo/progresso alcançado;
+- finalização;
+- voto Sim/Não.
 
-Não há fingerprint, geolocalização, câmera, microfone, teclas digitadas nem armazenamento de IP pela aplicação.
+A aplicação **não armazena**:
 
-> O parâmetro `?r=` identifica o LINK. Se o link for encaminhado, o painel não tem como provar qual pessoa física abriu.
+- endereço IP;
+- GPS;
+- latitude/longitude;
+- nome/telefone/e-mail;
+- fingerprint de hardware/canvas/fontes;
+- câmera, microfone ou teclas digitadas.
 
-## Tela final
+A geolocalização vem de `request.cf` no Worker. É geolocalização aproximada da conexão e pode apontar para uma cidade próxima ou para a infraestrutura da operadora.
 
-Depois do conteúdo existente aparece uma tela preta com:
+## Arquivos alterados
 
-- `Continua...`
-- `Gostou??`
-- `Sim`
-- `Não`
+- `src/engagement-tracker.js` — tracker V2;
+- `analytics-worker/src/index.js` — API V2;
+- `analytics-worker/schema.sql` — esquema completo;
+- `analytics-worker/migrations/0002_detailed_analytics.sql` — migração segura para o D1 já existente;
+- `public/admin.html` — novo painel detalhado.
 
-O voto é gravado pelo backend. Sem backend publicado, a tela continua aparecendo, mas o site informa que não conseguiu enviar o voto.
+O histórico da tabela antiga `visits` é preservado e aparece em uma seção separada no novo painel.
 
-## Backend escolhido: Cloudflare Worker + D1
+## Atualizar o D1 que já está publicado
 
-Ele fica em `analytics-worker/` e é independente da animação do site.
-
-### 1. Criar o D1
-
-No PowerShell:
+No PowerShell, dentro do projeto:
 
 ```powershell
 cd analytics-worker
-pnpm install
-npx wrangler login
-npx wrangler d1 create love-story-analytics
+npx wrangler d1 execute love-story-analytics --remote --file=.\migrations\0002_detailed_analytics.sql
 ```
 
-O Wrangler mostrará um `database_id`.
+A migração usa `CREATE TABLE IF NOT EXISTS`, então não apaga a tabela antiga nem os votos já registrados.
 
-Copie:
+## Publicar o Worker atualizado
 
-```powershell
-Copy-Item .\wrangler.toml.example .\wrangler.toml
-```
-
-Abra `wrangler.toml` e substitua `COLE_O_DATABASE_ID_AQUI` pelo ID criado.
-
-### 2. Criar as tabelas
-
-```powershell
-npx wrangler d1 execute love-story-analytics --remote --file=.\schema.sql
-```
-
-### 3. Criar a senha do painel
-
-```powershell
-npx wrangler secret put ADMIN_TOKEN
-```
-
-Digite uma senha longa. Ela NÃO deve ser colocada no código do site.
-
-### 4. Publicar
+Ainda em `analytics-worker`:
 
 ```powershell
 npx wrangler deploy
 ```
 
-Você receberá uma URL parecida com:
+O `ADMIN_TOKEN` já cadastrado continua valendo. Não precisa criar outro token.
 
-```text
-https://love-story-analytics.SEUSUBDOMINIO.workers.dev
+## Publicar o frontend
+
+Depois volte para a raiz:
+
+```powershell
+cd ..
+pnpm install
+pnpm build
 ```
 
-### 5. Ligar o site ao Worker
+Faça o deploy da mesma forma que você já usa hoje.
+
+Como a sua pasta `public` contém fotos pessoais e não foi enviada, o ZIP desta versão traz apenas os arquivos públicos que foram criados/alterados aqui. **Mescle** a pasta `public` do ZIP com a sua pasta `public` real; não substitua/apague seus assets pessoais.
+
+O arquivo `public/admin.html` desta versão deve substituir o `admin.html` antigo.
+
+Seu `public/analytics-config.js` atual deve continuar existindo. O painel novo lê exatamente o mesmo `window.__LOVE_ANALYTICS__.apiBase` usado pelo site.
+
+## Painel
 
 Abra:
-
-```text
-public/analytics-config.js
-```
-
-e altere:
-
-```js
-apiBase: '/api'
-```
-
-para:
-
-```js
-apiBase: 'https://love-story-analytics.SEUSUBDOMINIO.workers.dev/api'
-```
-
-Depois do deploy do site, você pode trocar `ALLOWED_ORIGIN = "*"` no `analytics-worker/wrangler.toml` pelo domínio exato do site e rodar `npx wrangler deploy` novamente.
-
-## Como ver os acessos
-
-Com o site publicado, abra:
 
 ```text
 https://SEU-SITE/admin.html
 ```
 
-Digite o mesmo `ADMIN_TOKEN` criado no Worker.
+Digite o mesmo `ADMIN_TOKEN` do Worker.
 
-O painel mostra:
+O painel possui:
 
-- acessos;
-- se chegou ao fim;
-- até qual capítulo chegou;
-- percentual dentro do capítulo;
-- mobile / desktop;
+- total de acessos/aberturas;
+- total de dispositivos prováveis;
+- finalizações e votos;
+- primeiro e último acesso;
+- resumo por link marcado;
+- aviso de possível compartilhamento quando um link marcado aparece em mais de um dispositivo;
+- cards por dispositivo com quantidade de acessos;
+- timeline com cada acesso e horário até os segundos;
+- tempo visível aproximado;
+- cidade/região/país aproximados;
+- navegador/SO;
+- etapa máxima;
 - voto;
-- horários.
+- origem do acesso;
+- histórico antigo preservado.
 
-O token do admin fica somente na sessão daquele navegador (`sessionStorage`), não está embutido no HTML.
+O painel atualiza automaticamente a cada 30 segundos e também tem botão `Atualizar`.
 
-## Como saber se o link que você mandou foi aberto
+## Link marcado
 
-No próprio `/admin.html` existe `Gerar link marcado`.
-
-Exemplo gerado:
+No painel existe um campo para gerar/copiar um link marcado. Exemplo:
 
 ```text
-https://SEU-SITE/?r=juju-a1b2c3d4
+https://SEU-SITE/?r=juju
 ```
 
-Envie esse link. No painel, o destinatário aparecerá como `juju-a1b2c3d4`.
+O marcador identifica **o link**, não uma identidade física. Se o mesmo link for encaminhado, as novas aberturas continuam com `recipient = juju`, mas podem aparecer sob outro dispositivo provável.
 
-Isso identifica aquele link específico. Se ele for encaminhado para outra pessoa, todos os acessos pelo mesmo link terão o mesmo marcador.
+## Como os acessos são contados
+
+Nesta V2, cada carregamento completo da página cria um novo `session_id`. Portanto:
+
+- abrir → 1 acesso;
+- fechar e abrir de novo → novo acesso;
+- atualizar/recarregar → novo acesso;
+- navegar dentro da história sem recarregar → continua o mesmo acesso.
+
+O `device_id` fica em `localStorage`. Se o navegador limpar os dados, usar aba privada ou outro navegador/aparelho, um novo dispositivo provável pode aparecer.

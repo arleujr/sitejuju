@@ -1,4 +1,4 @@
-import { createScrollFrameDriver } from './performance-runtime.js';
+import { createScrollFrameDriver, createViewportFrameDriver } from './performance-runtime.js';
 
 const PHOTO_MANIFEST = {
   'academia-01': { file: 'academia-01.webp', width: 1080, height: 1920 },
@@ -264,9 +264,8 @@ export function initGymScene(root, options={}){
 
   const render=()=>updateScene(host,map);
   const frameDriver=createScrollFrameDriver(render,{root:host,rootMargin:'125% 0px'});
-  const onResize=()=>frameDriver.flush();
-  window.addEventListener('resize',onResize,{passive:true});
-  cleanups.push(()=>window.removeEventListener('resize',onResize));
+  const viewportDriver=createViewportFrameDriver(()=>frameDriver.flush());
+  cleanups.push(()=>viewportDriver.destroy());
 
   return {
     root:host,
