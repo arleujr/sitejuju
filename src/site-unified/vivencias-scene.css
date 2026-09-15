@@ -261,14 +261,20 @@
   place-items: center;
   overflow: hidden;
   border-radius: 14px;
-  background: #111;
+  background: linear-gradient(145deg, rgba(255,255,255,.94), rgba(237,226,236,.88));
 }
 
 .viv4__video{
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #111;
+  background: transparent;
+  opacity:0;
+  transition:opacity .22s ease;
+}
+
+.viv4__video.is-frame-ready{
+  opacity:1;
 }
 
 .viv4__video-msg{
@@ -385,128 +391,222 @@
 
 
 /* ========================================================================== 
-   V4P8 — PONTE ENTRE A TELA ATUAL E O VIDEO FINAL
+   V10 — UM ÚNICO PENSAMENTO + REVELAÇÃO DO VÍDEO FINAL
 
-   A tela "e é só o começo da nossa história" acima NÃO é alterada.
-   A nova tela entra por baixo. O balaofala.png fica preso à BORDA SUPERIOR
-   do vídeo final: metade do balão invade a tela anterior e metade fica sobre
-   o vídeo. Depois o balão sai para cima e sobra somente o vídeo fullscreen.
+   Tudo o que veio antes fica visualmente "acima", dentro de uma grande nuvem
+   de pensamento. A nuvem se desprende da história, deixa a cauda cair em
+   direção ao último vídeo e desaparece quando a realidade (micro-ondas) entra.
+   Sem texto, sem corredor de balões e sem fullscreen no videofinal.mp4.
    ========================================================================== */
 
 .viv4-bridge{
-  position: relative;
-  z-index: 120;
-  width: 100%;
-  height: 300vh;
-  min-height: 300vh;
-
-  /* começa enquanto a última viewport da cena anterior ainda está presa */
-  margin-top: -100vh;
-  overflow: visible;
-  isolation: isolate;
+  position:relative;
+  z-index:120;
+  width:100%;
+  height:285vh;
+  min-height:285vh;
+  margin-top:0;
+  overflow:visible;
+  isolation:isolate;
 }
 
 .viv4-bridge__sticky{
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-  background: transparent;
-  pointer-events: none;
+  position:sticky;
+  top:0;
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  overflow:hidden;
+  background:#fff;
+  pointer-events:none;
 }
 
 .viv4-bridge__final-screen{
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  overflow: visible;
-  background: #000;
-  transform: translate3d(0,100%,0);
-  will-change: transform;
-  pointer-events: auto;
+  position:absolute;
+  inset:0;
+  z-index:1;
+  overflow:hidden;
+  background:rgb(var(--viv4-bridge-bg, 255 255 255));
+  transition:background-color 90ms linear;
+  pointer-events:auto;
+}
+
+.viv4-bridge__ambient{
+  display:none;
+}
+
+.viv4-bridge__ambient::after{
+  display:none;
+}
+
+/* A nuvem nasce maior que a tela e parcialmente fora dela. O topo cortado é
+   intencional: a leitura é de que todo o conteúdo que acabou de passar estava
+   "dentro" desse pensamento, em vez de ser mais um balão solto na página. */
+.viv4-bridge__thought-reveal{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+  transition:opacity .24s ease;
+}
+
+.viv4-bridge__thought-cloud{
+  display:none;
+}
+
+.viv4-bridge__thought-cloud svg{
+  display:none;
+}
+
+.viv4-bridge__thought-cloud path{
+  display:none;
+}
+
+.viv4-bridge__thought-cloud-sheen{
+  display:none;
+}
+
+/* Uma única cauda. Os círculos diminuem em direção ao vídeo, deixando claro
+   que a cena final é quem estava "pensando" tudo o que veio antes. */
+.viv4-bridge__thought-tail{
+  --viv4-thought-tail-opacity:0;
+  --viv4-thought-tail-y:-12vh;
+  position:absolute;
+  left:50%;
+  top:42%;
+  width:190px;
+  height:210px;
+  opacity:var(--viv4-thought-tail-opacity);
+  transform:translate3d(-50%,var(--viv4-thought-tail-y),0) rotate(4deg);
+  transform-origin:0 0;
+  filter:drop-shadow(0 18px 30px rgba(0,0,0,.10));
+  will-change:transform,opacity;
+}
+
+.viv4-bridge__thought-dot{
+  position:absolute;
+  display:block;
+  border-radius:50%;
+  background:#fff;
+  border:1px solid rgba(188,188,198,.92);
+  box-shadow:0 10px 26px rgba(0,0,0,.08);
+}
+
+.viv4-bridge__thought-dot--1{width:60px;height:60px;left:0;top:0}
+.viv4-bridge__thought-dot--2{width:40px;height:40px;left:52px;top:78px}
+.viv4-bridge__thought-dot--3{width:24px;height:24px;left:92px;top:136px}
+.viv4-bridge__thought-dot--4{width:14px;height:14px;left:126px;top:182px}
+
+.viv4-bridge__video-shell{
+  --viv4-final-video-opacity:0;
+  --viv4-final-video-y:29vh;
+  --viv4-final-video-scale:.86;
+  --viv4-final-video-glow:0;
+  position:absolute;
+  left:50%;
+  top:56%;
+  z-index:8;
+  width:min(68vw, 980px);
+  max-width:calc(100vw - 72px);
+  padding:10px;
+  border-radius:25px;
+  border:1px solid rgba(205,205,215,.88);
+  background:rgba(255,255,255,.97);
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.12),
+    0 0 calc(88px * var(--viv4-final-video-glow)) rgba(120,120,150,.08),
+    inset 0 1px 0 rgba(255,255,255,.88);
+  opacity:var(--viv4-final-video-opacity);
+  transform:translate3d(-50%, calc(-50% + var(--viv4-final-video-y)), 0) scale(var(--viv4-final-video-scale));
+  transform-origin:50% 50%;
+  will-change:transform,opacity;
+  pointer-events:auto;
+}
+
+.viv4-bridge__video-glow{
+  position:absolute;
+  inset:-24%;
+  z-index:-1;
+  border-radius:50%;
+  opacity:var(--viv4-final-video-glow);
+  background:radial-gradient(circle, rgba(231,189,215,.20), transparent 64%);
+  filter:blur(24px);
+  pointer-events:none;
 }
 
 .viv4-bridge__video-host{
-  position:absolute;
-  inset:0;
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:100%;
   overflow:hidden;
-  background:#000;
+  border-radius:17px;
+  background:#f5f5f7;
 }
 
 .viv4-bridge__video{
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  background: #000;
+  position:relative;
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:70dvh;
+  object-fit:contain;
+  object-position:center;
+  border-radius:17px;
+  background:#f5f5f7;
 }
 
-.viv4-bridge__balloon{
-  position: absolute;
-  left: 50%;
-  top: 0;
-  z-index: 3;
-
-  /* O balão serve somente como um corte visual muito rápido entre as telas. */
-  width: max(112vw, 1680px);
-  max-width: none;
-  height: auto;
-  display: block;
-  opacity: 0;
-  visibility: hidden;
-  transform: translate3d(-50%,-64%,0) scale(.985);
-  transform-origin: 50% 50%;
-  will-change: transform, opacity;
-  user-select: none;
-  pointer-events: none;
-}
-
-.viv4-bridge__final-screen.is-balloon-flash .viv4-bridge__balloon{
-  visibility: visible;
-  animation: viv4BalloonFlash 420ms cubic-bezier(.22,.7,.2,1) both;
-}
-
-@keyframes viv4BalloonFlash{
-  0%{ opacity:0; transform:translate3d(-50%,-60%,0) scale(.975); }
-  18%{ opacity:1; }
-  58%{ opacity:.96; transform:translate3d(-50%,-66%,0) scale(1); }
-  100%{ opacity:0; transform:translate3d(-50%,-76%,0) scale(1.015); }
-}
-
-.viv4-bridge__final-screen.is-video-only .viv4-bridge__balloon{
-  pointer-events: none;
+.viv4-bridge__final-screen.is-video-only .viv4-bridge__thought-reveal{
+  opacity:0;
 }
 
 @media (max-width:860px){
   .viv4-bridge{
-    height: var(--viv4-bridge-h, 330svh);
-    min-height: var(--viv4-bridge-h, 330svh);
-
-    /* Geometria congelada em px pelo JS: a barra do navegador móvel não
-       muda o ponto de emenda enquanto o usuário está rolando. */
-    margin-top: var(--viv4-bridge-mt, -130svh);
+    height:var(--viv4-bridge-h, 310svh);
+    min-height:var(--viv4-bridge-h, 310svh);
+    margin-top:0;
   }
 
   .viv4-bridge__sticky{
-    height: var(--viv4-bridge-vh, 100svh);
-    /* Fallback visual igual ao último tom da tela anterior. */
-    background: rgb(156 195 214);
+    height:var(--viv4-bridge-vh, 100svh);
   }
 
-  .viv4-bridge__balloon{
-    /* O PNG é 16:9 e o recorte foi pensado para a emenda horizontal.
-       No telefone ele precisa ser bem maior para manter o mesmo efeito. */
-    width: 230vw;
+  .viv4-bridge__thought-cloud{
+    display:none;
+  }
+
+  .viv4-bridge__thought-cloud path{
+    stroke-width:3;
+  }
+
+  .viv4-bridge__thought-tail{
+    left:50%;
+    top:44%;
+    transform:translate3d(-50%,var(--viv4-thought-tail-y),0) scale(.78) rotate(5deg);
+    transform-origin:0 0;
+  }
+
+  .viv4-bridge__video-shell{
+    top:58%;
+    width:92vw;
+    max-width:92vw;
+    padding:6px;
+    border-radius:19px;
+  }
+
+  .viv4-bridge__video-host,
+  .viv4-bridge__video{
+    border-radius:14px;
   }
 
   .viv4-bridge__video{
-    object-fit: cover;
+    max-height:67svh;
   }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .viv4-bridge__final-screen,
+  .viv4-bridge__thought-reveal{transition:none}
 }
 
 
@@ -531,7 +631,6 @@
    ========================================================================== */
 .viv4__video{
   display:block;
-  opacity:1;
   visibility:visible;
   backface-visibility:hidden;
   transform:translateZ(0);

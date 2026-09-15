@@ -90,10 +90,10 @@ const memoryHearts = [
     depth: 1,
   },
   {
-    id: 'filha',
-    src: '/assets/juju-crianca.jpg',
-    alt: 'Foto de infância',
-    label: 'Espero que nossa filha seja assim.',
+    id: 'coracoes',
+    src: '/assets/hero-coracoes.jpg',
+    alt: 'Uma memória especial',
+    label: '❤️❤️❤️',
     side: 'left-bottom',
     x: 17,
     y: 58,
@@ -541,7 +541,14 @@ app.innerHTML = `
               </article>
     
               <article class="message message--outgoing" data-event data-at="0.890">
-                <div class="bubble bubble--outgoing">Me perdoa, gatinha. <span class="checks" aria-hidden="true">✓✓</span></div>
+                <div class="bubble bubble--outgoing">Espero que nossa filha seja assim. <span class="checks" aria-hidden="true">✓✓</span></div>
+              </article>
+
+              <article class="message message--outgoing message--media" data-event data-at="0.905">
+                <figure class="media-card media-card--three-four media-card--lg">
+                  <img src="/assets/juju-crianca.jpg" alt="Foto de infância da Juju" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">juju-crianca.jpg</span>
+                </figure>
               </article>
     
               <article class="message message--incoming message--bridge-typing" data-transient data-start="0.920" data-end="0.942">
@@ -689,6 +696,15 @@ app.innerHTML = `
     <div data-love-continuation-root></div>
   </section>
 
+  <button class="journey-player" type="button" data-auto-journey-control data-state="paused" aria-label="Continuar reprodução automática" title="Continuar reprodução automática">
+    <span class="journey-player__icon journey-player__icon--play" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M8 5.6v12.8L18.5 12 8 5.6z"/></svg>
+    </span>
+    <span class="journey-player__icon journey-player__icon--pause" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M7 5.5h3.5v13H7zM13.5 5.5H17v13h-3.5z"/></svg>
+    </span>
+  </button>
+
   <audio id="title-chime" preload="metadata" src="/assets/sounds/notification.mp3"></audio>
   <audio id="background-music" preload="none" loop src="/assets/sounds/musica-fundo.mp3"></audio>
 `;
@@ -793,6 +809,7 @@ function jumpToChapterOne() {
   if (!chapterOne) return;
   introArmed = false;
   setIntroLock(false);
+  syncAutoJourneyControl();
   const root = document.documentElement;
   const previousScrollBehavior = root.style.scrollBehavior;
   root.style.scrollBehavior = 'auto';
@@ -803,23 +820,77 @@ function jumpToChapterOne() {
 }
 
 // ---------------------------------------------------------------------------
-// COMEÇAR = modo guiado opcional
+// COMEÇAR = reprodução guiada da história
 // ---------------------------------------------------------------------------
-// Clicar no botão inicia a história e passa a avançar o scroll sozinho.
-// Qualquer gesto real do usuário cancela o modo automático imediatamente,
-// deixando o site 100% manual a partir daquele ponto. Já entrar rolando pela
-// Home continua sendo manual desde o primeiro instante.
+// O botão Começar inicia um passeio automático pelo site. A partir daí o
+// controle fixo no topo permite pausar/continuar a qualquer momento. Um gesto
+// manual pausa (em vez de destruir) a reprodução, então a pessoa pode explorar
+// uma cena e depois retomar exatamente de onde parou.
 let autoJourneyRaf = 0;
 let autoJourneyActive = false;
+let autoJourneySession = false;
 let autoJourneyLastTs = 0;
-let autoJourneyTransitionHold = false;
+let autoJourneyBottomSince = 0;
+
+const autoJourneyControl = document.querySelector('[data-auto-journey-control]');
+
+function autoJourneyFinalReady() {
+  const outro = document.querySelector('.love-outro');
+  if (!outro) return true;
+  return outro.classList.contains('is-ready') || !outro.classList.contains('is-locked');
+}
+
+function syncAutoJourneyControl() {
+  if (!autoJourneyControl) return;
+
+  // O controle deixa de depender do botão Começar. Se a pessoa entrar na
+  // história por scroll/swipe/teclado, ele aparece em estado pausado e pode
+  // iniciar o passeio automático a partir do ponto atual.
+  const visible = !reducedMotion && !transitionRunning && (autoJourneySession || !introArmed || window.scrollY > 2);
+  autoJourneyControl.classList.toggle('is-visible', visible);
+  autoJourneyControl.dataset.state = autoJourneyActive ? 'playing' : 'paused';
+
+  const label = autoJourneyActive
+    ? 'Pausar reprodução automática'
+    : (autoJourneySession ? 'Continuar reprodução automática' : 'Iniciar reprodução automática');
+  autoJourneyControl.setAttribute('aria-label', label);
+  autoJourneyControl.setAttribute('title', label);
+}
+
+function setAutoJourneyDocumentState() {
+  document.documentElement.classList.toggle('has-auto-journey', autoJourneySession);
+  document.documentElement.classList.toggle('is-auto-journey', autoJourneySession && autoJourneyActive);
+  document.documentElement.classList.toggle('is-auto-journey-paused', autoJourneySession && !autoJourneyActive);
+}
+
+function pauseAutoJourney() {
+  if (!autoJourneySession || !autoJourneyActive) return;
+  autoJourneyActive = false;
+  autoJourneyLastTs = 0;
+  autoJourneyBottomSince = 0;
+  if (autoJourneyRaf) cancelAnimationFrame(autoJourneyRaf);
+  autoJourneyRaf = 0;
+  setAutoJourneyDocumentState();
+  syncAutoJourneyControl();
+}
+
+function stopAutoJourney() {
+  autoJourneyActive = false;
+  autoJourneySession = false;
+  autoJourneyLastTs = 0;
+  autoJourneyBottomSince = 0;
+  if (autoJourneyRaf) cancelAnimationFrame(autoJourneyRaf);
+  autoJourneyRaf = 0;
+  setAutoJourneyDocumentState();
+  syncAutoJourneyControl();
+}
 
 function shouldPauseAutoForVideo(video) {
   if (!video || video.paused || video.ended || video.readyState < 2) return false;
 
   // O segundo vídeo final começa enquanto o balão ainda está atravessando a
-  // emenda. No modo automático precisamos continuar rolando até a ponte ficar
-  // realmente "video only"; só depois paramos para assistir ao vídeo.
+  // emenda. Continuamos até a tela virar de fato o player final e, só então,
+  // paramos o scroll para assistir ao vídeo.
   if (video.dataset.videoRole === 'segundo-video-final') {
     const finalScreen = video.closest('.viv4-bridge__final-screen');
     return Boolean(finalScreen?.classList.contains('is-video-only'));
@@ -832,15 +903,6 @@ function hasPlayingVideo() {
   return [...document.querySelectorAll('video')].some(shouldPauseAutoForVideo);
 }
 
-function stopAutoJourney() {
-  if (!autoJourneyActive && !autoJourneyRaf) return;
-  autoJourneyActive = false;
-  autoJourneyLastTs = 0;
-  if (autoJourneyRaf) cancelAnimationFrame(autoJourneyRaf);
-  autoJourneyRaf = 0;
-  document.documentElement.classList.remove('is-auto-journey');
-}
-
 function autoJourneyFrame(timestamp) {
   autoJourneyRaf = 0;
   if (!autoJourneyActive) return;
@@ -849,26 +911,37 @@ function autoJourneyFrame(timestamp) {
   const dt = Math.min(40, Math.max(0, timestamp - autoJourneyLastTs));
   autoJourneyLastTs = timestamp;
 
-  // Durante vídeos e handoffs fullscreen o scroll fica parado. Assim o modo
-  // automático assiste ao vídeo em vez de tentar atravessar o gate por trás.
-  if (!document.hidden && !autoJourneyTransitionHold && !hasPlayingVideo()) {
+  // Vídeos narrativos são assistidos antes de a história continuar. Fora deles,
+  // o documento inteiro é percorrido por uma única fonte de verdade: scrollY.
+  if (!document.hidden && !hasPlayingVideo()) {
     const viewport = Math.max(480, window.visualViewport?.height || window.innerHeight || 720);
-    // V3.8.3: o modo guiado anterior estava excessivamente lento (~0,34 viewport/s).
-    // Mantemos leitura confortável, mas avançamos perto de 1 viewport/s no desktop
-    // e um pouco menos no mobile para não atropelar os layouts mais compactos.
     const mobile = window.innerWidth <= 860;
-    const rate = mobile ? 0.82 : 0.96;
-    const minSpeed = mobile ? 430 : 560;
-    const maxSpeed = mobile ? 760 : 1080;
+
+    // ~45-50% mais rápido do que a versão anterior. Ainda preserva tempo de
+    // leitura nas mensagens, mas evita a sensação de “arrastar” nas cenas longas.
+    const rate = mobile ? 1.22 : 1.42;
+    const minSpeed = mobile ? 620 : 780;
+    const maxSpeed = mobile ? 1120 : 1520;
     const pxPerSecond = Math.max(minSpeed, Math.min(maxSpeed, viewport * rate));
     const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    const nextY = Math.min(maxY, window.scrollY + (pxPerSecond * dt / 1000));
+    const currentY = window.scrollY;
+    const nextY = Math.min(maxY, currentY + (pxPerSecond * dt / 1000));
 
-    if (nextY > window.scrollY + 0.05) {
+    if (nextY > currentY + 0.05) {
+      autoJourneyBottomSince = 0;
       window.scrollTo(0, nextY);
-    } else if (window.scrollY >= maxY - 2) {
-      stopAutoJourney();
-      return;
+    } else if (currentY >= maxY - 2) {
+      // Algumas cenas finais liberam altura somente depois de o vídeo terminar.
+      // Não encerramos o passeio enquanto o epílogo ainda estiver bloqueado.
+      if (!autoJourneyFinalReady()) {
+        autoJourneyBottomSince = 0;
+      } else {
+        if (!autoJourneyBottomSince) autoJourneyBottomSince = timestamp;
+        if (timestamp - autoJourneyBottomSince > 700) {
+          stopAutoJourney();
+          return;
+        }
+      }
     }
   }
 
@@ -877,30 +950,39 @@ function autoJourneyFrame(timestamp) {
 
 function startAutoJourney() {
   if (reducedMotion) return;
-  stopAutoJourney();
+
+  autoJourneySession = true;
   autoJourneyActive = true;
   autoJourneyLastTs = 0;
-  document.documentElement.classList.add('is-auto-journey');
+  autoJourneyBottomSince = 0;
+  if (autoJourneyRaf) cancelAnimationFrame(autoJourneyRaf);
+  setAutoJourneyDocumentState();
+  syncAutoJourneyControl();
   autoJourneyRaf = requestAnimationFrame(autoJourneyFrame);
 }
 
 function cancelAutoJourneyFromUser(event) {
   if (!autoJourneyActive) return;
+  // O próprio botão play/pause não conta como intenção de navegação manual.
+  if (event?.target?.closest?.('[data-auto-journey-control]')) return;
   // Não tratamos eventos sintetizados pelo código como intenção manual.
   if (event && event.isTrusted === false) return;
-  stopAutoJourney();
+  pauseAutoJourney();
 }
 
 window.addEventListener('wheel', cancelAutoJourneyFromUser, { passive: true, capture: true });
 window.addEventListener('touchstart', cancelAutoJourneyFromUser, { passive: true, capture: true });
 window.addEventListener('pointerdown', cancelAutoJourneyFromUser, { passive: true, capture: true });
-window.addEventListener('keydown', cancelAutoJourneyFromUser, { capture: true });
+window.addEventListener('keydown', (event) => {
+  if (!['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Spacebar'].includes(event.key)) return;
+  cancelAutoJourneyFromUser(event);
+}, { capture: true });
 
-document.addEventListener('nextscene:transition-start', () => { autoJourneyTransitionHold = true; });
-document.addEventListener('nextscene:ready', () => { autoJourneyTransitionHold = true; });
-document.addEventListener('nextscene:entered', () => {
-  autoJourneyTransitionHold = false;
-  autoJourneyLastTs = performance.now();
+autoJourneyControl?.addEventListener('click', (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  if (autoJourneyActive) pauseAutoJourney();
+  else startAutoJourney();
 });
 
 function beginLoveTransition(origin = startButton, options = {}) {
@@ -912,6 +994,7 @@ function beginLoveTransition(origin = startButton, options = {}) {
     jumpToChapterOne();
     chapterOne.classList.add('is-entered');
     transitionRunning = false;
+    syncAutoJourneyControl();
     if (autoJourney) startAutoJourney();
     return;
   }
@@ -944,6 +1027,7 @@ function beginLoveTransition(origin = startButton, options = {}) {
         hero.classList.remove('hero--starting');
         document.body.classList.remove('is-transitioning');
         transitionRunning = false;
+        syncAutoJourneyControl();
         if (autoJourney) startAutoJourney();
       });
     });
@@ -972,6 +1056,7 @@ function rearmIntroIfBackAtStart() {
   heartPortal?.classList.remove('is-active', 'is-settled', 'is-revealing');
   document.body.classList.remove('is-transitioning');
   setIntroLock(true);
+  syncAutoJourneyControl();
   if (window.scrollY !== 0) window.scrollTo(0, 0);
 }
 
@@ -990,7 +1075,7 @@ window.addEventListener('wheel', accumulateWheelToPortal, { passive: false });
 let touchStartY = null;
 window.addEventListener('touchstart', (event) => {
   if (!heroGatewayActive()) return;
-  if (event.target.closest?.('[data-memory-heart], [data-start]')) return;
+  if (event.target.closest?.('[data-memory-heart], [data-start], [data-auto-journey-control]')) return;
   touchStartY = event.touches?.[0]?.clientY ?? null;
 }, { passive: true });
 

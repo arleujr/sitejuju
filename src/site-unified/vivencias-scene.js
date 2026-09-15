@@ -85,24 +85,44 @@ function headlineY(el,y){
   el.style.transform=`translate3d(0,${y}px,0)`;
 }
 
+function guidedPlaybackActive(){
+  return document.documentElement.classList.contains('has-auto-journey');
+}
+
 
 function initViv4Bridge(root, assetBase, options={}){
   const bridge=document.createElement('section');
   bridge.className='viv4-bridge is-locked';
 
-  // O segundo vídeo só existe enquanto a ponte está realmente ativa. Isso é
-  // importante no iOS/Android: uma camada <video> fora de tela pode continuar
-  // sendo composta pelo navegador sobre o primeiro vídeo.
+  // O site inteiro acima é tratado como uma lembrança/pensamento. Em vez de
+  // vários balões com texto, uma única nuvem enorme fica parcialmente fora da
+  // tela (como se tudo que veio antes estivesse dentro dela), deixa um rastro
+  // de pensamento e conduz o olhar até o vídeo que revela o micro-ondas.
   bridge.innerHTML=`
     <div class="viv4-bridge__sticky">
       <div class="viv4-bridge__final-screen">
-        <div class="viv4-bridge__video-host"></div>
-        <img
-          class="viv4-bridge__balloon"
-          src="${assetBase}/balaofala.png"
-          alt=""
-          draggable="false"
-        />
+        <div class="viv4-bridge__ambient" aria-hidden="true"></div>
+
+        <div class="viv4-bridge__thought-reveal" aria-hidden="true">
+          <div class="viv4-bridge__thought-cloud">
+            <svg viewBox="0 0 1050 560" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path d="M156 514c-72 0-125-47-119-111-58-41-44-142 31-169-10-93 78-161 167-127 37-82 160-112 226-42 69-65 189-46 224 40 89-35 182 25 174 111 83 18 127 105 87 171 51 60 11 143-68 155-22 71-98 107-166 75-51 67-164 78-229 19-69 57-179 48-235-18-54 37-132 31-177-14-18 5-38 8-58 8Z"/>
+            </svg>
+            <span class="viv4-bridge__thought-cloud-sheen"></span>
+          </div>
+
+          <div class="viv4-bridge__thought-tail">
+            <span class="viv4-bridge__thought-dot viv4-bridge__thought-dot--1"></span>
+            <span class="viv4-bridge__thought-dot viv4-bridge__thought-dot--2"></span>
+            <span class="viv4-bridge__thought-dot viv4-bridge__thought-dot--3"></span>
+            <span class="viv4-bridge__thought-dot viv4-bridge__thought-dot--4"></span>
+          </div>
+        </div>
+
+        <div class="viv4-bridge__video-shell">
+          <div class="viv4-bridge__video-glow" aria-hidden="true"></div>
+          <div class="viv4-bridge__video-host"></div>
+        </div>
       </div>
     </div>
   `;
@@ -110,7 +130,10 @@ function initViv4Bridge(root, assetBase, options={}){
   root.appendChild(bridge);
 
   const finalScreen=bridge.querySelector('.viv4-bridge__final-screen');
-  const balloon=bridge.querySelector('.viv4-bridge__balloon');
+  const thoughtReveal=bridge.querySelector('.viv4-bridge__thought-reveal');
+  const thoughtCloud=bridge.querySelector('.viv4-bridge__thought-cloud');
+  const thoughtTail=bridge.querySelector('.viv4-bridge__thought-tail');
+  const videoShell=bridge.querySelector('.viv4-bridge__video-shell');
   const videoHost=bridge.querySelector('.viv4-bridge__video-host');
 
   let secondVideo=null;
@@ -122,13 +145,20 @@ function initViv4Bridge(root, assetBase, options={}){
   let unlocked=false;
   let hasAdvanced=false;
   let completed=false;
-  let balloonFlashed=false;
-  let balloonFlashTimer=0;
 
   function onSecondVideoEnded(){
     if(destroyed||completed)return;
     completed=true;
-    playAttempted=false;
+    // Mantém o player definitivamente encerrado enquanto o epílogo entra.
+    // Antes, playAttempted voltava para false e o update() podia disparar
+    // play() novamente enquanto o scroll suave ia para “Continua...”.
+    playAttempted=true;
+    if(secondVideo){
+      try{secondVideo.pause();}catch(_){ }
+      secondVideo.loop=false;
+      secondVideo.removeAttribute('loop');
+      secondVideo.removeAttribute('autoplay');
+    }
     bridge.classList.add('is-complete');
     options.onComplete?.();
   }
@@ -136,6 +166,7 @@ function initViv4Bridge(root, assetBase, options={}){
   function destroySecondVideo(){
     if(!secondVideo)return;
     secondVideo.removeEventListener('ended',onSecondVideoEnded);
+    secondVideo.removeEventListener('error',onSecondVideoEnded);
     secondVideo.pause();
     secondVideo.removeAttribute('src');
     secondVideo.load();
@@ -159,6 +190,8 @@ function initViv4Bridge(root, assetBase, options={}){
     secondVideo.dataset.videoRole='segundo-video-final';
     secondVideo.src=`${assetBase}/${SECOND_VIDEO_FILE}`;
     secondVideo.addEventListener('ended',onSecondVideoEnded);
+    // Arquivo ausente/corrompido não pode prender a história para sempre.
+    secondVideo.addEventListener('error',onSecondVideoEnded);
     videoHost.appendChild(secondVideo);
     return secondVideo;
   }
@@ -169,23 +202,65 @@ function initViv4Bridge(root, assetBase, options={}){
     return clamp(-bridge.getBoundingClientRect().top/scrollable);
   }
 
+  function paintThoughtReveal(p){
+    // A nuvem já nasce grande e cortada pelo topo: visualmente, a página que
+    // acabou de passar pertence a esse pensamento. Conforme descemos ela sobe,
+    // se contrai e deixa apenas o rastro que aponta para a realidade do vídeo.
+    const appear=ease(clamp((p-.01)/.09));
+    const depart=ease(clamp((p-.31)/.34));
+    const cloudOpacity=appear*(1-depart*.92);
+    const cloudY=mix(5,-24,ease(clamp(p/.68)));
+    const cloudScale=mix(1.04,.82,ease(clamp((p-.03)/.62)));
+
+    const tailAppear=ease(clamp((p-.08)/.11));
+    const tailDepart=ease(clamp((p-.53)/.18));
+    const tailOpacity=tailAppear*(1-tailDepart);
+    const tailY=mix(-12,11,ease(clamp((p-.08)/.58)));
+
+    thoughtCloud.style.setProperty('--viv4-thought-cloud-opacity',cloudOpacity.toFixed(4));
+    thoughtCloud.style.setProperty('--viv4-thought-cloud-y',`${cloudY.toFixed(2)}vh`);
+    thoughtCloud.style.setProperty('--viv4-thought-cloud-scale',cloudScale.toFixed(4));
+    thoughtTail.style.setProperty('--viv4-thought-tail-opacity',tailOpacity.toFixed(4));
+    thoughtTail.style.setProperty('--viv4-thought-tail-y',`${tailY.toFixed(2)}vh`);
+  }
+
+  function paintVideo(p){
+    const enter=ease(clamp((p-.43)/.25));
+    const settle=ease(clamp((p-.58)/.13));
+    const y=mix(29,0,enter);
+    const scale=mix(.86,1,enter);
+
+    videoShell.style.setProperty('--viv4-final-video-opacity',enter.toFixed(4));
+    videoShell.style.setProperty('--viv4-final-video-y',`${y.toFixed(2)}vh`);
+    videoShell.style.setProperty('--viv4-final-video-scale',scale.toFixed(4));
+    videoShell.style.setProperty('--viv4-final-video-glow',settle.toFixed(4));
+  }
+
+  function resetVisuals(){
+    finalScreen.style.setProperty('--viv4-bridge-bg','255 255 255');
+    thoughtCloud.style.setProperty('--viv4-thought-cloud-opacity','0');
+    thoughtCloud.style.setProperty('--viv4-thought-cloud-y','5vh');
+    thoughtCloud.style.setProperty('--viv4-thought-cloud-scale','1.04');
+    thoughtTail.style.setProperty('--viv4-thought-tail-opacity','0');
+    thoughtTail.style.setProperty('--viv4-thought-tail-y','-12vh');
+    videoShell.style.setProperty('--viv4-final-video-opacity','0');
+    videoShell.style.setProperty('--viv4-final-video-y','29vh');
+    videoShell.style.setProperty('--viv4-final-video-scale','.86');
+    videoShell.style.setProperty('--viv4-final-video-glow','0');
+  }
+
   function lock(){
     if(destroyed)return;
     unlocked=false;
     hasAdvanced=false;
     playAttempted=false;
     completed=false;
-    balloonFlashed=false;
-    if(balloonFlashTimer){
-      clearTimeout(balloonFlashTimer);
-      balloonFlashTimer=0;
-    }
     last=-1;
     lastP=0;
     bridge.classList.add('is-locked');
     bridge.classList.remove('is-unlocked','is-complete');
-    finalScreen.classList.remove('is-video-only','is-balloon-flash');
-    finalScreen.style.transform='translate3d(0,100%,0)';
+    finalScreen.classList.remove('is-video-only');
+    resetVisuals();
     destroySecondVideo();
     frameDriver?.schedule();
   }
@@ -196,16 +271,11 @@ function initViv4Bridge(root, assetBase, options={}){
     unlocked=true;
     hasAdvanced=false;
     playAttempted=false;
-    balloonFlashed=false;
-    if(balloonFlashTimer){
-      clearTimeout(balloonFlashTimer);
-      balloonFlashTimer=0;
-    }
-    finalScreen.classList.remove('is-balloon-flash');
     last=-1;
     lastP=0;
     bridge.classList.remove('is-locked');
     bridge.classList.add('is-unlocked');
+    resetVisuals();
     frameDriver?.schedule();
   }
 
@@ -213,27 +283,22 @@ function initViv4Bridge(root, assetBase, options={}){
     if(!Number.isFinite(height)||height<=0){
       bridge.style.removeProperty('--viv4-bridge-vh');
       bridge.style.removeProperty('--viv4-bridge-h');
-      bridge.style.removeProperty('--viv4-bridge-mt');
       return;
     }
     bridge.style.setProperty('--viv4-bridge-vh',`${height}px`);
-    bridge.style.setProperty('--viv4-bridge-h',`${Math.round(height*3.3)}px`);
-    bridge.style.setProperty('--viv4-bridge-mt',`${Math.round(-height*1.3)}px`);
+    bridge.style.setProperty('--viv4-bridge-h',`${Math.round(height*3.10)}px`);
   }
 
   function update(){
-    if(destroyed)return;
-
-    if(!unlocked)return;
+    if(destroyed||!unlocked)return;
 
     const p=bridgeProgress();
     const direction=p-lastP;
-    if(p>.08)hasAdvanced=true;
+    if(p>.06)hasAdvanced=true;
 
-    // Voltou para o começo da ponte: devolve completamente o controle ao
-    // primeiro vídeo e remove o segundo <video> do DOM. Reentrar funciona
-    // como na primeira vez, sem camada fantasma no mobile.
-    if(hasAdvanced&&direction<-.0001&&p<=.018){
+    // Ao voltar para o primeiro vídeo, desmonta o player final e rearma a
+    // sequência exatamente como na primeira entrada.
+    if(hasAdvanced&&direction<-.0001&&p<=.012){
       options.onReturn?.();
       lock();
       return;
@@ -242,34 +307,34 @@ function initViv4Bridge(root, assetBase, options={}){
     if(Math.abs(p-last)>.0001){
       last=p;
 
-      const enterSpan=window.innerWidth<=860?.50:.58;
-      const enterT=ease(clamp(p/enterSpan));
-      finalScreen.style.transform=`translate3d(0,${mix(100,0,enterT)}%,0)`;
+      // O azul da cena anterior vai virando noite enquanto o pensamento único
+      // se desprende do conteúdo acima e aponta para a revelação do vídeo.
+      finalScreen.style.setProperty('--viv4-bridge-bg', '255 255 255');
 
-      // O balão agora é só um lampejo de transição entre as duas telas.
-      // Ele aparece por frações de segundo assim que a tela final começa a
-      // entrar, sem ficar preso ao progresso do scroll.
-      if(p>.08&&!balloonFlashed){
-        balloonFlashed=true;
-        finalScreen.classList.remove('is-balloon-flash');
-        void finalScreen.offsetWidth;
-        finalScreen.classList.add('is-balloon-flash');
-        balloonFlashTimer=window.setTimeout(()=>{
-          balloonFlashTimer=0;
-          finalScreen.classList.remove('is-balloon-flash');
-        },420);
-      }
+      paintThoughtReveal(p);
+      paintVideo(p);
 
-      if(p>.52&&!playAttempted&&secondVideo){
+      // O vídeo começa quando a cauda do pensamento já encontrou a cena final.
+      // Ele permanece contido e proporcional, sem voltar ao fullscreen antigo.
+      if(p>.73&&!completed&&!playAttempted&&secondVideo){
         playAttempted=true;
         secondVideo.muted=false;
+        secondVideo.volume=1;
         const play=secondVideo.play();
         if(play&&typeof play.catch==='function'){
           play.catch(()=>{
-            // Não degradamos silenciosamente para vídeo mudo. Se o navegador
-            // bloquear autoplay com som, os controles ficam disponíveis para
-            // um toque/clique do usuário.
             if(!secondVideo)return;
+
+            if(guidedPlaybackActive()){
+              secondVideo.muted=true;
+              secondVideo.volume=0;
+              secondVideo.dataset.autoMuted='true';
+              const retry=secondVideo.play();
+              if(retry&&typeof retry.catch==='function') retry.catch(onSecondVideoEnded);
+              else if(secondVideo.paused) onSecondVideoEnded();
+              return;
+            }
+
             secondVideo.muted=false;
             secondVideo.volume=1;
             secondVideo.controls=true;
@@ -278,21 +343,23 @@ function initViv4Bridge(root, assetBase, options={}){
         }
       }
 
-      // A ponte também é reversível internamente.
-      if(p<.46&&playAttempted){
+      // A transição continua reversível: voltou antes da revelação, o vídeo
+      // retorna ao início e a grande nuvem de pensamento se recompõe.
+      if(!completed&&p<.62&&playAttempted){
         playAttempted=false;
         if(secondVideo){
           secondVideo.pause();
-          try{secondVideo.currentTime=0;}catch(_){}
+          try{secondVideo.currentTime=0;}catch(_){ }
         }
       }
 
-      finalScreen.classList.toggle('is-video-only',p>.88);
+      finalScreen.classList.toggle('is-video-only',p>.70);
     }
 
     lastP=p;
   }
 
+  resetVisuals();
   frameDriver=createScrollFrameDriver(update,{root:bridge,rootMargin:'110% 0px'});
 
   return{
@@ -304,7 +371,6 @@ function initViv4Bridge(root, assetBase, options={}){
     destroy(){
       destroyed=true;
       frameDriver?.destroy();
-      if(balloonFlashTimer) clearTimeout(balloonFlashTimer);
       destroySecondVideo();
       bridge.remove();
     }
@@ -324,7 +390,7 @@ export function initVivenciasScene(root,options={}){
         <div class="viv4__grain"></div>
 
         <div class="viv4__headline-viewport">
-          <h2 class="viv4__headline viv4__headline--1">Me diverti muito</h2>
+          <h2 class="viv4__headline viv4__headline--1">Me diverti muito ao seu lado</h2>
           <h2 class="viv4__headline viv4__headline--2">Vc é minha melhor companhia</h2>
         </div>
 
@@ -475,9 +541,81 @@ export function initVivenciasScene(root,options={}){
   let restoringScroll=false;
   let autoStartAllowed=true;
   let replayAnchorScrollY=null;
+  let firstVideoSnapActive=false;
+  let firstVideoSnapRaf=0;
+  let firstVideoReadyTimer=0;
   let mobileBaseH=0;
   let mobileBaseW=window.innerWidth;
   let last=-1;
+
+  function firstVideoTargetScrollY(targetProgress=.972){
+    const viewH=viewportHeight();
+    const scrollable=Math.max(1,host.offsetHeight-viewH);
+    const hostTop=window.scrollY+host.getBoundingClientRect().top;
+    return Math.max(0,Math.round(hostTop+scrollable*targetProgress));
+  }
+
+  function cancelFirstVideoSnap(){
+    firstVideoSnapActive=false;
+    if(firstVideoSnapRaf){
+      cancelAnimationFrame(firstVideoSnapRaf);
+      firstVideoSnapRaf=0;
+    }
+  }
+
+  function waitForFirstVideoFrame(callback){
+    clearTimeout(firstVideoReadyTimer);
+
+    const ready=()=>{
+      clearTimeout(firstVideoReadyTimer);
+      video.removeEventListener('loadeddata',ready);
+      video.removeEventListener('canplay',ready);
+      video.classList.add('is-frame-ready');
+      callback();
+    };
+
+    if(video.readyState>=2){
+      ready();
+      return;
+    }
+
+    video.addEventListener('loadeddata',ready,{once:true});
+    video.addEventListener('canplay',ready,{once:true});
+    // Em conexão lenta, não deixa o gate preso para sempre.
+    firstVideoReadyTimer=window.setTimeout(ready,2200);
+  }
+
+  function snapToFirstVideoAndPlay(){
+    if(firstVideoSnapActive||firstVideoFinished||playStarted||!autoStartAllowed)return;
+
+    ensureVideoSource();
+    firstVideoSnapActive=true;
+    const targetY=firstVideoTargetScrollY(.972);
+    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+    window.scrollTo({top:targetY,behavior:reduced?'auto':'smooth'});
+
+    const startedAt=performance.now();
+    const settle=()=>{
+      if(destroyed||!firstVideoSnapActive)return;
+      const close=Math.abs(window.scrollY-targetY)<=5;
+      const timedOut=performance.now()-startedAt>1300;
+
+      if(close||timedOut){
+        firstVideoSnapActive=false;
+        firstVideoSnapRaf=0;
+        window.scrollTo(0,targetY);
+        last=-1;
+        frameDriver?.schedule();
+        requestAnimationFrame(()=>startFirstVideo());
+        return;
+      }
+
+      firstVideoSnapRaf=requestAnimationFrame(settle);
+    };
+
+    firstVideoSnapRaf=requestAnimationFrame(settle);
+  }
 
   function preventGateInput(event){
     if(!firstVideoGateActive)return;
@@ -532,6 +670,7 @@ export function initVivenciasScene(root,options={}){
   function showFirstVideoFrame(){
     if(!videoAttached)return;
     video.pause();
+    video.classList.remove('is-frame-ready');
 
     const seek=()=>{
       try{
@@ -540,14 +679,23 @@ export function initVivenciasScene(root,options={}){
       }catch(_){}
     };
 
-    if(video.readyState>=2)seek();
-    else video.addEventListener('loadeddata',seek,{once:true});
+    if(video.readyState>=2){
+      seek();
+      video.classList.add('is-frame-ready');
+    }else{
+      video.addEventListener('loadeddata',()=>{
+        seek();
+        video.classList.add('is-frame-ready');
+      },{once:true});
+    }
   }
 
   function resetFirstVideoCycle(reason='scene'){
     if(destroyed)return;
 
     releaseFirstVideoGate();
+    cancelFirstVideoSnap();
+    clearTimeout(firstVideoReadyTimer);
     lockOutro();
     firstVideoFinished=false;
     playStarted=false;
@@ -582,20 +730,60 @@ export function initVivenciasScene(root,options={}){
     try{video.currentTime=0;}catch(_){}
     lockForFirstVideo();
 
-    const play=video.play();
-    if(play&&typeof play.catch==='function'){
-      play.catch(()=>{
-        // Se autoplay for recusado, mantém o player visível e navegável.
-        playStarted=false;
-        releaseFirstVideoGate();
-      });
-    }
+    // Só tenta tocar quando existe frame decodificado. Isso evita o flash/tela
+    // preta que aparecia enquanto o browser ainda carregava o MP4.
+    waitForFirstVideoFrame(()=>{
+      if(destroyed||firstVideoFinished||!playStarted)return;
+
+      const play=video.play();
+      if(play&&typeof play.catch==='function'){
+        play.catch(()=>{
+          if(guidedPlaybackActive()){
+            // Fallback do modo guiado: navegadores mobile podem negar um play()
+            // com som muito tempo depois do clique inicial.
+            video.muted=true;
+            video.volume=0;
+            video.dataset.autoMuted='true';
+            const retry=video.play();
+            if(retry&&typeof retry.catch==='function'){
+              retry.catch(()=>{
+                playStarted=false;
+                finishFirstVideo();
+              });
+            }else if(video.paused){
+              playStarted=false;
+              finishFirstVideo();
+            }
+            return;
+          }
+
+          // Sem gesto de mídia válido alguns browsers recusam áudio. Mantemos
+          // a cena travada e tentamos reproduzir mudo em vez de mostrar preto
+          // ou deixar o scroll escapar do vídeo.
+          video.muted=true;
+          video.volume=0;
+          video.controls=true;
+          video.dataset.autoMuted='true';
+          const retry=video.play();
+          if(retry&&typeof retry.catch==='function'){
+            retry.catch(()=>{
+              playStarted=false;
+              releaseFirstVideoGate();
+            });
+          }else if(video.paused){
+            playStarted=false;
+            releaseFirstVideoGate();
+          }
+        });
+      }
+    });
   }
 
   video.addEventListener('ended',finishFirstVideo);
   video.addEventListener('error',()=>{
     playStarted=false;
-    releaseFirstVideoGate();
+    if(guidedPlaybackActive()) finishFirstVideo();
+    else releaseFirstVideoGate();
   });
 
   function externalProgress(){
@@ -709,7 +897,9 @@ export function initVivenciasScene(root,options={}){
       video.loop=false;
       video.preload='auto';
       video.classList.add('has-source');
+      video.classList.remove('is-frame-ready');
       videoAttached=true;
+      try{video.load();}catch(_){}
     }
   }
 
@@ -785,8 +975,10 @@ export function initVivenciasScene(root,options={}){
 
           setFinalVideoTransform(t);
 
-          if(p>.90)ensureVideoSource();
-          if(p>=.972&&!firstVideoFinished&&autoStartAllowed)startFirstVideo();
+          if(p>.885)ensureVideoSource();
+          // Ao chegar perto do card, termina a rolagem exatamente no vídeo,
+          // trava a cena naquele ponto e só então inicia a reprodução.
+          if(p>=.945&&!firstVideoFinished&&autoStartAllowed)snapToFirstVideoAndPlay();
         }
       }
     }
@@ -821,6 +1013,8 @@ export function initVivenciasScene(root,options={}){
       destroyed=true;
       frameDriver?.destroy();
       releaseFirstVideoGate();
+      cancelFirstVideoSnap();
+      clearTimeout(firstVideoReadyTimer);
       viewportDriver.destroy();
       video.removeEventListener('ended',finishFirstVideo);
       video.pause();

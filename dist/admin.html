@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Painel privado — Nossa história</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08070b;--panel:#121018;--panel2:#17131f;--line:#2b2435;--ink:#f8f2ff;--muted:#a99fb4;--accent:#e2b8ff;--good:#8ce3bc;--warn:#ffd37b;--bad:#ff9cae}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#23152d 0,transparent 34rem),var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+    button,input,select{font:inherit}.wrap{width:min(1180px,calc(100% - 28px));margin:auto;padding:28px 0 70px}.top{display:flex;gap:18px;align-items:flex-end;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap}.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}h1{font-size:clamp(26px,4vw,44px);line-height:1;margin:.25rem 0 .45rem}.sub{color:var(--muted);max-width:720px}.panel{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 18px 60px #0006}.login{max-width:460px;margin:12vh auto}.login h2{margin-top:0}.field{display:grid;gap:7px}.field label{font-size:12px;color:var(--muted)}input,select{width:100%;border:1px solid var(--line);background:#0e0b13;color:var(--ink);border-radius:11px;padding:11px 12px;outline:none}input:focus,select:focus{border-color:#77528f}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#21172b;color:var(--ink);border-radius:11px;padding:10px 14px;cursor:pointer}.btn:hover{background:#2b1d38}.btn.primary{background:#efe3ff;color:#160d1d;border-color:#efe3ff;font-weight:700}.btn.ghost{background:transparent}.error{color:var(--bad);min-height:1.4em;margin-top:8px}.hidden{display:none!important}.toolbar{display:grid;grid-template-columns:minmax(170px,260px) 1fr auto auto;gap:10px;margin:0 0 16px}@media(max-width:760px){.toolbar{grid-template-columns:1fr 1fr}.toolbar .wide{grid-column:1/-1}}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}@media(max-width:820px){.cards{grid-template-columns:repeat(2,1fr)}}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}.card .k{color:var(--muted);font-size:12px}.card .v{font-size:27px;font-weight:750;margin-top:4px}.card .mini{font-size:12px;color:var(--muted);margin-top:2px}
+    .section{margin-top:28px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}.section h2{font-size:18px;margin:0}.section-note{font-size:12px;color:var(--muted)}
+    .recipient-grid,.device-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media(max-width:780px){.recipient-grid,.device-grid{grid-template-columns:1fr}}.recipient,.device{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}.recipient{cursor:pointer}.recipient:hover{border-color:#5a426b}.headline{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.tag{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:var(--muted);white-space:nowrap}.tag.warn{color:#251900;background:var(--warn);border-color:var(--warn)}.tag.good{color:#082417;background:var(--good);border-color:var(--good)}.name{font-weight:750;font-size:16px;overflow-wrap:anywhere}.metrics{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;color:var(--muted);font-size:13px}.metrics strong{color:var(--ink)}.location{margin-top:8px;color:#d7cee0;font-size:13px}.device-id{font:11px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;color:#746a7e;margin-top:7px}
+    .timeline{display:grid;gap:9px}.session{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}.session summary{list-style:none;cursor:pointer;padding:13px 15px}.session summary::-webkit-details-marker{display:none}.session-main{display:grid;grid-template-columns:minmax(170px,1.2fr) minmax(150px,1fr) minmax(130px,.8fr) auto;gap:12px;align-items:center}@media(max-width:800px){.session-main{grid-template-columns:1fr 1fr}.session-main .when{grid-column:1/-1}}.when{font-weight:700}.muted{color:var(--muted)}.stage{font-size:13px}.session-body{border-top:1px solid var(--line);padding:12px 15px;background:#0e0c12;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:13px}@media(max-width:700px){.session-body{grid-template-columns:1fr 1fr}}.datum .dk{color:var(--muted);font-size:11px}.datum .dv{margin-top:2px;overflow-wrap:anywhere}.pill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 7px;font-size:11px}.pill.yes{background:#10261d;color:var(--good)}.pill.no{background:#2b1217;color:var(--bad)}.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.footnote{margin-top:22px;color:#82778c;font-size:12px;max-width:850px}.link-box{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:10px}.updated{font-size:12px;color:var(--muted)}
+  </style>
+  <script src="/analytics-config.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section id="login" class="panel login">
+      <div class="eyebrow">Nossa história</div>
+      <h2>Painel privado</h2>
+      <p class="sub">Use a senha administrativa configurada como <code>ADMIN_TOKEN</code> no Worker.</p>
+      <form id="loginForm" class="field">
+        <label for="token">Senha</label>
+        <input id="token" type="password" autocomplete="current-password" required />
+        <button class="btn primary" type="submit">Entrar</button>
+      </form>
+      <div id="loginError" class="error"></div>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <header class="top">
+        <div>
+          <div class="eyebrow">Analytics privado</div>
+          <h1>Acessos detalhados</h1>
+          <div class="sub">Cada abertura do site vira um acesso separado. Um ID aleatório persistente permite agrupar aberturas do mesmo navegador sem guardar IP ou GPS.</div>
+        </div>
+        <div class="row">
+          <span id="updated" class="updated"></span>
+          <button id="logout" class="btn ghost" type="button">Sair</button>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <select id="recipientFilter" aria-label="Filtrar link"></select>
+        <button id="refresh" class="btn" type="button">Atualizar</button>
+        <input id="marker" class="wide" placeholder="marcador do link, ex.: juju" maxlength="80" />
+        <button id="copyLink" class="btn primary" type="button">Copiar link marcado</button>
+      </div>
+
+      <div id="cards" class="cards"></div>
+
+      <section class="section">
+        <div class="section-head"><h2>Links / destinatários</h2><span class="section-note">Mais de um dispositivo é um indício, não prova de outra pessoa.</span></div>
+        <div id="recipients" class="recipient-grid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><h2>Dispositivos prováveis</h2><span class="section-note">ID aleatório do navegador + informações básicas do aparelho.</span></div>
+        <div id="devices" class="device-grid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><h2>Timeline de acessos</h2><span class="section-note">Horários são exibidos no fuso do navegador deste painel.</span></div>
+        <div id="sessions" class="timeline"></div>
+      </section>
+
+      <section id="legacySection" class="section hidden">
+        <div class="section-head"><h2>Histórico da versão antiga</h2><span class="section-note">Registros anteriores à atualização V2.</span></div>
+        <div id="legacy" class="timeline"></div>
+      </section>
+
+      <p class="footnote">A localização exibida é aproximada (cidade/região/país informados pela Cloudflare com base na conexão). Ela pode apontar para uma cidade próxima ou para a infraestrutura da operadora. Este painel não recebe GPS e a aplicação não armazena o endereço IP.</p>
+    </section>
+  </main>
+
+<script>
+(() => {
+  const cfg = window.__LOVE_ANALYTICS__ || {};
+  const API_BASE = String(cfg.apiBase || '/api').replace(/\/$/, '');
+  const TOKEN_KEY = 'love-story-admin-token-v1';
+  const $ = (sel) => document.querySelector(sel);
+  const login = $('#login');
+  const dashboard = $('#dashboard');
+  const loginForm = $('#loginForm');
+  const tokenInput = $('#token');
+  const loginError = $('#loginError');
+  const recipientFilter = $('#recipientFilter');
+  let token = sessionStorage.getItem(TOKEN_KEY) || '';
+  let knownRecipients = [];
+  let autoRefresh = null;
+
+  const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  const n = (value) => Number(value || 0).toLocaleString('pt-BR');
+
+  function parseUtc(value) {
+    if (!value) return null;
+    const raw = String(value);
+    return new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(raw) ? raw : raw.replace(' ', 'T') + 'Z');
+  }
+  function dateTime(value) {
+    const d = parseUtc(value);
+    if (!d || Number.isNaN(d.getTime())) return '—';
+    return new Intl.DateTimeFormat('pt-BR', { dateStyle:'short', timeStyle:'medium' }).format(d);
+  }
+  function shortDateTime(value) {
+    const d = parseUtc(value);
+    if (!d || Number.isNaN(d.getTime())) return '—';
+    return new Intl.DateTimeFormat('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' }).format(d);
+  }
+  function duration(seconds) {
+    let s = Math.max(0, Number(seconds || 0));
+    const h = Math.floor(s / 3600); s %= 3600;
+    const m = Math.floor(s / 60); s = Math.floor(s % 60);
+    if (h) return `${h}h ${m}min`;
+    if (m) return `${m}min ${s}s`;
+    return `${s}s`;
+  }
+  function countryName(code) {
+    if (!code) return '';
+    try { return new Intl.DisplayNames(['pt-BR'], { type:'region' }).of(code) || code; } catch { return code; }
+  }
+  function locationOf(row) {
+    return [row.city, row.region, countryName(row.country_code)].filter(Boolean).join(', ') || 'Localização indisponível';
+  }
+  function api(path) { return `${API_BASE}${path}`; }
+
+  async function requestSummary(recipient = '') {
+    const url = new URL(api('/admin/summary'), location.href);
+    if (recipient) url.searchParams.set('recipient', recipient);
+    const res = await fetch(url, { headers:{ Authorization:`Bearer ${token}` }, cache:'no-store' });
+    if (res.status === 401) throw new Error('AUTH');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+
+  function showLogin(message = '') {
+    clearInterval(autoRefresh); autoRefresh = null;
+    dashboard.classList.add('hidden');
+    login.classList.remove('hidden');
+    loginError.textContent = message;
+    if (!tokenInput.value) tokenInput.focus();
+  }
+  function showDashboard() {
+    login.classList.add('hidden');
+    dashboard.classList.remove('hidden');
+    if (!autoRefresh) autoRefresh = setInterval(() => loadData(recipientFilter.value, true), 30000);
+  }
+
+  function renderFilter() {
+    const current = recipientFilter.value;
+    recipientFilter.innerHTML = '<option value="">Todos os links</option>' + knownRecipients.map((r) => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
+    if ([...recipientFilter.options].some((o) => o.value === current)) recipientFilter.value = current;
+  }
+
+  function renderCards(data) {
+    const t = data.totals || {};
+    $('#cards').innerHTML = `
+      <div class="card"><div class="k">Acessos / aberturas</div><div class="v">${n(t.accesses)}</div><div class="mini">cada carregamento do site</div></div>
+      <div class="card"><div class="k">Dispositivos prováveis</div><div class="v">${n(t.devices)}</div><div class="mini">IDs persistentes de navegador</div></div>
+      <div class="card"><div class="k">Finalizações</div><div class="v">${n(t.completed)}</div><div class="mini">Sim ${n(t.yes)} · Não ${n(t.no)}</div></div>
+      <div class="card"><div class="k">Último acesso</div><div class="v" style="font-size:18px">${esc(shortDateTime(t.last_seen))}</div><div class="mini">primeiro: ${esc(shortDateTime(t.first_seen))}</div></div>`;
+  }
+
+  function renderRecipients(rows) {
+    const root = $('#recipients');
+    if (!rows?.length) { root.innerHTML = '<div class="empty">Nenhum acesso V2 registrado ainda.</div>'; return; }
+    root.innerHTML = rows.map((r) => {
+      const share = r.recipient !== 'public' && Number(r.devices) > 1;
+      return `<article class="recipient" data-recipient="${esc(r.recipient)}">
+        <div class="headline"><div class="name">${esc(r.recipient)}</div>${share ? '<span class="tag warn">possível compartilhamento</span>' : '<span class="tag good">1 fluxo</span>'}</div>
+        <div class="metrics"><span><strong>${n(r.accesses)}</strong> acessos</span><span><strong>${n(r.devices)}</strong> dispositivos</span><span><strong>${n(r.completed)}</strong> finalizações</span></div>
+        <div class="location">Primeiro ${esc(shortDateTime(r.first_seen))} · último ${esc(shortDateTime(r.last_seen))}</div>
+      </article>`;
+    }).join('');
+    root.querySelectorAll('[data-recipient]').forEach((el) => el.addEventListener('click', () => {
+      const value = el.dataset.recipient || '';
+      if (!knownRecipients.includes(value)) { knownRecipients.push(value); knownRecipients.sort(); renderFilter(); }
+      recipientFilter.value = value;
+      loadData(value);
+      scrollTo({ top:0, behavior:'smooth' });
+    }));
+  }
+
+  function deviceLabels(rows) {
+    const groups = new Map();
+    [...rows].sort((a,b) => (parseUtc(a.first_seen)?.getTime() || 0) - (parseUtc(b.first_seen)?.getTime() || 0)).forEach((d) => {
+      if (!groups.has(d.recipient)) groups.set(d.recipient, []);
+      groups.get(d.recipient).push(d.device_id);
+    });
+    const map = new Map();
+    groups.forEach((ids, recipient) => ids.forEach((id, i) => map.set(`${recipient}\n${id}`, `Dispositivo ${String.fromCharCode(65 + (i % 26))}${i >= 26 ? Math.floor(i/26)+1 : ''}`)));
+    return map;
+  }
+
+  function renderDevices(rows) {
+    const root = $('#devices');
+    if (!rows?.length) { root.innerHTML = '<div class="empty">Nenhum dispositivo V2 registrado ainda.</div>'; return new Map(); }
+    const labels = deviceLabels(rows);
+    root.innerHTML = rows.map((d) => {
+      const label = labels.get(`${d.recipient}\n${d.device_id}`) || 'Dispositivo';
+      return `<article class="device">
+        <div class="headline"><div><div class="name">${esc(label)}</div><div class="muted">${esc(d.recipient)}</div></div><span class="tag">${n(d.access_count)} acessos</span></div>
+        <div class="metrics"><span>${esc(d.device_class)}</span><span>${esc(d.browser)}</span><span>${esc(d.os)}</span><span>${duration(d.total_active_seconds)}</span></div>
+        <div class="location">${esc(locationOf(d))}</div>
+        <div class="muted" style="margin-top:6px">Primeiro: ${esc(dateTime(d.first_seen))}<br>Último: ${esc(dateTime(d.last_seen))}</div>
+        <div class="device-id">${esc(String(d.device_id).slice(0,26))}${String(d.device_id).length>26?'…':''}</div>
+      </article>`;
+    }).join('');
+    return labels;
+  }
+
+  function renderSessions(rows, labels) {
+    const root = $('#sessions');
+    if (!rows?.length) { root.innerHTML = '<div class="empty">Nenhum acesso V2 registrado ainda.</div>'; return; }
+    root.innerHTML = rows.map((s) => {
+      const label = labels.get(`${s.recipient}\n${s.device_id}`) || 'Dispositivo';
+      const vote = s.vote === 'yes' ? '<span class="pill yes">votou Sim</span>' : s.vote === 'no' ? '<span class="pill no">votou Não</span>' : '<span class="pill">sem voto</span>';
+      return `<details class="session">
+        <summary><div class="session-main">
+          <div class="when">${esc(shortDateTime(s.started_at))}<div class="muted">Acesso #${n(s.access_number)} de ${n(s.device_access_total)}</div></div>
+          <div><strong>${esc(label)}</strong><div class="muted">${esc(s.recipient)} · ${esc(s.browser)} / ${esc(s.os)}</div></div>
+          <div class="stage">${esc(s.max_stage_label || 'Hero')} · ${n(s.max_stage_progress)}%<div class="muted">tempo visível: ${duration(s.active_seconds)}</div></div>
+          <div>${vote}</div>
+        </div></summary>
+        <div class="session-body">
+          <div class="datum"><div class="dk">Entrada</div><div class="dv">${esc(dateTime(s.started_at))}</div></div>
+          <div class="datum"><div class="dk">Última atividade</div><div class="dv">${esc(dateTime(s.last_seen))}</div></div>
+          <div class="datum"><div class="dk">Saída aproximada</div><div class="dv">${esc(dateTime(s.ended_at))}</div></div>
+          <div class="datum"><div class="dk">Local aproximado</div><div class="dv">${esc(locationOf(s))}</div></div>
+          <div class="datum"><div class="dk">Aparelho</div><div class="dv">${esc(s.device_class)} · ${esc(s.browser)} · ${esc(s.os)}</div></div>
+          <div class="datum"><div class="dk">Fuso do navegador</div><div class="dv">${esc(s.client_timezone || '—')}</div></div>
+          <div class="datum"><div class="dk">Maior etapa</div><div class="dv">${esc(s.max_stage_label || 'Hero')} · ${n(s.max_stage_progress)}%</div></div>
+          <div class="datum"><div class="dk">Finalizou</div><div class="dv">${Number(s.completed) ? 'Sim' : 'Não'}</div></div>
+          <div class="datum"><div class="dk">Origem</div><div class="dv">${esc(s.referrer || 'acesso direto')}</div></div>
+        </div>
+      </details>`;
+    }).join('');
+  }
+
+  function renderLegacy(rows) {
+    const section = $('#legacySection');
+    if (!rows?.length) { section.classList.add('hidden'); return; }
+    section.classList.remove('hidden');
+    $('#legacy').innerHTML = rows.map((r) => `<div class="session"><div style="padding:12px 15px"><strong>${esc(r.recipient)}</strong> · ${esc(r.device)} · ${esc(shortDateTime(r.last_seen))}<div class="muted">${esc(r.max_stage_label || 'Hero')} ${n(r.max_stage_progress)}% · registro antigo ${esc(String(r.visit_id).slice(0,16))}…</div></div></div>`).join('');
+  }
+
+  async function loadData(recipient = '', silent = false) {
+    try {
+      if (!silent) $('#refresh').disabled = true;
+      const data = await requestSummary(recipient);
+      if (!recipient) {
+        knownRecipients = (data.recipients || []).map((r) => r.recipient).filter(Boolean).sort();
+        renderFilter();
+      }
+      renderCards(data);
+      renderRecipients(data.recipients || []);
+      const labels = renderDevices(data.devices || []);
+      renderSessions(data.sessions || [], labels);
+      renderLegacy(data.legacy || []);
+      $('#updated').textContent = `Atualizado ${new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date())}`;
+      showDashboard();
+    } catch (err) {
+      if (err.message === 'AUTH') {
+        sessionStorage.removeItem(TOKEN_KEY); token = '';
+        showLogin('Senha inválida ou token não configurado no Worker.');
+      } else if (!silent) {
+        alert(`Não foi possível carregar o painel: ${err.message}`);
+      }
+    } finally { $('#refresh').disabled = false; }
+  }
+
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    token = tokenInput.value.trim();
+    if (!token) return;
+    sessionStorage.setItem(TOKEN_KEY, token);
+    loadData('');
+  });
+  $('#logout').addEventListener('click', () => {
+    token = '';
+    sessionStorage.removeItem(TOKEN_KEY);
+    tokenInput.value = '';
+    showLogin();
+  });
+  $('#refresh').addEventListener('click', () => loadData(recipientFilter.value));
+  recipientFilter.addEventListener('change', () => loadData(recipientFilter.value));
+  $('#copyLink').addEventListener('click', async () => {
+    const marker = $('#marker').value.trim().slice(0,80);
+    if (!marker) { $('#marker').focus(); return; }
+    const link = new URL('/', location.origin);
+    link.searchParams.set('r', marker);
+    try {
+      await navigator.clipboard.writeText(link.href);
+      const button = $('#copyLink'); const old = button.textContent;
+      button.textContent = 'Copiado!'; setTimeout(() => button.textContent = old, 1400);
+    } catch { prompt('Copie o link:', link.href); }
+  });
+
+  if (token) loadData(''); else showLogin();
+})();
+</script>
+</body>
+</html>
