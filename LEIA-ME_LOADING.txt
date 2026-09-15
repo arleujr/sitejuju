@@ -1,0 +1,16 @@
+PATCH DE LOADING — BASEADO EXATAMENTE NA “versão github.zip” enviada em 15/09/2026
+
+Este patch altera apenas:
+- index.html
+- adiciona public/assets/loading-casal.webp
+
+NÃO altera src/main.js, Vivências, Play/Pause, analytics, Wrangler, pnpm ou qualquer outra parte do site.
+
+Como aplicar:
+1. Extraia este ZIP por cima da versão atual do projeto.
+2. Mescle a pasta public (não apague/substitua suas fotos).
+3. Rode: pnpm dev
+4. Depois: pnpm build
+
+O loading pré-carrega apenas os assets essenciais da Hero/início. O restante continua carregando em segundo plano.
+Há timeout de segurança de 8s para o loading nunca prender o site.

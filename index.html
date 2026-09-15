@@ -6,9 +6,231 @@
     <meta name="theme-color" content="#f6efe5" />
     <meta name="description" content="Arleu & Juliana — Uma história de amor." />
     <title>Arleu & Juliana — Uma história de amor</title>
+    <link rel="preload" href="/assets/loading-casal.webp" as="image" type="image/webp" fetchpriority="high" />
+    <style id="site-loader-style">
+      html.site-is-loading,
+      body.site-is-loading {
+        overflow: hidden !important;
+      }
+
+      #site-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at 50% 26%, rgba(255,255,255,.95), rgba(255,255,255,0) 31%),
+          linear-gradient(180deg, #fbf7f9 0%, #f7f1f5 100%);
+        opacity: 1;
+        visibility: visible;
+        transition: opacity .48s ease, visibility .48s ease;
+      }
+
+      #site-loader.site-loader--done {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .site-loader__inner {
+        width: min(90vw, 420px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        text-align: center;
+      }
+
+      .site-loader__art {
+        display: block;
+        width: min(62vw, 250px);
+        height: auto;
+        user-select: none;
+        -webkit-user-drag: none;
+        filter: drop-shadow(0 18px 34px rgba(114,76,93,.12));
+        animation: site-loader-float 2.5s ease-in-out infinite;
+      }
+
+      .site-loader__label {
+        margin: 4px 0 0;
+        color: #724c5d;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: clamp(15px, 1.6vw, 17px);
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .site-loader__percent {
+        margin: 0;
+        color: #9c6075;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: clamp(21px, 3vw, 29px);
+        line-height: 1;
+        font-weight: 700;
+      }
+
+      .site-loader__bar {
+        width: 140px;
+        max-width: 56vw;
+        height: 6px;
+        margin-top: 6px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(156,96,117,.15);
+        box-shadow: inset 0 0 0 1px rgba(156,96,117,.07);
+      }
+
+      .site-loader__bar-fill {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: #9c6075;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform .16s ease-out;
+      }
+
+      @keyframes site-loader-float {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-6px) scale(1.01); }
+      }
+
+      @media (max-width: 640px) {
+        .site-loader__art { width: min(72vw, 225px); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .site-loader__art { animation: none; }
+      }
+    </style>
   </head>
-  <body>
+  <body class="site-is-loading">
+    <div id="site-loader" role="status" aria-live="polite" aria-label="Carregando">
+      <div class="site-loader__inner">
+        <img class="site-loader__art" src="/assets/loading-casal.webp" alt="" width="640" height="640" fetchpriority="high" />
+        <p class="site-loader__label">Carregando...</p>
+        <p class="site-loader__percent" data-loader-percent>0%</p>
+        <span class="site-loader__bar" aria-hidden="true"><i class="site-loader__bar-fill" data-loader-bar></i></span>
+      </div>
+    </div>
+
     <div id="app"></div>
+
+    <script>
+      (() => {
+        const loader = document.getElementById('site-loader');
+        const percentNode = loader?.querySelector('[data-loader-percent]');
+        const barNode = loader?.querySelector('[data-loader-bar]');
+        if (!loader) return;
+
+        document.documentElement.classList.add('site-is-loading');
+
+        const criticalAssets = [
+          '/assets/loading-casal.webp',
+          '/assets/jujucarnaval02.jpeg',
+          '/assets/jujuformatura.jpeg',
+          '/assets/jujucasamento.jpg',
+          '/assets/hero-coracoes.jpg',
+          '/assets/titulo-abertura.png',
+          '/assets/festa-show-neon.png',
+          '/assets/encontro-01-juntos.png',
+          '/assets/encontro-02-pergunta.png',
+          '/assets/encontro-03-beijo.png',
+          '/assets/encontro-04-abraco.png'
+        ];
+
+        const startedAt = performance.now();
+        const minimumVisibleMs = 750;
+        const hardTimeoutMs = 8000;
+        let finished = false;
+        let completed = 0;
+        const total = criticalAssets.length + 1;
+
+        const paint = () => {
+          const value = Math.min(100, Math.round((completed / total) * 100));
+          if (percentNode) percentNode.textContent = `${value}%`;
+          if (barNode) barNode.style.transform = `scaleX(${value / 100})`;
+        };
+
+        const markComplete = () => {
+          completed = Math.min(total, completed + 1);
+          paint();
+        };
+
+        const preloadImage = (src) => new Promise((resolve) => {
+          const image = new Image();
+          let settled = false;
+          const done = () => {
+            if (settled) return;
+            settled = true;
+            markComplete();
+            resolve();
+          };
+          image.onload = done;
+          image.onerror = done;
+          image.decoding = 'async';
+          image.src = src;
+          if (image.complete) done();
+        });
+
+        const waitForApp = new Promise((resolve) => {
+          const app = document.getElementById('app');
+          if (!app) {
+            markComplete();
+            resolve();
+            return;
+          }
+
+          const ready = () => app.childElementCount > 0;
+          if (ready()) {
+            markComplete();
+            resolve();
+            return;
+          }
+
+          const observer = new MutationObserver(() => {
+            if (!ready()) return;
+            observer.disconnect();
+            markComplete();
+            resolve();
+          });
+          observer.observe(app, { childList: true });
+
+          window.setTimeout(() => {
+            observer.disconnect();
+            markComplete();
+            resolve();
+          }, 5000);
+        });
+
+        const reveal = () => {
+          if (finished) return;
+          finished = true;
+          completed = total;
+          paint();
+          const wait = Math.max(0, minimumVisibleMs - (performance.now() - startedAt));
+          window.setTimeout(() => {
+            loader.classList.add('site-loader--done');
+            document.documentElement.classList.remove('site-is-loading');
+            document.body.classList.remove('site-is-loading');
+            window.setTimeout(() => loader.remove(), 560);
+          }, wait);
+        };
+
+        paint();
+        Promise.allSettled([
+          ...criticalAssets.map(preloadImage),
+          waitForApp
+        ]).then(reveal);
+
+        // Falha segura: o loader nunca pode prender o site indefinidamente.
+        window.setTimeout(reveal, hardTimeoutMs);
+      })();
+    </script>
     <script src="/analytics-config.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
