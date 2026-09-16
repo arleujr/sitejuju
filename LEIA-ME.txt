@@ -1,19 +1,35 @@
-PATCH — Cloudflare / loading sem disputa de rede
+VERSAO V2 — corrige a chamada do conversor no Windows usando npx.cmd.
 
-O que muda:
-- mantém o loading preso no topo;
-- remove o falso timeout de 15 s das imagens críticas;
-- se um arquivo crítico realmente der 404, mostra o nome exato;
-- fotos da Rotina passam a usar loading="lazy";
-- áudio inicial passa a preload="none";
-- toque/tecla no loader não inicia música por trás da tela;
-- grade de Trabalho (20 fotos + fallback de extensões) deixa de ser criada no boot;
-  ela só começa a carregar perto da parte de Trabalho.
+PATCH WEBP — HERO + NOSSO PRIMEIRO BEIJO
 
-Arquivos:
-- index.html
-- src/main.js
-- src/site-unified/runtime.js
-- DIAGNOSTICAR_ASSETS.ps1
+Objetivo:
+- reduzir os 5 PNGs pesados;
+- preservar transparência das ilustrações;
+- manter o loading curto;
+- carregar Hero + frame inicial do beijo antes de abrir;
+- aquecer as outras poses em segundo plano;
+- impedir Trabalho de disparar requests no boot.
 
-A base de src/main.js já inclui o patch mobile de viewport/transição.
+Uso:
+1. Extraia este ZIP NA RAIZ do sitejuju.
+2. Rode:
+   powershell -ExecutionPolicy Bypass -File .\APLICAR_OTIMIZACAO_WEBP.ps1
+3. O script:
+   - cria backup fora do repositório, na pasta TEMP;
+   - converte os 5 PNGs para WebP;
+   - aplica os caminhos .webp;
+   - remove os PNGs antigos de public/assets;
+   - executa pnpm build.
+4. Teste:
+   pnpm dev
+5. Se estiver correto:
+   git add -A
+   git commit -m "optimize first kiss assets to webp"
+   git push
+
+Qualidade:
+- fundo da festa: WebP q82
+- ilustrações com transparência: WebP q84, alphaQuality 92
+
+O Sharp é executado via npm exec só durante a conversão.
+Ele NÃO é adicionado ao package.json.
