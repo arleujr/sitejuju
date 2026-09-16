@@ -1,0 +1,12 @@
+PATCH — LOADING CRITICO REAL
+
+Substitua somente o index.html pelo deste patch.
+
+Mudanca principal:
+- remove o timeout que fingia 100% apos 8 segundos;
+- espera download + decode de TODAS as fotos da Hero;
+- espera download + decode do fundo e das 4 imagens de "Nosso primeiro beijo";
+- espera o app montar e as fontes ficarem prontas;
+- so entao mostra 100% e faz o fade.
+
+Se um asset critico realmente estiver quebrado/404, o loader nao abre o site incompleto.

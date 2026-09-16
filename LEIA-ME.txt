@@ -1,29 +1,24 @@
-ARLEU & JULIANA — PATCH V22
-TRANSIÇÃO FIXA / SEM SALTO VISUAL
+PATCH MOBILE — FAIXA INFERIOR + TRANSIÇÃO PRIMEIRO BEIJO -> CONVERSA
 
-BASE
-- feito DIRETAMENTE sobre o jujusite.zip enviado nesta conversa.
+Base usada: versão github.zip enviada pelo usuário em 15/09/2026.
 
-BLOQUEADO / NÃO ALTERADO
-- Home -> Ato I
-- rearme ao voltar para Home
-- cena do Ato I
-- primeiro beijo
-- coração aprovado do primeiro beijo
-- textos, chuva, luzes, cartoons
-- conteúdo do Ato II
+Corrige:
+1) faixa rosa/vermelha que aparece embaixo no Chrome/Android quando a barra do navegador recolhe;
+2) transição "Nosso primeiro beijo" -> "Conversa" que parecia subir/repetir a mesma página várias vezes no mobile.
 
-ÚNICA CORREÇÃO
-- o fim do Ato I não sai mais fisicamente da viewport antes da transição.
-- no exato pixel em que o sticky do Ato I terminaria, uma cópia visual fica FIXA ocupando 100% da tela.
-- o documento rola por baixo sem aparecer.
-- a página velha é rasgada enquanto a viewport permanece parada.
-- atrás dela já existe uma cópia exata do primeiro frame do Ato II.
-- o overlay só é removido quando o Ato II REAL está exatamente alinhado no topo da viewport.
+Arquivos:
+- src/main.js
+- src/mobile-viewport-fix.css
 
-OBJETIVO
-A pessoa não percebe troca de seção/página. Ela só percebe a TRANSIÇÃO.
+O que NÃO é alterado:
+- index.html / loading
+- Vivências JS
+- Play/Pause
+- analytics
+- pnpm / Wrangler
+- public / fotos
 
-APLICAÇÃO
-Copie src/main.js e src/styles.css por cima da versão enviada (jujusite.zip).
-Depois rode pnpm dev e use Ctrl + F5.
+A correção mantém a geometria de scroll original e usa 100dvh apenas nas superfícies visuais. Também impede que resizes de altura causados pela barra do Chrome desmontem e recriem o rasgo no meio da transição.
+
+Aplicação:
+Extraia este ZIP por cima do projeto atual e rode `pnpm dev`.

@@ -9,6 +9,7 @@ import './site-unified/vivencias-scene.css';
 import './site-unified/full-love-scene.css';
 import './site-unified/site-continuation-bridge.css';
 import './site-unified/end-feedback.css';
+import './mobile-viewport-fix.css';
 import { createScrollFrameDriver, createViewportFrameDriver } from './site-unified/performance-runtime.js';
 import { initStoryRuntime } from './site-unified/runtime.js';
 import { initSiteContinuation } from './site-unified/site-continuation-entry.js';
@@ -1509,6 +1510,13 @@ const unifiedFirstScene = unifiedStory?.querySelector('.chat-scene');
 let tearSnapshotBuilt = false;
 let tearNextBuilt = false;
 let tearVisualMode = null;
+let tearTransitionViewport = 0;
+let tearViewportWidth = Math.round(window.innerWidth || document.documentElement.clientWidth || 0);
+
+function liveMobileViewportHeight() {
+  const visual = window.visualViewport?.height;
+  return Math.max(1, Math.round((Number.isFinite(visual) && visual > 0 ? visual : window.innerHeight) || tearStage?.clientHeight || 1));
+}
 
 // O overlay não participa do fluxo da página. Isso é o que impede a tela
 // de "subir" entre o fim do Ato I e o começo da transição.
@@ -1583,20 +1591,35 @@ function resetTearVisual() {
 function renderTear() {
   if (!chapterTear || !tearStage || !tearPage || !unifiedStory) return;
 
-  // O Ato I sticky deixa de ocupar a viewport exatamente um viewport antes
-  // do começo do spacer da transição. O overlay entra NESTE MESMO PIXEL.
-  // Mesma referência geométrica do overlay CSS (svh/sticky).
-  const transitionViewport = Math.max(1, tearStage.clientHeight || window.innerHeight);
-  const freezeStart = chapterTear.offsetTop - transitionViewport;
+  // No Chrome/Android a barra do navegador muda a altura visual durante o
+  // próprio gesto de scroll. Se recalcularmos a geometria nesse momento, o
+  // rasgo volta alguns frames e parece que a mesma página sobe várias vezes.
+  // Usamos a altura visual ATUAL para detectar a entrada e, assim que a
+  // transição começa, congelamos essa referência até o handoff terminar.
+  const liveViewport = liveMobileViewportHeight();
+  const wasActive = tearVisualMode === 'active';
+  let transitionViewport = wasActive && tearTransitionViewport
+    ? tearTransitionViewport
+    : liveViewport;
+  let freezeStart = chapterTear.offsetTop - transitionViewport;
   const handoff = unifiedStory.offsetTop;
+  let active = window.scrollY >= freezeStart && window.scrollY < handoff;
+
+  if (active && !wasActive) {
+    tearTransitionViewport = liveViewport;
+    transitionViewport = tearTransitionViewport;
+    freezeStart = chapterTear.offsetTop - transitionViewport;
+    active = window.scrollY >= freezeStart && window.scrollY < handoff;
+  }
+
   const span = Math.max(1, handoff - freezeStart);
   const raw = clamp01((window.scrollY - freezeStart) / span);
-  const active = window.scrollY >= freezeStart && window.scrollY < handoff;
 
   if (!active) {
     const mode = window.scrollY < freezeStart ? 'before' : 'after';
     if (tearVisualMode === mode) return;
     tearVisualMode = mode;
+    tearTransitionViewport = 0;
     tearStage.classList.remove('is-active');
     if (mode === 'before') resetTearVisual();
     return;
@@ -1632,9 +1655,23 @@ const tearScrollDriver = createScrollFrameDriver(renderTear, {
 });
 
 createViewportFrameDriver(() => {
+  const nextWidth = Math.round(window.innerWidth || document.documentElement.clientWidth || 0);
+  const widthChanged = Math.abs(nextWidth - tearViewportWidth) > 24;
+  tearViewportWidth = nextWidth;
+
+  // Android dispara resize quando a barra do navegador recolhe/volta. Isso
+  // NÃO é uma mudança real de layout e não pode desmontar/recriar os clones
+  // no meio do rasgo. Em mobile, só reconstruímos se a largura realmente
+  // mudou (rotação, resize de janela, etc.).
+  if (window.innerWidth <= 860 && !widthChanged) {
+    tearScrollDriver.schedule();
+    return;
+  }
+
   tearSnapshotBuilt = false;
   tearNextBuilt = false;
   tearVisualMode = null;
+  tearTransitionViewport = 0;
   tearSnapshotSlot?.replaceChildren();
   tearNextSlot?.replaceChildren();
   resetTearVisual();

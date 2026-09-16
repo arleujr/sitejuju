@@ -1,0 +1,85 @@
+/* ==========================================================================\n   MOBILE VIEWPORT FIX — Chrome/Android\n   --------------------------------------------------------------------------\n   Mantém a geometria de scroll existente (svh/px) e corrige SOMENTE as\n   superfícies visuais que precisam preencher a viewport dinâmica. Assim a\n   barra do navegador pode recolher sem revelar a cor da seção por baixo.\n   ========================================================================== */
+
+@media (max-width: 860px) {
+  /* Hero e Primeiro Beijo: preenchem a altura visual real enquanto o chrome
+     do navegador abre/fecha. O track de scroll continua inalterado. */
+  .hero,
+  .encounter-stage {
+    height: 100dvh !important;
+  }
+
+  /* Conversa/Rotina. */
+  .chat-scene {
+    height: 100dvh !important;
+  }
+
+  /* Transição rasgada: o overlay e os dois frames clonados precisam cobrir
+     exatamente a viewport visível. Antes estavam em 100svh, deixando a faixa
+     vermelha/rosa aparecer embaixo quando a barra do Chrome recolhia. */
+  .tear-stage {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+  }
+
+  .tear-snapshot-stage,
+  .tear-next-stage-clone {
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+
+  /* Trabalho/galeria e frame de transição fullscreen. */
+  .work-gallery.is-video-fullscreen .transition-video-frame,
+  .work-gallery.is-next-scene-ready .transition-video-stage,
+  .work-gallery.is-next-scene-ready .transition-video-frame {
+    height: 100dvh !important;
+  }
+
+  /* Sorriso / Estilo / Academia já usam dvh nas regras mais novas, mas estas
+     garantias ficam por último para impedir regressão por especificidade. */
+  .love-trio .smile-v5__sticky,
+  .love-trio .style-v1__sticky,
+  .love-trio .gym-v1__sticky,
+  .love-trio .smile-v5__canvas,
+  .love-trio .style-v1__canvas,
+  .love-trio .gym-v1__canvas {
+    height: 100dvh !important;
+  }
+
+  /* Vivências mantém sua altura-base em JS para NÃO alterar o progresso do
+     scroll. Só o palco visível cresce para cobrir a viewport dinâmica. */
+  .viv4__sticky,
+  .viv4__ending,
+  .viv4-bridge__sticky {
+    height: 100dvh !important;
+  }
+
+  /* Fim/enquete. */
+  .end-feedback,
+  [data-end-feedback] {
+    min-height: 100dvh;
+  }
+}
+
+/* Fallback para navegadores sem dvh. */
+@supports not (height: 100dvh) {
+  @media (max-width: 860px) {
+    .hero,
+    .encounter-stage,
+    .chat-scene,
+    .tear-stage,
+    .work-gallery.is-video-fullscreen .transition-video-frame,
+    .work-gallery.is-next-scene-ready .transition-video-stage,
+    .work-gallery.is-next-scene-ready .transition-video-frame,
+    .love-trio .smile-v5__sticky,
+    .love-trio .style-v1__sticky,
+    .love-trio .gym-v1__sticky,
+    .love-trio .smile-v5__canvas,
+    .love-trio .style-v1__canvas,
+    .love-trio .gym-v1__canvas,
+    .viv4__sticky,
+    .viv4__ending,
+    .viv4-bridge__sticky {
+      height: 100vh !important;
+    }
+  }
+}

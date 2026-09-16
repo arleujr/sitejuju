@@ -129,13 +129,15 @@
 
         document.documentElement.classList.add('site-is-loading');
 
+        // Tudo que aparece na Hero e em "Nosso primeiro beijo".
+        // O site so sera revelado quando estes arquivos tiverem sido
+        // BAIXADOS E DECODIFICADOS pelo navegador.
         const criticalAssets = [
           '/assets/loading-casal.webp',
           '/assets/jujucarnaval02.jpeg',
           '/assets/jujuformatura.jpeg',
           '/assets/jujucasamento.jpg',
           '/assets/hero-coracoes.jpg',
-          '/assets/titulo-abertura.png',
           '/assets/festa-show-neon.png',
           '/assets/encontro-01-juntos.png',
           '/assets/encontro-02-pergunta.png',
@@ -144,14 +146,16 @@
         ];
 
         const startedAt = performance.now();
-        const minimumVisibleMs = 750;
-        const hardTimeoutMs = 8000;
-        let finished = false;
+        const minimumVisibleMs = 700;
+        const EXTRA_STEPS = 3; // app montado + fontes + imagens DOM prontas
+        const total = criticalAssets.length + EXTRA_STEPS;
         let completed = 0;
-        const total = criticalAssets.length + 1;
+        let finished = false;
 
         const paint = () => {
-          const value = Math.min(100, Math.round((completed / total) * 100));
+          // Nunca mostramos 100% antes da liberacao real.
+          const raw = Math.round((completed / total) * 100);
+          const value = finished ? 100 : Math.min(99, raw);
           if (percentNode) percentNode.textContent = `${value}%`;
           if (barNode) barNode.style.transform = `scaleX(${value / 100})`;
         };
@@ -161,21 +165,42 @@
           paint();
         };
 
-        const preloadImage = (src) => new Promise((resolve) => {
-          const image = new Image();
-          let settled = false;
-          const done = () => {
-            if (settled) return;
-            settled = true;
+        const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
+
+        const loadAndDecode = async (src, attempt = 1) => {
+          try {
+            const image = new Image();
+            image.decoding = 'async';
+            image.src = src;
+
+            if (!image.complete || !image.naturalWidth) {
+              await new Promise((resolve, reject) => {
+                image.addEventListener('load', resolve, { once: true });
+                image.addEventListener('error', () => reject(new Error(`Falha ao carregar ${src}`)), { once: true });
+              });
+            }
+
+            if (!image.naturalWidth) throw new Error(`Imagem invalida: ${src}`);
+
+            // onload significa que os bytes chegaram. decode() garante que a
+            // imagem tambem esta pronta para ser pintada na tela.
+            if (typeof image.decode === 'function') {
+              await image.decode();
+            }
+
             markComplete();
-            resolve();
-          };
-          image.onload = done;
-          image.onerror = done;
-          image.decoding = 'async';
-          image.src = src;
-          if (image.complete) done();
-        });
+            return src;
+          } catch (error) {
+            if (attempt < 4) {
+              await wait(450 * attempt);
+              return loadAndDecode(src, attempt + 1);
+            }
+
+            // Nao fingimos 100% e nao abrimos um site incompleto.
+            console.error('[loader] Asset critico nao ficou pronto:', src, error);
+            return new Promise(() => {});
+          }
+        };
 
         const waitForApp = new Promise((resolve) => {
           const app = document.getElementById('app');
@@ -199,36 +224,66 @@
             resolve();
           });
           observer.observe(app, { childList: true });
-
-          window.setTimeout(() => {
-            observer.disconnect();
-            markComplete();
-            resolve();
-          }, 5000);
         });
 
-        const reveal = () => {
+        const waitForFonts = (async () => {
+          if (document.fonts?.ready) await document.fonts.ready;
+          markComplete();
+        })();
+
+        const waitForCriticalDomImages = (async () => {
+          await waitForApp;
+
+          // Espera tambem as tags <img> reais do primeiro beijo. Mesmo com o
+          // arquivo em cache, isso evita revelar a pagina um frame antes do paint.
+          const images = [
+            ...document.querySelectorAll('#inicio img, #ato-1 img')
+          ];
+
+          await Promise.all(images.map(async (image) => {
+            if (!image.complete || !image.naturalWidth) {
+              await new Promise((resolve, reject) => {
+                image.addEventListener('load', resolve, { once: true });
+                image.addEventListener('error', reject, { once: true });
+              });
+            }
+            if (typeof image.decode === 'function') {
+              try { await image.decode(); } catch (_) {}
+            }
+          }));
+
+          // Garante dois paints completos antes de liberar o overlay.
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          markComplete();
+        })();
+
+        const reveal = async () => {
           if (finished) return;
           finished = true;
-          completed = total;
-          paint();
-          const wait = Math.max(0, minimumVisibleMs - (performance.now() - startedAt));
-          window.setTimeout(() => {
-            loader.classList.add('site-loader--done');
-            document.documentElement.classList.remove('site-is-loading');
-            document.body.classList.remove('site-is-loading');
-            window.setTimeout(() => loader.remove(), 560);
-          }, wait);
+
+          const elapsed = performance.now() - startedAt;
+          if (elapsed < minimumVisibleMs) await wait(minimumVisibleMs - elapsed);
+
+          if (percentNode) percentNode.textContent = '100%';
+          if (barNode) barNode.style.transform = 'scaleX(1)';
+
+          // Deixa o 100% ser realmente pintado antes do fade.
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+          loader.classList.add('site-loader--done');
+          document.documentElement.classList.remove('site-is-loading');
+          document.body.classList.remove('site-is-loading');
+          window.setTimeout(() => loader.remove(), 560);
         };
 
         paint();
-        Promise.allSettled([
-          ...criticalAssets.map(preloadImage),
-          waitForApp
-        ]).then(reveal);
 
-        // Falha segura: o loader nunca pode prender o site indefinidamente.
-        window.setTimeout(reveal, hardTimeoutMs);
+        Promise.all([
+          ...criticalAssets.map((src) => loadAndDecode(src)),
+          waitForApp,
+          waitForFonts,
+          waitForCriticalDomImages
+        ]).then(reveal);
       })();
     </script>
     <script src="/analytics-config.js"></script>
