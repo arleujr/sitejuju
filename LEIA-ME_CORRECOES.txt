@@ -1,0 +1,46 @@
+PATCH — TRANSIÇÕES + VIVÊNCIAS + ÁUDIO
+
+Base: PATCH_CODIGO_LIMPO_POS_WEBP.
+
+Corrige:
+1. Primeiro beijo -> Conversa
+   - congela início e fim da transição no momento em que ela começa;
+   - barra móvel do navegador / composição tardia não consegue mais fazer
+     a página voltar alguns frames e subir duas vezes.
+
+2. Trabalho -> "Amo o seu sorriso"
+   - mantém a expansão tipo vídeo;
+   - ao terminar a expansão, a prévia fica fixa;
+   - a seção Sorriso real é alinhada por baixo;
+   - só então a prévia some.
+   Resultado: não existe mais a mesma tela subindo depois do fullscreen.
+
+3. "e é só o começo da nossa história" / vivencias-final.mp4
+   - remove o smooth-scroll que podia ultrapassar o vídeo e voltar;
+   - encaixa no ponto em que o card já está centralizado (p=.965);
+   - trava o scroll antes de esperar o vídeo;
+   - não mostra frame preto enquanto o MP4 ainda não decodificou.
+
+4. Música
+   - tenta começar assim que o loader chega a 100%;
+   - se o navegador bloquear autoplay com som, o clique em "Começar" tenta
+     novamente e não deixa o estado ficar falsamente "ativado";
+   - depois disso a música continua pelo restante da experiência.
+
+IMPORTANTE SOBRE AUTOPLAY:
+Chrome/Safari podem bloquear áudio audível sem gesto do usuário. Código nenhum
+pode garantir som automático em todos os aparelhos sem uma interação. O patch
+tenta na saída do loader e usa "Começar" como fallback imediato.
+
+Arquivos alterados:
+- index.html
+- src/main.js
+- src/site-unified/runtime.js
+- src/site-unified/site-continuation-entry.js
+- src/site-unified/site-continuation-bridge.css
+- src/site-unified/vivencias-scene.js
+
+Validações:
+- sintaxe de todos os JS: OK
+- loader inline: OK
+- UTF-8/mojibake: OK

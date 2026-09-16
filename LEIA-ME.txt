@@ -1,35 +1,24 @@
-VERSAO V2 — corrige a chamada do conversor no Windows usando npx.cmd.
+PATCH CIRÚRGICO
 
-PATCH WEBP — HERO + NOSSO PRIMEIRO BEIJO
+Restaura exatamente da versão funcional:
+- coração Hero -> Nosso primeiro beijo;
+- entrada/saída das mensagens estilo WhatsApp;
+- pilha de mensagens subindo;
+- fade das mensagens antigas;
+- dots animados de "Juju ❤️ está digitando...".
 
-Objetivo:
-- reduzir os 5 PNGs pesados;
-- preservar transparência das ilustrações;
-- manter o loading curto;
-- carregar Hero + frame inicial do beijo antes de abrir;
-- aquecer as outras poses em segundo plano;
-- impedir Trabalho de disparar requests no boot.
+Mantém as correções recentes de:
+- primeiro beijo -> conversa;
+- Trabalho -> Sorriso;
+- Vivências/vídeo;
+- áudio;
+- loader;
+- WebP.
 
-Uso:
-1. Extraia este ZIP NA RAIZ do sitejuju.
-2. Rode:
-   powershell -ExecutionPolicy Bypass -File .\APLICAR_OTIMIZACAO_WEBP.ps1
-3. O script:
-   - cria backup fora do repositório, na pasta TEMP;
-   - converte os 5 PNGs para WebP;
-   - aplica os caminhos .webp;
-   - remove os PNGs antigos de public/assets;
-   - executa pnpm build.
-4. Teste:
-   pnpm dev
-5. Se estiver correto:
-   git add -A
-   git commit -m "optimize first kiss assets to webp"
-   git push
+Nenhum asset é convertido ou apagado.
 
-Qualidade:
-- fundo da festa: WebP q82
-- ilustrações com transparência: WebP q84, alphaQuality 92
-
-O Sharp é executado via npm exec só durante a conversão.
-Ele NÃO é adicionado ao package.json.
+Arquivos:
+- src/main.js
+- src/styles.css
+- src/site-unified/base.css
+- src/site-unified/runtime.js

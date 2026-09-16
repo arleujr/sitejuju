@@ -35,12 +35,12 @@ const STAGES = [
       { id:'academia-06', rot:1.3, enter:[24,22], exit:[30,24] },
     ],
     deco: [
-      { key:'cat-01', file:'cat-01.png', rot:-2, enter:[-24,18], exit:[-28,20] },
-      { key:'cat-02', file:'cat-02.png', rot:3, enter:[28,-10], exit:[32,-12] },
-      { key:'cat-03', file:'cat-03.png', rot:0, enter:[0,22], exit:[0,26] },
-      { key:'dog01', file:'dog01.png', rot:2, enter:[26,18], exit:[30,22] },
-      { key:'halter02', file:'halter02.png', rot:-4, enter:[10,22], exit:[14,26] },
-      { key:'garrafa', file:'garrafa.png', rot:-3, enter:[-26,0], exit:[-30,0] },
+      { key:'cat-01', file:'cat-01.webp', rot:-2, enter:[-24,18], exit:[-28,20] },
+      { key:'cat-02', file:'cat-02.webp', rot:3, enter:[28,-10], exit:[32,-12] },
+      { key:'cat-03', file:'cat-03.webp', rot:0, enter:[0,22], exit:[0,26] },
+      { key:'dog01', file:'dog01.webp', rot:2, enter:[26,18], exit:[30,22] },
+      { key:'halter02', file:'halter02.webp', rot:-4, enter:[10,22], exit:[14,26] },
+      { key:'garrafa', file:'garrafa.webp', rot:-3, enter:[-26,0], exit:[-30,0] },
       { key:'heart', file:'heart.png', rot:0, enter:[8,10], exit:[12,12] },
     ],
   },
@@ -56,14 +56,14 @@ const STAGES = [
       { id:'academia-13', rot:-0.7, enter:[22,24], exit:[26,26] },
     ],
     deco: [
-      { key:'vceumsabor', file:'vceumsabor.png', rot:-1, enter:[0,24], exit:[0,28], kind:'title' },
-      { key:'cat-04', file:'cat-04.png', rot:-1, enter:[-26,18], exit:[-30,22] },
-      { key:'cat-05', file:'cat-05.png', rot:3, enter:[28,16], exit:[32,20] },
-      { key:'cat-06', file:'cat-06.png', rot:0, enter:[26,-14], exit:[30,-18] },
-      { key:'fire', file:'fire.png', rot:2, enter:[-10,22], exit:[-12,26] },
-      { key:'luva', file:'luva.png', rot:-3, enter:[-28,0], exit:[-32,0] },
-      { key:'halter01', file:'halter01.jpg', rot:3, enter:[28,0], exit:[32,0] },
-      { key:'heart2', file:'heart2.png', rot:0, enter:[10,20], exit:[14,24] },
+      { key:'vceumsabor', file:'vceumsabor.webp', rot:-1, enter:[0,24], exit:[0,28], kind:'title' },
+      { key:'cat-04', file:'cat-04.webp', rot:-1, enter:[-26,18], exit:[-30,22] },
+      { key:'cat-05', file:'cat-05.webp', rot:3, enter:[28,16], exit:[32,20] },
+      { key:'cat-06', file:'cat-06.webp', rot:0, enter:[26,-14], exit:[30,-18] },
+      { key:'fire', file:'fire.webp', rot:2, enter:[-10,22], exit:[-12,26] },
+      { key:'luva', file:'luva.webp', rot:-3, enter:[-28,0], exit:[-32,0] },
+      { key:'halter01', file:'halter01.webp', rot:3, enter:[28,0], exit:[32,0] },
+      { key:'heart2', file:'heart2.webp', rot:0, enter:[10,20], exit:[14,24] },
     ],
   },
   {
@@ -78,13 +78,13 @@ const STAGES = [
       { id:'academia-16', rot:-0.4, enter:[0,28], exit:[0,30] },
     ],
     deco: [
-      { key:'cat-07', file:'cat-07.png', rot:1, enter:[0,-24], exit:[0,-28] },
-      { key:'rat01', file:'rat01.png', rot:-2, enter:[-28,20], exit:[-32,24] },
-      { key:'rat02', file:'rat02.png', rot:2, enter:[-16,22], exit:[-20,26] },
-      { key:'rat03', file:'rat03.png', rot:-1, enter:[16,22], exit:[20,26] },
-      { key:'rat04', file:'rat04.png', rot:2, enter:[28,0], exit:[32,0] },
-      { key:'rat05', file:'rat05.png', rot:-2, enter:[-28,0], exit:[-32,0] },
-      { key:'trofeu', file:'trofeu.jpg', rot:0, enter:[0,18], exit:[0,22] },
+      { key:'cat-07', file:'cat-07.webp', rot:1, enter:[0,-24], exit:[0,-28] },
+      { key:'rat01', file:'rat01.webp', rot:-2, enter:[-28,20], exit:[-32,24] },
+      { key:'rat02', file:'rat02.webp', rot:2, enter:[-16,22], exit:[-20,26] },
+      { key:'rat03', file:'rat03.webp', rot:-1, enter:[16,22], exit:[20,26] },
+      { key:'rat04', file:'rat04.webp', rot:2, enter:[28,0], exit:[32,0] },
+      { key:'rat05', file:'rat05.webp', rot:-2, enter:[-28,0], exit:[-32,0] },
+      { key:'trofeu', file:'trofeu.webp', rot:0, enter:[0,18], exit:[0,22] },
     ],
   },
 ];
@@ -241,7 +241,7 @@ export function initGymScene(root, options={}){
   const assetBase=(options.assetBase||'/assets').replace(/\/$/,'');
   const host=document.createElement('section');
   host.className='gym-v1';
-  host.innerHTML=`<div class="gym-v1__section"><div class="gym-v1__sticky"><div class="gym-v1__scene-stage"><div class="gym-v1__paper" aria-hidden="true"></div><div class="gym-v1__canvas"><img class="gym-v1__tapago" src="${assetBase}/love-scene-academia/kit/tapago.png" alt="Amo receber os tá pago" draggable="false" /></div></div></div></div>`;
+  host.innerHTML=`<div class="gym-v1__section"><div class="gym-v1__sticky"><div class="gym-v1__scene-stage"><div class="gym-v1__paper" aria-hidden="true"></div><div class="gym-v1__canvas"><img class="gym-v1__tapago" src="${assetBase}/love-scene-academia/kit/tapago.webp" alt="Amo receber os tá pago" draggable="false" /></div></div></div></div>`;
   const canvas=host.querySelector('.gym-v1__canvas');
   const map={};
   STAGES.forEach((stage,index)=>{

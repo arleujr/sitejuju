@@ -56,7 +56,7 @@ function floatingHeroHeartsMarkup(){
 const memoryHearts = [
   {
     id: 'carnaval',
-    src: '/assets/jujucarnaval02.jpeg',
+    src: '/assets/jujucarnaval02.webp',
     alt: 'Arleu e Juliana no carnaval',
     label: 'Dois Gostosos',
     side: 'left',
@@ -68,7 +68,7 @@ const memoryHearts = [
   },
   {
     id: 'formatura',
-    src: '/assets/jujuformatura.jpeg',
+    src: '/assets/jujuformatura.webp',
     alt: 'Arleu e Juliana na formatura',
     label: '🥵🥵🥵',
     side: 'right-top',
@@ -80,7 +80,7 @@ const memoryHearts = [
   },
   {
     id: 'casamento',
-    src: '/assets/jujucasamento.jpg',
+    src: '/assets/jujucasamento.webp',
     alt: 'Arleu e Juliana em uma celebração',
     label: 'Juntos',
     side: 'right-bottom',
@@ -92,7 +92,7 @@ const memoryHearts = [
   },
   {
     id: 'coracoes',
-    src: '/assets/hero-coracoes.jpg',
+    src: '/assets/hero-coracoes.webp',
     alt: 'Uma memória especial',
     label: '❤️❤️❤️',
     side: 'left-bottom',
@@ -396,7 +396,7 @@ app.innerHTML = `
     
           <div class="scene-title" data-title>
             <span class="scene-title__ornament" aria-hidden="true"><i></i><b>♥</b><i></i></span>
-            <img src="/assets/titulo-abertura.png" alt="E depois disso começamos a conversar..." decoding="async" fetchpriority="high" />
+            <img src="/assets/titulo-abertura.webp" alt="E depois disso começamos a conversar..." decoding="async" fetchpriority="high" />
           </div>
     
           <div class="chat-viewport" data-chat-viewport>
@@ -415,34 +415,34 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.195">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-01.jpeg" alt="Foto rotina 01" decoding="async"  loading="lazy" />
-                  <span class="media-fallback">rotina-01.jpeg</span>
+                  <img src="/assets/rotina/rotina-01.webp" alt="Foto rotina 01" decoding="async" />
+                  <span class="media-fallback">rotina-01.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.235">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-02.jpeg" alt="Foto rotina 02" decoding="async"  loading="lazy" />
-                  <span class="media-fallback">rotina-02.jpeg</span>
+                  <img src="/assets/rotina/rotina-02.webp" alt="Foto rotina 02" decoding="async" />
+                  <span class="media-fallback">rotina-02.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.275">
                 <figure class="media-card media-card--three-four media-card--lg">
-                  <img src="/assets/rotina/rotina-03.jpeg" alt="Foto rotina 03" decoding="async"  loading="lazy" />
-                  <span class="media-fallback">rotina-03.jpeg</span>
+                  <img src="/assets/rotina/rotina-03.webp" alt="Foto rotina 03" decoding="async" />
+                  <span class="media-fallback">rotina-03.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media message--cluster" data-event data-at="0.315">
                 <div class="media-grid media-grid--two">
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-04.jpeg" alt="Foto rotina 04" decoding="async"  loading="lazy" />
-                    <span class="media-fallback">rotina-04.jpeg</span>
+                    <img src="/assets/rotina/rotina-04.webp" alt="Foto rotina 04" decoding="async" />
+                    <span class="media-fallback">rotina-04.webp</span>
                   </figure>
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-05.jpeg" alt="Foto rotina 05" decoding="async"  loading="lazy" />
-                    <span class="media-fallback">rotina-05.jpeg</span>
+                    <img src="/assets/rotina/rotina-05.webp" alt="Foto rotina 05" decoding="async" />
+                    <span class="media-fallback">rotina-05.webp</span>
                   </figure>
                 </div>
               </article>
@@ -464,34 +464,34 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.480">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-06.jpeg" alt="Foto rotina 06" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-06.jpeg</span>
+                  <img src="/assets/rotina/rotina-06.webp" alt="Foto rotina 06" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-06.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.515">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-07.jpeg" alt="Foto rotina 07" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-07.jpeg</span>
+                  <img src="/assets/rotina/rotina-07.webp" alt="Foto rotina 07" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-07.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.550">
                 <figure class="media-card media-card--three-four media-card--lg">
-                  <img src="/assets/rotina/rotina-08.jpeg" alt="Foto rotina 08" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-08.jpeg</span>
+                  <img src="/assets/rotina/rotina-08.webp" alt="Foto rotina 08" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-08.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media message--cluster" data-event data-at="0.585">
                 <div class="media-grid media-grid--two">
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-09.jpg" alt="Foto rotina 09" decoding="async" fetchpriority="low"  loading="lazy" />
-                    <span class="media-fallback">rotina-09.jpg</span>
+                    <img src="/assets/rotina/rotina-09.webp" alt="Foto rotina 09" decoding="async" fetchpriority="low" />
+                    <span class="media-fallback">rotina-09.webp</span>
                   </figure>
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-10.jpeg" alt="Foto rotina 10" decoding="async" fetchpriority="low"  loading="lazy" />
-                    <span class="media-fallback">rotina-10.jpeg</span>
+                    <img src="/assets/rotina/rotina-10.webp" alt="Foto rotina 10" decoding="async" fetchpriority="low" />
+                    <span class="media-fallback">rotina-10.webp</span>
                   </figure>
                 </div>
               </article>
@@ -509,34 +509,34 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.710">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-11.jpeg" alt="Foto rotina 11" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-11.jpeg</span>
+                  <img src="/assets/rotina/rotina-11.webp" alt="Foto rotina 11" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-11.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.785">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-12.jpeg" alt="Foto rotina 12" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-12.jpeg</span>
+                  <img src="/assets/rotina/rotina-12.webp" alt="Foto rotina 12" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-12.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.820">
                 <figure class="media-card media-card--portrait media-card--lg">
-                  <img src="/assets/rotina/rotina-13.jpeg" alt="Foto rotina 13" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-13.jpeg</span>
+                  <img src="/assets/rotina/rotina-13.webp" alt="Foto rotina 13" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-13.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media message--cluster" data-event data-at="0.855">
                 <div class="media-grid media-grid--two">
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-14.jpeg" alt="Foto rotina 14" decoding="async" fetchpriority="low"  loading="lazy" />
-                    <span class="media-fallback">rotina-14.jpeg</span>
+                    <img src="/assets/rotina/rotina-14.webp" alt="Foto rotina 14" decoding="async" fetchpriority="low" />
+                    <span class="media-fallback">rotina-14.webp</span>
                   </figure>
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-15.jpeg" alt="Foto rotina 15" decoding="async" fetchpriority="low"  loading="lazy" />
-                    <span class="media-fallback">rotina-15.jpeg</span>
+                    <img src="/assets/rotina/rotina-15.webp" alt="Foto rotina 15" decoding="async" fetchpriority="low" />
+                    <span class="media-fallback">rotina-15.webp</span>
                   </figure>
                 </div>
               </article>
@@ -547,7 +547,7 @@ app.innerHTML = `
 
               <article class="message message--outgoing message--media" data-event data-at="0.905">
                 <figure class="media-card media-card--three-four media-card--lg">
-                  <img src="/assets/juju-crianca.jpg" alt="Foto de infância da Juju" decoding="async" fetchpriority="low"  loading="lazy" />
+                  <img src="/assets/juju-crianca.jpg" alt="Foto de infância da Juju" decoding="async" fetchpriority="low" />
                   <span class="media-fallback">juju-crianca.jpg</span>
                 </figure>
               </article>
@@ -561,22 +561,22 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.945">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-16.jpeg" alt="Foto rotina 16" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-16.jpeg</span>
+                  <img src="/assets/rotina/rotina-16.webp" alt="Foto rotina 16" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-16.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.960">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-17.jpeg" alt="Foto rotina 17" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-17.jpeg</span>
+                  <img src="/assets/rotina/rotina-17.webp" alt="Foto rotina 17" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-17.webp</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.973">
                 <figure class="media-card media-card--portrait media-card--lg">
-                  <img src="/assets/rotina/rotina-18.jpeg" alt="Foto rotina 18" decoding="async" fetchpriority="low"  loading="lazy" />
-                  <span class="media-fallback">rotina-18.jpeg</span>
+                  <img src="/assets/rotina/rotina-18.webp" alt="Foto rotina 18" decoding="async" fetchpriority="low" />
+                  <span class="media-fallback">rotina-18.webp</span>
                 </figure>
               </article>
     
@@ -648,17 +648,17 @@ app.innerHTML = `
             <div class="romance-overlay" data-romance-overlay aria-hidden="true">
               <div class="romance-copy romance-copy--gallery">
                 <div class="romance-copy__reveal">
-                  <img src="/assets/romance/trabalho-frase-01-user.png" alt="" decoding="async" fetchpriority="low" />
+                  <img src="/assets/romance/trabalho-frase-01-user.webp" alt="" decoding="async" fetchpriority="low" />
                 </div>
               </div>
               <div class="romance-copy romance-copy--viewer-a">
                 <div class="romance-copy__reveal">
-                  <img src="/assets/romance/trabalho-frase-02-user.png" alt="" decoding="async" fetchpriority="low" />
+                  <img src="/assets/romance/trabalho-frase-02-user.webp" alt="" decoding="async" fetchpriority="low" />
                 </div>
               </div>
               <div class="romance-copy romance-copy--viewer-b">
                 <div class="romance-copy__reveal">
-                  <img src="/assets/romance/trabalho-frase-03-user.png" alt="" decoding="async" fetchpriority="low" />
+                  <img src="/assets/romance/trabalho-frase-03-user.webp" alt="" decoding="async" fetchpriority="low" />
                 </div>
               </div>
     
@@ -1511,6 +1511,8 @@ let tearSnapshotBuilt = false;
 let tearNextBuilt = false;
 let tearVisualMode = null;
 let tearTransitionViewport = 0;
+let tearFreezeStartY = 0;
+let tearHandoffY = 0;
 let tearViewportWidth = Math.round(window.innerWidth || document.documentElement.clientWidth || 0);
 
 function liveMobileViewportHeight() {
@@ -1591,37 +1593,47 @@ function resetTearVisual() {
 function renderTear() {
   if (!chapterTear || !tearStage || !tearPage || !unifiedStory) return;
 
-  // No Chrome/Android a barra do navegador muda a altura visual durante o
-  // próprio gesto de scroll. Se recalcularmos a geometria nesse momento, o
-  // rasgo volta alguns frames e parece que a mesma página sobe várias vezes.
-  // Usamos a altura visual ATUAL para detectar a entrada e, assim que a
-  // transição começa, congelamos essa referência até o handoff terminar.
+  const scrollY = window.scrollY;
   const liveViewport = liveMobileViewportHeight();
   const wasActive = tearVisualMode === 'active';
-  let transitionViewport = wasActive && tearTransitionViewport
-    ? tearTransitionViewport
-    : liveViewport;
-  let freezeStart = chapterTear.offsetTop - transitionViewport;
-  const handoff = unifiedStory.offsetTop;
-  let active = window.scrollY >= freezeStart && window.scrollY < handoff;
+
+  // A causa do "sobe, volta um pedaço e sobe de novo" era a geometria da
+  // transição continuar sendo recalculada enquanto o Chrome mobile mudava a
+  // viewport e enquanto a página terminava de compor. Ao entrar no rasgo,
+  // congelamos AS DUAS coordenadas até o handoff terminar.
+  let freezeStart = wasActive && tearFreezeStartY
+    ? tearFreezeStartY
+    : chapterTear.offsetTop - liveViewport;
+  let handoff = wasActive && tearHandoffY
+    ? tearHandoffY
+    : unifiedStory.offsetTop;
+
+  let active = scrollY >= freezeStart && scrollY < handoff;
 
   if (active && !wasActive) {
     tearTransitionViewport = liveViewport;
-    transitionViewport = tearTransitionViewport;
-    freezeStart = chapterTear.offsetTop - transitionViewport;
-    active = window.scrollY >= freezeStart && window.scrollY < handoff;
+    tearFreezeStartY = chapterTear.offsetTop - tearTransitionViewport;
+    tearHandoffY = unifiedStory.offsetTop;
+    freezeStart = tearFreezeStartY;
+    handoff = tearHandoffY;
+    active = scrollY >= freezeStart && scrollY < handoff;
   }
 
   const span = Math.max(1, handoff - freezeStart);
-  const raw = clamp01((window.scrollY - freezeStart) / span);
+  const raw = clamp01((scrollY - freezeStart) / span);
 
   if (!active) {
-    const mode = window.scrollY < freezeStart ? 'before' : 'after';
-    if (tearVisualMode === mode) return;
-    tearVisualMode = mode;
+    const mode = scrollY < freezeStart ? 'before' : 'after';
+    if (tearVisualMode !== mode) {
+      tearVisualMode = mode;
+      tearStage.classList.remove('is-active');
+      if (mode === 'before') resetTearVisual();
+    }
+
+    // Fora do rasgo liberamos a geometria para uma futura reentrada.
     tearTransitionViewport = 0;
-    tearStage.classList.remove('is-active');
-    if (mode === 'before') resetTearVisual();
+    tearFreezeStartY = 0;
+    tearHandoffY = 0;
     return;
   }
 
@@ -1630,9 +1642,6 @@ function renderTear() {
   buildTearNextPage();
   tearStage.classList.add('is-active');
 
-  // Começa totalmente igual ao último frame do Ato I. Depois a borda rasgada
-  // sobe pela tela; no fim, seguramos o primeiro frame da rotina V3.2 até o DOM real
-  // chegar exatamente à mesma posição.
   const tear = range(raw, .02, .91);
   const eased = tear * tear * (3 - 2 * tear);
   const tearY = 103 - eased * 121;
@@ -1672,6 +1681,8 @@ createViewportFrameDriver(() => {
   tearNextBuilt = false;
   tearVisualMode = null;
   tearTransitionViewport = 0;
+  tearFreezeStartY = 0;
+  tearHandoffY = 0;
   tearSnapshotSlot?.replaceChildren();
   tearNextSlot?.replaceChildren();
   resetTearVisual();

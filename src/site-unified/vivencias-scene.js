@@ -548,7 +548,7 @@ export function initVivenciasScene(root,options={}){
   let mobileBaseW=window.innerWidth;
   let last=-1;
 
-  function firstVideoTargetScrollY(targetProgress=.972){
+  function firstVideoTargetScrollY(targetProgress=.965){
     const viewH=viewportHeight();
     const scrollable=Math.max(1,host.offsetHeight-viewH);
     const hostTop=window.scrollY+host.getBoundingClientRect().top;
@@ -566,12 +566,19 @@ export function initVivenciasScene(root,options={}){
   function waitForFirstVideoFrame(callback){
     clearTimeout(firstVideoReadyTimer);
 
+    let callbackCalled=false;
+    const begin=()=>{
+      if(callbackCalled)return;
+      callbackCalled=true;
+      callback();
+    };
+
     const ready=()=>{
-      clearTimeout(firstVideoReadyTimer);
+      video.classList.add('is-frame-ready');
       video.removeEventListener('loadeddata',ready);
       video.removeEventListener('canplay',ready);
-      video.classList.add('is-frame-ready');
-      callback();
+      clearTimeout(firstVideoReadyTimer);
+      begin();
     };
 
     if(video.readyState>=2){
@@ -579,10 +586,13 @@ export function initVivenciasScene(root,options={}){
       return;
     }
 
-    video.addEventListener('loadeddata',ready,{once:true});
-    video.addEventListener('canplay',ready,{once:true});
-    // Em conexão lenta, não deixa o gate preso para sempre.
-    firstVideoReadyTimer=window.setTimeout(ready,2200);
+    video.addEventListener('loadeddata',ready);
+    video.addEventListener('canplay',ready);
+
+    // Em rede lenta começamos a tentativa de play, mas NÃO fingimos que existe
+    // frame pronto. O vídeo continua transparente sobre o fundo claro até
+    // loadeddata/canplay chegar, evitando o retângulo preto.
+    firstVideoReadyTimer=window.setTimeout(begin,5000);
   }
 
   function snapToFirstVideoAndPlay(){
@@ -590,31 +600,24 @@ export function initVivenciasScene(root,options={}){
 
     ensureVideoSource();
     firstVideoSnapActive=true;
-    const targetY=firstVideoTargetScrollY(.972);
-    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
 
-    window.scrollTo({top:targetY,behavior:reduced?'auto':'smooth'});
+    // O card já está visualmente assentado em p=.965. Em vez de fazer um
+    // smooth-scroll até .972 (que podia deixar o touch momentum passar da cena,
+    // mostrar o fundo seguinte e depois VOLTAR), fazemos um único encaixe curto
+    // e instantâneo e travamos ali.
+    const targetY=firstVideoTargetScrollY(.965);
+    window.scrollTo(0,targetY);
 
-    const startedAt=performance.now();
-    const settle=()=>{
-      if(destroyed||!firstVideoSnapActive)return;
-      const close=Math.abs(window.scrollY-targetY)<=5;
-      const timedOut=performance.now()-startedAt>1300;
+    firstVideoSnapActive=false;
+    firstVideoSnapRaf=0;
+    last=-1;
+    frameDriver?.schedule();
 
-      if(close||timedOut){
-        firstVideoSnapActive=false;
-        firstVideoSnapRaf=0;
-        window.scrollTo(0,targetY);
-        last=-1;
-        frameDriver?.schedule();
-        requestAnimationFrame(()=>startFirstVideo());
-        return;
-      }
+    // Trava ANTES de aguardar buffer/frame. Assim nenhum gesto consegue
+    // atravessar a Vivências enquanto o MP4 está preparando o primeiro frame.
+    lockForFirstVideo();
 
-      firstVideoSnapRaf=requestAnimationFrame(settle);
-    };
-
-    firstVideoSnapRaf=requestAnimationFrame(settle);
+    requestAnimationFrame(()=>startFirstVideo());
   }
 
   function preventGateInput(event){
@@ -978,7 +981,7 @@ export function initVivenciasScene(root,options={}){
           if(p>.885)ensureVideoSource();
           // Ao chegar perto do card, termina a rolagem exatamente no vídeo,
           // trava a cena naquele ponto e só então inicia a reprodução.
-          if(p>=.945&&!firstVideoFinished&&autoStartAllowed)snapToFirstVideoAndPlay();
+          if(p>=.962&&!firstVideoFinished&&autoStartAllowed)snapToFirstVideoAndPlay();
         }
       }
     }

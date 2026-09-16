@@ -86,3 +86,19 @@
     transition: none !important;
   }
 }
+
+
+/* Handoff real Trabalho -> Sorriso:
+   a prévia fullscreen fica presa na viewport enquanto a seção real é alinhada
+   por baixo. Isso elimina a segunda subida da mesma tela. */
+.transition-video-stage.is-handoff-fixed {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  padding: 0 !important;
+  z-index: 2147480000 !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: none !important;
+}

@@ -165,10 +165,10 @@
         // Só o que realmente precisa estar pronto antes da pessoa começar:
         // Hero completa + "Nosso primeiro beijo".
         const heroAssets = [
-          '/assets/jujucarnaval02.jpeg',
-          '/assets/jujuformatura.jpeg',
-          '/assets/jujucasamento.jpg',
-          '/assets/hero-coracoes.jpg'
+          '/assets/jujucarnaval02.webp',
+          '/assets/jujuformatura.webp',
+          '/assets/jujucasamento.webp',
+          '/assets/hero-coracoes.webp'
         ];
 
         // Só o frame inicial de "Nosso primeiro beijo" bloqueia a abertura.
@@ -313,6 +313,13 @@
 
           // Garante que a abertura SEMPRE começa na Hero.
           window.scrollTo(0, 0);
+
+          // Sinal único para o runtime: a partir daqui ele pode preparar/tentar
+          // iniciar a trilha. Se o navegador bloquear autoplay com som, o clique
+          // em "Começar" vira o fallback garantido.
+          window.__siteLoaderComplete = true;
+          document.dispatchEvent(new CustomEvent('site:loader-complete'));
+
           loader.classList.add('site-loader--done');
 
           window.setTimeout(() => {

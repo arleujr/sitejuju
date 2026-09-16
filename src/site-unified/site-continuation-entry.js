@@ -23,6 +23,9 @@ export function initSiteContinuation() {
   let preview = null;
   let prepareRaf = 0;
   let entered = false;
+  let handoffPending = false;
+  let handoffTimer = 0;
+  let handoffScrollY = 0;
 
   function forcePreviewFrameZero(clone) {
     clone.querySelectorAll('.smile-v5__spread').forEach((spread, index) => {
@@ -131,6 +134,8 @@ export function initSiteContinuation() {
 
   function activate(event) {
     const mount = event?.detail?.mount || defaultHandoffMount;
+    if (handoffPending || entered) return;
+
     installPreview(mount);
     shell.classList.add('is-active');
     shell.setAttribute('aria-hidden', 'false');
@@ -139,11 +144,78 @@ export function initSiteContinuation() {
       detail: { root: shell, scene },
     }));
 
-    // Não existe handoff físico para esperar. A continuação já está no fluxo.
-    entered = true;
-    document.dispatchEvent(new CustomEvent('nextscene:entered', {
-      detail: { root: shell, scene },
-    }));
+    // O fullscreen de Trabalho é uma prévia do PRIMEIRO frame de Sorriso.
+    // Antes, depois de expandir, a pessoa ainda precisava rolar até a seção
+    // real — por isso via a mesma tela "subindo" novamente. Agora seguramos
+    // a prévia fixa, alinhamos a seção real por baixo e só então removemos
+    // a prévia. Visualmente existe uma única transição.
+    handoffPending = true;
+    handoffScrollY = window.scrollY;
+
+    const stage = document.querySelector('[data-transition-video-stage]');
+    const frame = document.querySelector('[data-transition-video-frame]');
+    stage?.classList.add('is-handoff-fixed');
+
+    const keepScroll = () => {
+      if (!handoffPending) return;
+      if (Math.abs(window.scrollY - handoffScrollY) > 1) {
+        window.scrollTo(0, handoffScrollY);
+      }
+    };
+    const blockInput = (event) => {
+      if (!handoffPending) return;
+      if (event.type === 'keydown') {
+        const blocked = ['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' ','Spacebar'];
+        if (!blocked.includes(event.key)) return;
+      }
+      event.preventDefault();
+    };
+
+    window.addEventListener('scroll', keepScroll, { passive: true });
+    window.addEventListener('wheel', blockInput, { passive: false });
+    window.addEventListener('touchmove', blockInput, { passive: false });
+    window.addEventListener('keydown', blockInput, { passive: false });
+
+    let committed = false;
+    const cleanupGate = () => {
+      window.removeEventListener('scroll', keepScroll);
+      window.removeEventListener('wheel', blockInput);
+      window.removeEventListener('touchmove', blockInput);
+      window.removeEventListener('keydown', blockInput);
+    };
+
+    const commit = () => {
+      if (committed) return;
+      committed = true;
+      clearTimeout(handoffTimer);
+      frame?.removeEventListener('transitionend', onTransitionEnd);
+
+      const target = Math.max(0, Math.round(window.scrollY + shell.getBoundingClientRect().top));
+      window.scrollTo(0, target);
+      scene.refresh?.();
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        stage?.classList.remove('is-handoff-fixed');
+        handoffPending = false;
+        cleanupGate();
+
+        entered = true;
+        document.dispatchEvent(new CustomEvent('nextscene:entered', {
+          detail: { root: shell, scene },
+        }));
+      }));
+    };
+
+    const onTransitionEnd = (event) => {
+      if (event.target !== frame) return;
+      if (!['width', 'height', 'border-radius', 'transform'].includes(event.propertyName)) return;
+      commit();
+    };
+
+    frame?.addEventListener('transitionend', onTransitionEnd);
+
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    handoffTimer = window.setTimeout(commit, reduced ? 80 : 980);
   }
 
   document.addEventListener('nextscene:prepare', prepare);

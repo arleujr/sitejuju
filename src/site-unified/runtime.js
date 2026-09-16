@@ -11,6 +11,7 @@ export function initStoryRuntime() {
   const mediaCards = [...document.querySelectorAll('.media-card')];
   const titleChime = document.getElementById('title-chime');
   const backgroundMusic = document.getElementById('background-music');
+  const startButton = document.querySelector('[data-start]');
 
   const plusButton = document.querySelector('[data-plus]');
   const gallery = document.querySelector('[data-work-gallery]');
@@ -34,7 +35,28 @@ export function initStoryRuntime() {
   const CHAT_END = 0.65;
   const GALLERY_OPEN = 0.690;
   const WORK_COUNT = 20;
-  const EXTENSIONS = ['webp', 'jpeg', 'jpg', 'png'];
+  const WORK_ASSETS = [
+    '/assets/trabalho/trabalho-01.webp',
+    '/assets/trabalho/trabalho-02.jpg',
+    '/assets/trabalho/trabalho-03.webp',
+    '/assets/trabalho/trabalho-04.webp',
+    '/assets/trabalho/trabalho-05.webp',
+    '/assets/trabalho/trabalho-06.webp',
+    '/assets/trabalho/trabalho-07.webp',
+    '/assets/trabalho/trabalho-08.webp',
+    '/assets/trabalho/trabalho-09.webp',
+    '/assets/trabalho/trabalho-10.webp',
+    '/assets/trabalho/trabalho-11.webp',
+    '/assets/trabalho/trabalho-12.webp',
+    '/assets/trabalho/trabalho-13.webp',
+    '/assets/trabalho/trabalho-14.webp',
+    '/assets/trabalho/trabalho-15.jpeg',
+    '/assets/trabalho/trabalho-16.jpeg',
+    '/assets/trabalho/trabalho-17.jpeg',
+    '/assets/trabalho/trabalho-18.jpeg',
+    '/assets/trabalho/trabalho-19.jpeg',
+    '/assets/trabalho/trabalho-20.webp',
+  ];
   const mobileMedia = window.matchMedia('(max-width: 700px)');
 
   const clamp = (n, a = 0, b = 1) => Math.min(b, Math.max(a, n));
@@ -48,6 +70,7 @@ export function initStoryRuntime() {
   let layoutDirty = true;
   let lastRomanceState = '';
   let audioEnabled = false;
+  let audioUnlockInFlight = false;
   let backgroundWanted = false;
   let backgroundFadeRaf = 0;
   const activeVideos = new Set();
@@ -143,8 +166,8 @@ export function initStoryRuntime() {
     window.scrollTo({ top: target, behavior });
   }
 
-  function workBase(index) {
-    return `/assets/trabalho/trabalho-${String(index + 1).padStart(2, '0')}`;
+  function workAsset(index) {
+    return WORK_ASSETS[index] || '';
   }
 
   function syncRomanceOverlay(active, showViewer, progress = 0) {
@@ -165,23 +188,22 @@ export function initStoryRuntime() {
     romanceOverlay?.setAttribute('aria-hidden', active ? 'false' : 'true');
   }
 
-  function tryImage(img, index, onFail) {
-    const base = workBase(index);
-    let extIndex = 0;
-    const attempt = () => {
-      img.onerror = () => {
-        extIndex += 1;
-        if (extIndex < EXTENSIONS.length) attempt();
-        else {
-          img.removeAttribute('src');
-          img.classList.remove('is-loaded');
-          onFail?.();
-        }
-      };
-      img.onload = () => img.classList.add('is-loaded');
-      img.src = `${base}.${EXTENSIONS[extIndex]}`;
+  function loadWorkImage(img, index, onFail) {
+    const src = workAsset(index);
+    if (!src) {
+      img.removeAttribute('src');
+      img.classList.remove('is-loaded');
+      onFail?.();
+      return;
+    }
+
+    img.onerror = () => {
+      img.removeAttribute('src');
+      img.classList.remove('is-loaded');
+      onFail?.();
     };
-    attempt();
+    img.onload = () => img.classList.add('is-loaded');
+    img.src = src;
   }
 
   let galleryBuilt = false;
@@ -208,7 +230,7 @@ export function initStoryRuntime() {
       button.append(img, fallback);
       galleryGrid.append(button);
 
-      tryImage(img, i, () => button.classList.add('is-fallback'));
+      loadWorkImage(img, i, () => button.classList.add('is-fallback'));
       img.addEventListener('load', () => button.classList.remove('is-fallback'));
       let pointerStartX = 0;
       let pointerStartY = 0;
@@ -386,7 +408,7 @@ export function initStoryRuntime() {
       viewerImg.decoding = 'async';
       viewerImg.fetchPriority = 'high';
       viewerImg.classList.remove('is-loaded');
-      tryImage(viewerImg, viewerIndex, () => viewerImg.classList.remove('is-loaded'));
+      loadWorkImage(viewerImg, viewerIndex, () => viewerImg.classList.remove('is-loaded'));
     }
 
     if (animate && viewerMedia && direction !== 0) {
@@ -703,9 +725,6 @@ export function initStoryRuntime() {
     const p = clamp(rawProgress);
     const chatP = clamp(p / CHAT_END);
 
-    // As 20 fotos de Trabalho não participam da abertura. Antes elas eram
-    // resolvidas já no boot e competiam com Hero/Ato I pela rede no Cloudflare.
-    // Só começamos a prepará-las quando a pessoa já está perto da galeria.
     if (!initialLoaderActive() && p >= 0.56) buildGallery();
 
     applyVisibility(chatP);
@@ -830,55 +849,58 @@ export function initStoryRuntime() {
       || document.body.classList.contains('site-is-loading');
   }
 
-  async function enableAudio() {
-    // Toque/tecla no loader não pode desbloquear a trilha por baixo da tela.
-    if (initialLoaderActive()) return;
+  async function enableAudio({ allowDuringLoader = false } = {}) {
+    if (initialLoaderActive() && !allowDuringLoader) return false;
+    if (audioUnlockInFlight) return false;
 
-    if (audioEnabled) {
-      backgroundWanted = true;
-      resumeBackgroundMusic();
-      return;
-    }
-
-    let unlocked = false;
-
-    // A música é o principal desbloqueio de áudio. O primeiro clique/toque
-    // (normalmente "Começar") permite áudio audível nos navegadores modernos.
-    if (backgroundMusic) {
-      try {
-        backgroundMusic.muted = false;
-        backgroundMusic.loop = true;
-        backgroundMusic.volume = 0;
-        await backgroundMusic.play();
-        unlocked = true;
-      } catch (_) {}
-    }
-
-    // Mantém os chimes existentes preparados sem produzir um som extra ao
-    // desbloquear a experiência.
-    if (titleChime) {
-      try {
-        const oldVolume = titleChime.volume;
-        titleChime.muted = false;
-        titleChime.volume = 0;
-        await titleChime.play();
-        titleChime.pause();
-        titleChime.currentTime = 0;
-        titleChime.volume = oldVolume || 1;
-        unlocked = true;
-      } catch (_) {}
-    }
-
-    // Mesmo que o arquivo da música ainda não tenha sido colocado, marcamos o
-    // áudio como habilitado após a interação para os vídeos entrarem sem muted.
-    audioEnabled = true;
     backgroundWanted = true;
-    soundHint?.classList.add('is-active');
-    soundHint?.setAttribute('aria-label', 'Som ativado');
-    soundHint?.setAttribute('title', 'Som ativado');
-    document.querySelectorAll('video').forEach(configureVideoAudio);
-    if (unlocked) resumeBackgroundMusic({ immediate: true });
-    maybePlayChime(clamp(((window.scrollY - storyTop) / travel) / CHAT_END));
+
+    if (!backgroundMusic) {
+      audioEnabled = true;
+      return true;
+    }
+
+    audioUnlockInFlight = true;
+
+    try {
+      backgroundMusic.preload = 'auto';
+      backgroundMusic.muted = false;
+      backgroundMusic.loop = true;
+      backgroundMusic.volume = 0;
+
+      if (backgroundMusic.readyState === 0) {
+        try { backgroundMusic.load(); } catch (_) {}
+      }
+
+      await backgroundMusic.play();
+
+      // Só marcamos como habilitado se a música realmente conseguiu tocar.
+      // Antes, uma tentativa bloqueada pelo navegador podia deixar
+      // audioEnabled=true e os cliques seguintes não corrigiam a música.
+      audioEnabled = true;
+      soundHint?.classList.add('is-active');
+      soundHint?.setAttribute('aria-label', 'Som ativado');
+      soundHint?.setAttribute('title', 'Som ativado');
+
+      document.querySelectorAll('video').forEach(configureVideoAudio);
+      resumeBackgroundMusic({ immediate: true });
+
+      // Prepara o chime sem obrigar sua reprodução.
+      if (titleChime) {
+        titleChime.preload = 'auto';
+        try { titleChime.load(); } catch (_) {}
+      }
+
+      maybePlayChime(clamp(((window.scrollY - storyTop) / travel) / CHAT_END));
+      return true;
+    } catch (_) {
+      // Autoplay com som pode ser bloqueado pelo browser. Nesse caso NÃO
+      // fingimos que o áudio está ativo: o próximo clique/toque tenta de novo.
+      audioEnabled = false;
+      return false;
+    } finally {
+      audioUnlockInFlight = false;
+    }
   }
 
   function playChime() {
@@ -972,7 +994,24 @@ export function initStoryRuntime() {
     }
   });
 
-  soundHint?.addEventListener('click', enableAudio);
+  const tryAudioAfterLoader = () => {
+    if (backgroundMusic) {
+      backgroundMusic.preload = 'auto';
+      try { backgroundMusic.load(); } catch (_) {}
+    }
+    // Tentamos imediatamente. Browsers que permitem autoplay começam aqui.
+    // Se bloquearem, o botão "Começar" é o fallback gestual garantido.
+    if (!audioEnabled) enableAudio({ allowDuringLoader: true });
+  };
+
+  document.addEventListener('site:loader-complete', tryAudioAfterLoader);
+  if (window.__siteLoaderComplete) tryAudioAfterLoader();
+
+  startButton?.addEventListener('click', () => {
+    if (!audioEnabled) enableAudio();
+  }, { capture: true });
+
+  soundHint?.addEventListener('click', () => enableAudio());
   window.addEventListener('pointerdown', () => {
     if (initialLoaderActive()) return;
     if (!audioEnabled) enableAudio();
@@ -988,6 +1027,28 @@ export function initStoryRuntime() {
     } else if (audioEnabled && backgroundWanted) {
       resumeBackgroundMusic();
     }
+  });
+
+  document.addEventListener('nextscene:entered', () => {
+    storyAdvanced = true;
+    manualVideoOpen = false;
+    manualViewerOpen = false;
+    manualGalleryOpen = false;
+    suppressAutoViewer = false;
+    setVideoStageVisible(false, false, false);
+    gallery?.classList.remove(
+      'is-active',
+      'is-grid-ready',
+      'is-copy-visible',
+      'is-manual-gallery',
+      'is-manual-viewer',
+      'is-auto-viewer',
+      'is-video-stage',
+      'is-video-pressing',
+      'is-video-fullscreen',
+      'is-next-scene-ready'
+    );
+    gallery?.setAttribute('aria-hidden', 'true');
   });
 
   // O scroll da conversa participa do scheduler global compartilhado com as
