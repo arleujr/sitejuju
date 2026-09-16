@@ -415,21 +415,21 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.195">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-01.jpeg" alt="Foto rotina 01" decoding="async" />
+                  <img src="/assets/rotina/rotina-01.jpeg" alt="Foto rotina 01" decoding="async"  loading="lazy" />
                   <span class="media-fallback">rotina-01.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.235">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-02.jpeg" alt="Foto rotina 02" decoding="async" />
+                  <img src="/assets/rotina/rotina-02.jpeg" alt="Foto rotina 02" decoding="async"  loading="lazy" />
                   <span class="media-fallback">rotina-02.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.275">
                 <figure class="media-card media-card--three-four media-card--lg">
-                  <img src="/assets/rotina/rotina-03.jpeg" alt="Foto rotina 03" decoding="async" />
+                  <img src="/assets/rotina/rotina-03.jpeg" alt="Foto rotina 03" decoding="async"  loading="lazy" />
                   <span class="media-fallback">rotina-03.jpeg</span>
                 </figure>
               </article>
@@ -437,11 +437,11 @@ app.innerHTML = `
               <article class="message message--incoming message--media message--cluster" data-event data-at="0.315">
                 <div class="media-grid media-grid--two">
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-04.jpeg" alt="Foto rotina 04" decoding="async" />
+                    <img src="/assets/rotina/rotina-04.jpeg" alt="Foto rotina 04" decoding="async"  loading="lazy" />
                     <span class="media-fallback">rotina-04.jpeg</span>
                   </figure>
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-05.jpeg" alt="Foto rotina 05" decoding="async" />
+                    <img src="/assets/rotina/rotina-05.jpeg" alt="Foto rotina 05" decoding="async"  loading="lazy" />
                     <span class="media-fallback">rotina-05.jpeg</span>
                   </figure>
                 </div>
@@ -464,21 +464,21 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.480">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-06.jpeg" alt="Foto rotina 06" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-06.jpeg" alt="Foto rotina 06" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-06.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.515">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-07.jpeg" alt="Foto rotina 07" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-07.jpeg" alt="Foto rotina 07" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-07.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.550">
                 <figure class="media-card media-card--three-four media-card--lg">
-                  <img src="/assets/rotina/rotina-08.jpeg" alt="Foto rotina 08" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-08.jpeg" alt="Foto rotina 08" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-08.jpeg</span>
                 </figure>
               </article>
@@ -486,11 +486,11 @@ app.innerHTML = `
               <article class="message message--incoming message--media message--cluster" data-event data-at="0.585">
                 <div class="media-grid media-grid--two">
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-09.jpg" alt="Foto rotina 09" decoding="async" fetchpriority="low" />
+                    <img src="/assets/rotina/rotina-09.jpg" alt="Foto rotina 09" decoding="async" fetchpriority="low"  loading="lazy" />
                     <span class="media-fallback">rotina-09.jpg</span>
                   </figure>
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-10.jpeg" alt="Foto rotina 10" decoding="async" fetchpriority="low" />
+                    <img src="/assets/rotina/rotina-10.jpeg" alt="Foto rotina 10" decoding="async" fetchpriority="low"  loading="lazy" />
                     <span class="media-fallback">rotina-10.jpeg</span>
                   </figure>
                 </div>
@@ -509,21 +509,21 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.710">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-11.jpeg" alt="Foto rotina 11" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-11.jpeg" alt="Foto rotina 11" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-11.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.785">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-12.jpeg" alt="Foto rotina 12" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-12.jpeg" alt="Foto rotina 12" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-12.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.820">
                 <figure class="media-card media-card--portrait media-card--lg">
-                  <img src="/assets/rotina/rotina-13.jpeg" alt="Foto rotina 13" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-13.jpeg" alt="Foto rotina 13" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-13.jpeg</span>
                 </figure>
               </article>
@@ -531,11 +531,11 @@ app.innerHTML = `
               <article class="message message--incoming message--media message--cluster" data-event data-at="0.855">
                 <div class="media-grid media-grid--two">
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-14.jpeg" alt="Foto rotina 14" decoding="async" fetchpriority="low" />
+                    <img src="/assets/rotina/rotina-14.jpeg" alt="Foto rotina 14" decoding="async" fetchpriority="low"  loading="lazy" />
                     <span class="media-fallback">rotina-14.jpeg</span>
                   </figure>
                   <figure class="media-card media-card--portrait media-card--grid-small">
-                    <img src="/assets/rotina/rotina-15.jpeg" alt="Foto rotina 15" decoding="async" fetchpriority="low" />
+                    <img src="/assets/rotina/rotina-15.jpeg" alt="Foto rotina 15" decoding="async" fetchpriority="low"  loading="lazy" />
                     <span class="media-fallback">rotina-15.jpeg</span>
                   </figure>
                 </div>
@@ -547,7 +547,7 @@ app.innerHTML = `
 
               <article class="message message--outgoing message--media" data-event data-at="0.905">
                 <figure class="media-card media-card--three-four media-card--lg">
-                  <img src="/assets/juju-crianca.jpg" alt="Foto de infância da Juju" decoding="async" fetchpriority="low" />
+                  <img src="/assets/juju-crianca.jpg" alt="Foto de infância da Juju" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">juju-crianca.jpg</span>
                 </figure>
               </article>
@@ -561,21 +561,21 @@ app.innerHTML = `
     
               <article class="message message--incoming message--media" data-event data-at="0.945">
                 <figure class="media-card media-card--portrait media-card--xl">
-                  <img src="/assets/rotina/rotina-16.jpeg" alt="Foto rotina 16" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-16.jpeg" alt="Foto rotina 16" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-16.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.960">
                 <figure class="media-card media-card--portrait media-card--sm">
-                  <img src="/assets/rotina/rotina-17.jpeg" alt="Foto rotina 17" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-17.jpeg" alt="Foto rotina 17" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-17.jpeg</span>
                 </figure>
               </article>
     
               <article class="message message--incoming message--media" data-event data-at="0.973">
                 <figure class="media-card media-card--portrait media-card--lg">
-                  <img src="/assets/rotina/rotina-18.jpeg" alt="Foto rotina 18" decoding="async" fetchpriority="low" />
+                  <img src="/assets/rotina/rotina-18.jpeg" alt="Foto rotina 18" decoding="async" fetchpriority="low"  loading="lazy" />
                   <span class="media-fallback">rotina-18.jpeg</span>
                 </figure>
               </article>

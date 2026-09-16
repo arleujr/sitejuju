@@ -184,8 +184,12 @@ export function initStoryRuntime() {
     attempt();
   }
 
+  let galleryBuilt = false;
+
   function buildGallery() {
-    if (!galleryGrid || galleryGrid.children.length) return;
+    if (galleryBuilt || !galleryGrid) return;
+    galleryBuilt = true;
+    if (galleryGrid.children.length) return;
     for (let i = 0; i < WORK_COUNT; i += 1) {
       const button = document.createElement('button');
       button.type = 'button';
@@ -696,6 +700,11 @@ export function initStoryRuntime() {
     const p = clamp(rawProgress);
     const chatP = clamp(p / CHAT_END);
 
+    // As 20 fotos de Trabalho não participam da abertura. Antes elas eram
+    // resolvidas já no boot e competiam com Hero/Ato I pela rede no Cloudflare.
+    // Só começamos a prepará-las quando a pessoa já está perto da galeria.
+    if (p >= 0.56) buildGallery();
+
     applyVisibility(chatP);
     layoutStack();
 
@@ -813,7 +822,15 @@ export function initStoryRuntime() {
   videoAudioObserver.observe(document.documentElement, { childList: true, subtree: true });
   document.querySelectorAll('video').forEach(configureVideoAudio);
 
+  function initialLoaderActive() {
+    return document.documentElement.classList.contains('site-is-loading')
+      || document.body.classList.contains('site-is-loading');
+  }
+
   async function enableAudio() {
+    // Toque/tecla no loader não pode desbloquear a trilha por baixo da tela.
+    if (initialLoaderActive()) return;
+
     if (audioEnabled) {
       backgroundWanted = true;
       resumeBackgroundMusic();
@@ -894,6 +911,7 @@ export function initStoryRuntime() {
   }
 
   plusButton?.addEventListener('click', () => {
+    buildGallery();
     clearVideoAdvanceTimer();
     manualVideoOpen = false;
     autoFullscreenTriggered = false;
@@ -941,6 +959,7 @@ export function initStoryRuntime() {
 
 
   window.addEventListener('keydown', (e) => {
+    if (initialLoaderActive()) return;
     if (!audioEnabled) enableAudio();
     if (gallery?.classList.contains('is-next-scene-ready')) return;
     if (viewer?.getAttribute('aria-hidden') === 'false') {
@@ -952,11 +971,13 @@ export function initStoryRuntime() {
 
   soundHint?.addEventListener('click', enableAudio);
   window.addEventListener('pointerdown', () => {
+    if (initialLoaderActive()) return;
     if (!audioEnabled) enableAudio();
-  }, { once: true, passive: true });
+  }, { passive: true });
   window.addEventListener('touchstart', () => {
+    if (initialLoaderActive()) return;
     if (!audioEnabled) enableAudio();
-  }, { once: true, passive: true });
+  }, { passive: true });
   document.addEventListener('visibilitychange', () => {
     if (!backgroundMusic) return;
     if (document.hidden) {
@@ -972,7 +993,6 @@ export function initStoryRuntime() {
   const storyViewportDriver = createViewportFrameDriver(requestMeasure, { visualViewport: true });
   mobileMedia.addEventListener?.('change', requestMeasure);
 
-  buildGallery();
   setViewerIndex(0, false);
   syncGalleryScrollState();
   requestAnimationFrame(() => requestAnimationFrame(measure));

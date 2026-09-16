@@ -1,14 +1,19 @@
-PATCH — LOADING RÁPIDO + TRAVA DE SCROLL
+PATCH — Cloudflare / loading sem disputa de rede
 
-Correções:
-- não espera document.fonts.ready (o projeto usa fontes do sistema);
-- não decodifica as mesmas imagens duas vezes;
-- Hero recebe prioridade alta;
-- "Nosso primeiro beijo" carrega junto;
-- scroll/swipe/teclas ficam bloqueados enquanto o loader está na tela;
-- a página é forçada para o topo antes e depois do loading;
-- 100% só aparece quando Hero + Primeiro Beijo + app estão prontos;
-- se um asset crítico falhar por 15 s, não finge 100%: mostra "Recarregue a página".
+O que muda:
+- mantém o loading preso no topo;
+- remove o falso timeout de 15 s das imagens críticas;
+- se um arquivo crítico realmente der 404, mostra o nome exato;
+- fotos da Rotina passam a usar loading="lazy";
+- áudio inicial passa a preload="none";
+- toque/tecla no loader não inicia música por trás da tela;
+- grade de Trabalho (20 fotos + fallback de extensões) deixa de ser criada no boot;
+  ela só começa a carregar perto da parte de Trabalho.
 
-Arquivo alterado:
+Arquivos:
 - index.html
+- src/main.js
+- src/site-unified/runtime.js
+- DIAGNOSTICAR_ASSETS.ps1
+
+A base de src/main.js já inclui o patch mobile de viewport/transição.
