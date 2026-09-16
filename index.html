@@ -11,6 +11,9 @@
       html.site-is-loading,
       body.site-is-loading {
         overflow: hidden !important;
+        overscroll-behavior: none !important;
+        touch-action: none !important;
+        height: 100% !important;
       }
 
       #site-loader {
@@ -129,15 +132,45 @@
 
         document.documentElement.classList.add('site-is-loading');
 
-        // Tudo que aparece na Hero e em "Nosso primeiro beijo".
-        // O site so sera revelado quando estes arquivos tiverem sido
-        // BAIXADOS E DECODIFICADOS pelo navegador.
-        const criticalAssets = [
-          '/assets/loading-casal.webp',
+        // Enquanto o loading estiver visível, a história fica fisicamente presa
+        // no topo. Assim nenhum wheel/swipe/tecla consegue "andar por baixo".
+        try {
+          if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        } catch (_) {}
+
+        let lockingScroll = true;
+        const forceTop = () => {
+          if (!lockingScroll) return;
+          if (window.scrollX !== 0 || window.scrollY !== 0) window.scrollTo(0, 0);
+        };
+        const blockScrollInput = (event) => {
+          if (!lockingScroll) return;
+          event.preventDefault();
+          forceTop();
+        };
+        const blockScrollKey = (event) => {
+          if (!lockingScroll) return;
+          if (!['ArrowDown','ArrowUp','PageDown','PageUp',' ','Spacebar','Home','End'].includes(event.key)) return;
+          event.preventDefault();
+          forceTop();
+        };
+
+        window.scrollTo(0, 0);
+        window.addEventListener('scroll', forceTop, { passive: true, capture: true });
+        window.addEventListener('wheel', blockScrollInput, { passive: false, capture: true });
+        window.addEventListener('touchmove', blockScrollInput, { passive: false, capture: true });
+        window.addEventListener('keydown', blockScrollKey, { capture: true });
+
+        // Só o que realmente precisa estar pronto antes da pessoa começar:
+        // Hero completa + "Nosso primeiro beijo".
+        const heroAssets = [
           '/assets/jujucarnaval02.jpeg',
           '/assets/jujuformatura.jpeg',
           '/assets/jujucasamento.jpg',
-          '/assets/hero-coracoes.jpg',
+          '/assets/hero-coracoes.jpg'
+        ];
+
+        const beijoAssets = [
           '/assets/festa-show-neon.png',
           '/assets/encontro-01-juntos.png',
           '/assets/encontro-02-pergunta.png',
@@ -145,15 +178,16 @@
           '/assets/encontro-04-abraco.png'
         ];
 
+        const criticalAssets = [...heroAssets, ...beijoAssets];
+
         const startedAt = performance.now();
-        const minimumVisibleMs = 700;
-        const EXTRA_STEPS = 3; // app montado + fontes + imagens DOM prontas
-        const total = criticalAssets.length + EXTRA_STEPS;
+        const minimumVisibleMs = 350;
+        const total = criticalAssets.length + 1; // + app montado
         let completed = 0;
         let finished = false;
+        let failedAsset = null;
 
         const paint = () => {
-          // Nunca mostramos 100% antes da liberacao real.
           const raw = Math.round((completed / total) * 100);
           const value = finished ? 100 : Math.min(99, raw);
           if (percentNode) percentNode.textContent = `${value}%`;
@@ -167,58 +201,57 @@
 
         const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
-        const loadAndDecode = async (src, attempt = 1) => {
-          try {
-            const image = new Image();
-            image.decoding = 'async';
-            image.src = src;
+        const loadAndDecode = (src, priority = 'auto') => new Promise((resolve, reject) => {
+          const image = new Image();
+          let settled = false;
+          const timer = window.setTimeout(() => {
+            if (settled) return;
+            settled = true;
+            reject(new Error(`Tempo excedido: ${src}`));
+          }, 15000);
 
-            if (!image.complete || !image.naturalWidth) {
-              await new Promise((resolve, reject) => {
-                image.addEventListener('load', resolve, { once: true });
-                image.addEventListener('error', () => reject(new Error(`Falha ao carregar ${src}`)), { once: true });
-              });
+          const finish = async () => {
+            if (settled) return;
+            try {
+              if (!image.naturalWidth) throw new Error(`Imagem inválida: ${src}`);
+              if (typeof image.decode === 'function') {
+                try { await image.decode(); } catch (_) {}
+              }
+              settled = true;
+              window.clearTimeout(timer);
+              markComplete();
+              resolve(src);
+            } catch (error) {
+              settled = true;
+              window.clearTimeout(timer);
+              reject(error);
             }
+          };
 
-            if (!image.naturalWidth) throw new Error(`Imagem invalida: ${src}`);
+          image.decoding = 'async';
+          try { image.fetchPriority = priority; } catch (_) {}
+          image.addEventListener('load', finish, { once: true });
+          image.addEventListener('error', () => {
+            if (settled) return;
+            settled = true;
+            window.clearTimeout(timer);
+            reject(new Error(`Falha ao carregar ${src}`));
+          }, { once: true });
+          image.src = src;
 
-            // onload significa que os bytes chegaram. decode() garante que a
-            // imagem tambem esta pronta para ser pintada na tela.
-            if (typeof image.decode === 'function') {
-              await image.decode();
-            }
-
-            markComplete();
-            return src;
-          } catch (error) {
-            if (attempt < 4) {
-              await wait(450 * attempt);
-              return loadAndDecode(src, attempt + 1);
-            }
-
-            // Nao fingimos 100% e nao abrimos um site incompleto.
-            console.error('[loader] Asset critico nao ficou pronto:', src, error);
-            return new Promise(() => {});
-          }
-        };
+          if (image.complete && image.naturalWidth) finish();
+        });
 
         const waitForApp = new Promise((resolve) => {
           const app = document.getElementById('app');
-          if (!app) {
-            markComplete();
-            resolve();
-            return;
-          }
-
-          const ready = () => app.childElementCount > 0;
-          if (ready()) {
+          if (!app || app.childElementCount > 0) {
             markComplete();
             resolve();
             return;
           }
 
           const observer = new MutationObserver(() => {
-            if (!ready()) return;
+            if (app.childElementCount <= 0) return;
             observer.disconnect();
             markComplete();
             resolve();
@@ -226,36 +259,12 @@
           observer.observe(app, { childList: true });
         });
 
-        const waitForFonts = (async () => {
-          if (document.fonts?.ready) await document.fonts.ready;
-          markComplete();
-        })();
-
-        const waitForCriticalDomImages = (async () => {
-          await waitForApp;
-
-          // Espera tambem as tags <img> reais do primeiro beijo. Mesmo com o
-          // arquivo em cache, isso evita revelar a pagina um frame antes do paint.
-          const images = [
-            ...document.querySelectorAll('#inicio img, #ato-1 img')
-          ];
-
-          await Promise.all(images.map(async (image) => {
-            if (!image.complete || !image.naturalWidth) {
-              await new Promise((resolve, reject) => {
-                image.addEventListener('load', resolve, { once: true });
-                image.addEventListener('error', reject, { once: true });
-              });
-            }
-            if (typeof image.decode === 'function') {
-              try { await image.decode(); } catch (_) {}
-            }
-          }));
-
-          // Garante dois paints completos antes de liberar o overlay.
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-          markComplete();
-        })();
+        // Hero recebe prioridade alta. O primeiro beijo carrega ao mesmo tempo,
+        // mas sem obrigar o browser a tratar tudo como prioridade máxima.
+        const assetJobs = [
+          ...heroAssets.map((src) => loadAndDecode(src, 'high')),
+          ...beijoAssets.map((src) => loadAndDecode(src, 'auto'))
+        ];
 
         const reveal = async () => {
           if (finished) return;
@@ -267,23 +276,44 @@
           if (percentNode) percentNode.textContent = '100%';
           if (barNode) barNode.style.transform = 'scaleX(1)';
 
-          // Deixa o 100% ser realmente pintado antes do fade.
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          // Um único ciclo de pintura é suficiente porque os arquivos já foram
+          // baixados/decodificados e o app já existe no DOM.
+          await new Promise((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          );
 
+          // Garante que a abertura SEMPRE começa na Hero.
+          window.scrollTo(0, 0);
           loader.classList.add('site-loader--done');
-          document.documentElement.classList.remove('site-is-loading');
-          document.body.classList.remove('site-is-loading');
-          window.setTimeout(() => loader.remove(), 560);
+
+          window.setTimeout(() => {
+            lockingScroll = false;
+            window.removeEventListener('scroll', forceTop, { capture: true });
+            window.removeEventListener('wheel', blockScrollInput, { capture: true });
+            window.removeEventListener('touchmove', blockScrollInput, { capture: true });
+            window.removeEventListener('keydown', blockScrollKey, { capture: true });
+            document.documentElement.classList.remove('site-is-loading');
+            document.body.classList.remove('site-is-loading');
+            window.scrollTo(0, 0);
+            loader.remove();
+          }, 520);
+        };
+
+        const showLoadProblem = (error) => {
+          failedAsset = error;
+          console.error('[loader] Falha em asset crítico:', error);
+          // Não finge 100% nem abre incompleto. Também não fica "eternamente"
+          // parecendo que está carregando sem explicar.
+          if (percentNode) percentNode.textContent = '!';
+          const label = loader.querySelector('.site-loader__label');
+          if (label) label.textContent = 'Recarregue a página';
         };
 
         paint();
 
-        Promise.all([
-          ...criticalAssets.map((src) => loadAndDecode(src)),
-          waitForApp,
-          waitForFonts,
-          waitForCriticalDomImages
-        ]).then(reveal);
+        Promise.all([...assetJobs, waitForApp])
+          .then(reveal)
+          .catch(showLoadProblem);
       })();
     </script>
     <script src="/analytics-config.js"></script>

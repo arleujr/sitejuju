@@ -1,24 +1,14 @@
-PATCH MOBILE — FAIXA INFERIOR + TRANSIÇÃO PRIMEIRO BEIJO -> CONVERSA
+PATCH — LOADING RÁPIDO + TRAVA DE SCROLL
 
-Base usada: versão github.zip enviada pelo usuário em 15/09/2026.
+Correções:
+- não espera document.fonts.ready (o projeto usa fontes do sistema);
+- não decodifica as mesmas imagens duas vezes;
+- Hero recebe prioridade alta;
+- "Nosso primeiro beijo" carrega junto;
+- scroll/swipe/teclas ficam bloqueados enquanto o loader está na tela;
+- a página é forçada para o topo antes e depois do loading;
+- 100% só aparece quando Hero + Primeiro Beijo + app estão prontos;
+- se um asset crítico falhar por 15 s, não finge 100%: mostra "Recarregue a página".
 
-Corrige:
-1) faixa rosa/vermelha que aparece embaixo no Chrome/Android quando a barra do navegador recolhe;
-2) transição "Nosso primeiro beijo" -> "Conversa" que parecia subir/repetir a mesma página várias vezes no mobile.
-
-Arquivos:
-- src/main.js
-- src/mobile-viewport-fix.css
-
-O que NÃO é alterado:
-- index.html / loading
-- Vivências JS
-- Play/Pause
-- analytics
-- pnpm / Wrangler
-- public / fotos
-
-A correção mantém a geometria de scroll original e usa 100dvh apenas nas superfícies visuais. Também impede que resizes de altura causados pela barra do Chrome desmontem e recriem o rasgo no meio da transição.
-
-Aplicação:
-Extraia este ZIP por cima do projeto atual e rode `pnpm dev`.
+Arquivo alterado:
+- index.html
