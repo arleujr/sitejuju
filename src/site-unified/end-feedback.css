@@ -134,7 +134,5 @@
   .love-outro__choices{gap:10px}
   .love-outro__vote{min-width:124px;min-height:52px}
 }
-@media (prefers-reduced-motion:reduce){
-  .love-outro__inner{transition:none}
-  .love-outro__vote,.love-outro__replay{transition:none}
-}
+
+

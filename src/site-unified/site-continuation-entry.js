@@ -214,7 +214,7 @@ export function initSiteContinuation() {
 
     frame?.addEventListener('transitionend', onTransitionEnd);
 
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    const reduced = false;
     handoffTimer = window.setTimeout(commit, reduced ? 80 : 980);
   }
 

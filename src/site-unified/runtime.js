@@ -521,7 +521,7 @@ export function initStoryRuntime() {
     try {
       window.scrollTo({
         top: target,
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        behavior: 'smooth',
       });
     } catch (_) {
       window.scrollTo(0, target);

@@ -364,19 +364,6 @@ app.innerHTML = `
         </div>
       </div>
     </section>
-
-
-    <section class="chapter-tear" id="transicao-ato-2" aria-label="Transição para o próximo capítulo">
-      <div class="tear-stage" data-tear-stage>
-        <div class="tear-next-page" data-tear-next aria-hidden="true"></div>
-        <div class="tear-old-page" data-tear-page aria-hidden="true">
-          <div class="tear-snapshot" data-tear-snapshot></div>
-          <div class="tear-edge" data-tear-edge></div>
-        </div>
-      </div>
-    </section>
-
-
     <section class="story site-unified-story" data-story aria-label="Nossa rotina">
       <section class="chat-scene" data-scene aria-label="E depois disso começamos a conversar">
         <div class="chat-app">
@@ -725,7 +712,7 @@ void import('./engagement-tracker.js')
 
 const hero = document.querySelector('.hero');
 const startButton = document.querySelector('[data-start]');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reducedMotion = false; // Experiência narrativa: animações cinematográficas sempre ativas.
 const parallaxNodes = [...document.querySelectorAll('[data-parallax]')];
 const memoryHeartNodes = [...document.querySelectorAll('[data-memory-heart]')];
 
@@ -847,7 +834,7 @@ function syncAutoJourneyControl() {
   // O controle deixa de depender do botão Começar. Se a pessoa entrar na
   // história por scroll/swipe/teclado, ele aparece em estado pausado e pode
   // iniciar o passeio automático a partir do ponto atual.
-  const visible = !reducedMotion && !transitionRunning && (autoJourneySession || !introArmed || window.scrollY > 2);
+  const visible = !transitionRunning && (autoJourneySession || !introArmed || window.scrollY > 2);
   autoJourneyControl.classList.toggle('is-visible', visible);
   autoJourneyControl.dataset.state = autoJourneyActive ? 'playing' : 'paused';
 
@@ -950,8 +937,6 @@ function autoJourneyFrame(timestamp) {
 }
 
 function startAutoJourney() {
-  if (reducedMotion) return;
-
   autoJourneySession = true;
   autoJourneyActive = true;
   autoJourneyLastTs = 0;
@@ -1491,205 +1476,12 @@ createRain(document.querySelector('[data-rain-front]'), {
 
 
 // ---------------------------------------------------------
-// TRANSIÇÃO ATO I -> SITE UNIFICADO V3.2 — SEM SALTO DE PÁGINA.
-// A viewport fica visualmente PARADA o tempo inteiro:
-// 1) no exato instante em que o sticky do Ato I terminaria, congelamos
-//    uma cópia pixel-a-pixel da tela aprovada;
-// 2) o documento continua rolando por baixo, invisível;
-// 3) a cópia é rasgada e revela uma cópia EXATA do primeiro frame da rotina V3.2;
-// 4) só soltamos o overlay quando a rotina V3.2 real está exatamente no topo.
+// HANDOFF ATO I -> CONVERSA
 // ---------------------------------------------------------
-const chapterTear = document.querySelector('#transicao-ato-2');
-const tearStage = document.querySelector('[data-tear-stage]');
-const tearPage = document.querySelector('[data-tear-page]');
-const tearSnapshotSlot = document.querySelector('[data-tear-snapshot]');
-const tearNextSlot = document.querySelector('[data-tear-next]');
-const tearEdge = document.querySelector('[data-tear-edge]');
-const unifiedStory = document.querySelector('[data-story]');
-const unifiedFirstScene = unifiedStory?.querySelector('.chat-scene');
-let tearSnapshotBuilt = false;
-let tearNextBuilt = false;
-let tearVisualMode = null;
-let tearTransitionViewport = 0;
-let tearFreezeStartY = 0;
-let tearHandoffY = 0;
-let tearViewportWidth = Math.round(window.innerWidth || document.documentElement.clientWidth || 0);
-
-function liveMobileViewportHeight() {
-  const visual = window.visualViewport?.height;
-  return Math.max(1, Math.round((Number.isFinite(visual) && visual > 0 ? visual : window.innerHeight) || tearStage?.clientHeight || 1));
-}
-
-// O overlay não participa do fluxo da página. Isso é o que impede a tela
-// de "subir" entre o fim do Ato I e o começo da transição.
-if (tearStage && tearStage.parentElement !== document.body) {
-  document.body.appendChild(tearStage);
-}
-
-function cloneStageWithCanvasPixels(source, extraClass) {
-  if (!source) return null;
-  const clone = source.cloneNode(true);
-  clone.classList.add(extraClass);
-
-  const sourceCanvases = [...source.querySelectorAll('canvas')];
-  const cloneCanvases = [...clone.querySelectorAll('canvas')];
-  cloneCanvases.forEach((targetCanvas, index) => {
-    const sourceCanvas = sourceCanvases[index];
-    if (!sourceCanvas) return;
-    try {
-      targetCanvas.width = sourceCanvas.width;
-      targetCanvas.height = sourceCanvas.height;
-      const targetContext = targetCanvas.getContext('2d');
-      targetContext?.drawImage(sourceCanvas, 0, 0);
-    } catch {}
-  });
-
-  return clone;
-}
-
-function buildTearSnapshot() {
-  if (tearSnapshotBuilt || !tearSnapshotSlot || !encounterStage) return;
-
-  // Neste ponto o Ato I já chegou ao progresso 1. Não mudamos nenhuma
-  // animação aprovada: apenas fotografamos visualmente o frame final.
-  renderEncounter();
-  const clone = cloneStageWithCanvasPixels(encounterStage, 'tear-snapshot-stage');
-  if (!clone) return;
-  clone.removeAttribute('data-encounter-stage');
-  tearSnapshotSlot.replaceChildren(clone);
-  tearSnapshotBuilt = true;
-}
-
-function buildTearNextPage() {
-  if (tearNextBuilt || !tearNextSlot || !unifiedFirstScene) return;
-
-  // O rasgo revela o PRIMEIRO FRAME REAL da rotina aprovada (V3.2).
-  // Clonamos a cena já renderizada pelo runtime em progresso 0, então o
-  // último pixel da transição coincide com o primeiro pixel da seção real.
-  const clone = cloneStageWithCanvasPixels(unifiedFirstScene, 'tear-next-stage-clone');
-  if (!clone) return;
-
-  const unifiedStyle = getComputedStyle(unifiedStory);
-  ['--paper', '--ink', '--sage', '--header-h', '--composer-h', '--chat-dim', '--composer-dim'].forEach((name) => {
-    const value = unifiedStyle.getPropertyValue(name);
-    if (value) tearNextSlot.style.setProperty(name, value);
-  });
-
-  clone.removeAttribute('data-scene');
-  clone.setAttribute('aria-hidden', 'true');
-  tearNextSlot.replaceChildren(clone);
-  tearNextBuilt = true;
-}
-
-function resetTearVisual() {
-  if (!tearStage) return;
-  tearStage.style.setProperty('--tear-y', '103%');
-  tearStage.style.setProperty('--tear-lift', '0vh');
-  tearStage.style.setProperty('--tear-tilt', '0deg');
-  tearStage.style.setProperty('--tear-progress', '0');
-  tearStage.style.setProperty('--tear-edge-opacity', '0');
-}
-
-function renderTear() {
-  if (!chapterTear || !tearStage || !tearPage || !unifiedStory) return;
-
-  const scrollY = window.scrollY;
-  const liveViewport = liveMobileViewportHeight();
-  const wasActive = tearVisualMode === 'active';
-
-  // A causa do "sobe, volta um pedaço e sobe de novo" era a geometria da
-  // transição continuar sendo recalculada enquanto o Chrome mobile mudava a
-  // viewport e enquanto a página terminava de compor. Ao entrar no rasgo,
-  // congelamos AS DUAS coordenadas até o handoff terminar.
-  let freezeStart = wasActive && tearFreezeStartY
-    ? tearFreezeStartY
-    : chapterTear.offsetTop - liveViewport;
-  let handoff = wasActive && tearHandoffY
-    ? tearHandoffY
-    : unifiedStory.offsetTop;
-
-  let active = scrollY >= freezeStart && scrollY < handoff;
-
-  if (active && !wasActive) {
-    tearTransitionViewport = liveViewport;
-    tearFreezeStartY = chapterTear.offsetTop - tearTransitionViewport;
-    tearHandoffY = unifiedStory.offsetTop;
-    freezeStart = tearFreezeStartY;
-    handoff = tearHandoffY;
-    active = scrollY >= freezeStart && scrollY < handoff;
-  }
-
-  const span = Math.max(1, handoff - freezeStart);
-  const raw = clamp01((scrollY - freezeStart) / span);
-
-  if (!active) {
-    const mode = scrollY < freezeStart ? 'before' : 'after';
-    if (tearVisualMode !== mode) {
-      tearVisualMode = mode;
-      tearStage.classList.remove('is-active');
-      if (mode === 'before') resetTearVisual();
-    }
-
-    // Fora do rasgo liberamos a geometria para uma futura reentrada.
-    tearTransitionViewport = 0;
-    tearFreezeStartY = 0;
-    tearHandoffY = 0;
-    return;
-  }
-
-  tearVisualMode = 'active';
-  buildTearSnapshot();
-  buildTearNextPage();
-  tearStage.classList.add('is-active');
-
-  const tear = range(raw, .02, .91);
-  const eased = tear * tear * (3 - 2 * tear);
-  const tearY = 103 - eased * 121;
-  const lift = -eased * 3.2;
-  const tilt = -eased * .38;
-  const edgeOpacity = tear <= .01 || tear >= .995 ? 0 : 1;
-
-  tearStage.style.setProperty('--tear-y', `${tearY.toFixed(3)}%`);
-  tearStage.style.setProperty('--tear-lift', `${lift.toFixed(3)}vh`);
-  tearStage.style.setProperty('--tear-tilt', `${tilt.toFixed(3)}deg`);
-  tearStage.style.setProperty('--tear-progress', eased.toFixed(4));
-  tearStage.style.setProperty('--tear-edge-opacity', `${edgeOpacity}`);
-
-  if (tearEdge) tearEdge.style.opacity = `${edgeOpacity}`;
-}
-
-const tearScrollDriver = createScrollFrameDriver(renderTear, {
-  root: chapterTear || unifiedStory,
-  rootMargin: '110% 0px',
-});
-
-createViewportFrameDriver(() => {
-  const nextWidth = Math.round(window.innerWidth || document.documentElement.clientWidth || 0);
-  const widthChanged = Math.abs(nextWidth - tearViewportWidth) > 24;
-  tearViewportWidth = nextWidth;
-
-  // Android dispara resize quando a barra do navegador recolhe/volta. Isso
-  // NÃO é uma mudança real de layout e não pode desmontar/recriar os clones
-  // no meio do rasgo. Em mobile, só reconstruímos se a largura realmente
-  // mudou (rotação, resize de janela, etc.).
-  if (window.innerWidth <= 860 && !widthChanged) {
-    tearScrollDriver.schedule();
-    return;
-  }
-
-  tearSnapshotBuilt = false;
-  tearNextBuilt = false;
-  tearVisualMode = null;
-  tearTransitionViewport = 0;
-  tearFreezeStartY = 0;
-  tearHandoffY = 0;
-  tearSnapshotSlot?.replaceChildren();
-  tearNextSlot?.replaceChildren();
-  resetTearVisual();
-  tearScrollDriver.schedule();
-});
-resetTearVisual();
-tearScrollDriver.schedule();
+// A Conversa é a próxima seção REAL do documento. Não existe mais clone,
+// snapshot ou página intermediária: encontro-04 sai naturalmente e a
+// conversa entra uma única vez pelo próprio scroll.
+// ---------------------------------------------------------
 
 // Draggable heart memories. They remain where the user leaves them, with a tiny inertial settle.
 const heartNodes = memoryHeartNodes;

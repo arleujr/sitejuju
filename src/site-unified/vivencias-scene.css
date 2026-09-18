@@ -385,9 +385,8 @@
   }
 }
 
-@media (prefers-reduced-motion:reduce){
-  .viv4__gloss::before{animation:none!important}
-}
+
+
 
 
 /* ========================================================================== 
@@ -604,10 +603,8 @@
   }
 }
 
-@media (prefers-reduced-motion:reduce){
-  .viv4-bridge__final-screen,
-  .viv4-bridge__thought-reveal{transition:none}
-}
+
+
 
 
 /* ==========================================================================

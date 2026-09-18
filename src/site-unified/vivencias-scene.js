@@ -390,7 +390,7 @@ export function initVivenciasScene(root,options={}){
         <div class="viv4__grain"></div>
 
         <div class="viv4__headline-viewport">
-          <h2 class="viv4__headline viv4__headline--1">Me diverti muito ao seu lado</h2>
+          <h2 class="viv4__headline viv4__headline--1">Sou muito feliz ao seu lado</h2>
           <h2 class="viv4__headline viv4__headline--2">Vc é minha melhor companhia</h2>
         </div>
 
@@ -486,7 +486,7 @@ export function initVivenciasScene(root,options={}){
     // Em vez de depender de mais scroll, levamos a tela preta ao viewport.
     outroRevealTimer=window.setTimeout(()=>{
       if(destroyed||!outro.classList.contains('is-ready'))return;
-      const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+      const reduced=false;
       outro.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
     },120);
   }

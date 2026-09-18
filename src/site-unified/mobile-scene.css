@@ -280,11 +280,8 @@
   .love-trio .gym-v1__tapago { scale: .68; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .love-trio .smile-v5__gloss::before,
-  .love-trio .style-v1__gloss::before,
-  .love-trio .gym-v1__gloss::before { animation: none !important; }
-}
+
+
 
 /* ==========================================================================
    MOBILE V4P1 — correção de viewport + escala visual

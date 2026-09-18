@@ -291,13 +291,8 @@
   .love-trio__gym { margin-top: -124.25svh; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .love-trio .smile-v5__gloss::before,
-  .love-trio .style-v1__gloss::before,
-  .love-trio .gym-v1__gloss::before {
-    animation: none !important;
-  }
-}
+
+
 
 /* Ajustes finais de espaçamento validados para 1920x1080: removem as últimas
    colisões entre foto/foto e asset/asset sem depender de JavaScript. */

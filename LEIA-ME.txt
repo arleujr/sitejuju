@@ -1,24 +1,32 @@
-PATCH CIRÚRGICO
+PATCH DIRETO — EFEITOS COMPLETOS NO DESKTOP E MOBILE
 
-Restaura exatamente da versão funcional:
-- coração Hero -> Nosso primeiro beijo;
-- entrada/saída das mensagens estilo WhatsApp;
-- pilha de mensagens subindo;
-- fade das mensagens antigas;
-- dots animados de "Juju ❤️ está digitando...".
+Base: src.zip enviado pelo usuário nesta conversa.
 
-Mantém as correções recentes de:
-- primeiro beijo -> conversa;
-- Trabalho -> Sorriso;
-- Vivências/vídeo;
-- áudio;
-- loader;
-- WebP.
+Objetivo:
+- desktop e mobile usam os mesmos efeitos narrativos;
+- o site não desliga coração, conversa, transições ou Play/Pause por causa de
+  prefers-reduced-motion do Windows/navegador.
 
-Nenhum asset é convertido ou apagado.
+Alterações:
+- main.js: reducedMotion fixado em false;
+- runtime/continuação/Vivências: transições não são encurtadas por reduced-motion;
+- CSS: removidos APENAS os blocos @media (prefers-reduced-motion: reduce).
 
-Arquivos:
-- src/main.js
-- src/styles.css
-- src/site-unified/base.css
-- src/site-unified/runtime.js
+Preservado e validado:
+- coração Hero -> Primeiro beijo;
+- Juju ❤️ está digitando... + três dots;
+- entrada/saída das mensagens;
+- Play/Pause;
+- código atual enviado no src.zip fora dessas alterações;
+- UTF-8;
+- sintaxe de todos os JS.
+
+Arquivos alterados: 11
+Blocos CSS reduced-motion removidos: 14
+
+COMO USAR:
+Extraia este ZIP diretamente na raiz do sitejuju e aceite substituir.
+Não há script para executar.
+
+Depois:
+pnpm dev

@@ -1,0 +1,40 @@
+{
+  "changed_files": [
+    "styles.css",
+    "site-unified/site-continuation-bridge.css",
+    "site-unified/end-feedback.css",
+    "site-unified/combined-scene.css",
+    "site-unified/vivencias-scene.css",
+    "site-unified/mobile-scene.css",
+    "site-unified/base.css",
+    "main.js",
+    "site-unified/runtime.js",
+    "site-unified/site-continuation-entry.js",
+    "site-unified/vivencias-scene.js"
+  ],
+  "css_reduced_motion_blocks_removed": {
+    "styles.css": 3,
+    "site-unified/site-continuation-bridge.css": 1,
+    "site-unified/end-feedback.css": 1,
+    "site-unified/combined-scene.css": 1,
+    "site-unified/vivencias-scene.css": 2,
+    "site-unified/mobile-scene.css": 1,
+    "site-unified/base.css": 5
+  },
+  "js_replacements": {
+    "main.js": 1,
+    "site-unified/runtime.js": 1,
+    "site-unified/site-continuation-entry.js": 1,
+    "site-unified/vivencias-scene.js": 1
+  },
+  "checks": {
+    "heart active JS": true,
+    "heart settled JS": true,
+    "heart animation CSS": true,
+    "typing text": true,
+    "typing dots markup": true,
+    "typing keyframes": true,
+    "message transitions": true,
+    "play/pause": true
+  }
+}

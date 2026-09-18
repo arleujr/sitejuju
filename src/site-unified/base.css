@@ -311,10 +311,8 @@
   .typing-status { font-size: 13px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .message, .media-card img, .sound-hint, .scene-title { transition: none !important; }
-  .typing-dots i { animation: none !important; }
-}
+
+
 
 /* -------------------------------------------------------------
    TRANSIÇÃO: + -> GALERIA DE TRABALHO
@@ -1175,21 +1173,8 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .romance-copy {
-    transform: none !important;
-    filter: none !important;
-  }
-  .romance-copy__reveal {
-    clip-path: none !important;
-    -webkit-clip-path: none !important;
-    animation: none !important;
-  }
-  .romance-heart,
-  .love-arrow { animation: none !important; }
-  .romance-heart { display: none; }
-  .love-arrow { display: none; }
-}
+
+
 
 /* -------------------------------------------------------------
    V26 — galeria primeiro, frases depois + PNGs mais legíveis
@@ -1712,16 +1697,8 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .transition-video-stage,
-  .work-gallery.is-video-stage .viewer-media {
-    transition: none !important;
-  }
-  .work-gallery.is-video-pressing .transition-play,
-  .work-gallery.is-video-pressing .transition-play::after {
-    animation: none !important;
-  }
-}
+
+
 
 /* -------------------------------------------------------------
    V32 — falso vídeo como transição + expansão real de tela
@@ -1845,13 +1822,8 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .transition-video-frame,
-  .transition-play,
-  .transition-video-frame::after {
-    transition: none !important;
-  }
-}
+
+
 
 
 /* -------------------------------------------------------------
@@ -1929,8 +1901,5 @@
   border-radius: 0 !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .work-gallery.is-video-pressing .transition-video-progress i {
-    animation: none !important;
-  }
-}
+
+

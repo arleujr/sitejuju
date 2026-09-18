@@ -582,9 +582,8 @@ button { color: inherit; }
   .paint-heart--5 { display: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; }
-}
+
+
 
 
 /* =========================================================
@@ -2029,10 +2028,8 @@ body.is-intro-locked {
   .encounter-scroll-hint{display:none}
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .party-lights i,.party-crowd i,.wet-floor::after,.puddle,.rain-splash-layer i,.bokeh,.party-tent,.beam,.disco-ball,.disco-rays,.stage-screen,.stage-fog,.encounter-pose,.party-disco,.love-blob,.love-ring,.love-heart-particle,.encounter-love-wash::before,.encounter-love-wash::after{animation:none!important}
-  .chapter-one{min-height:300svh}
-}
+
+
 
 .party-disco { display: none !important; }
 
@@ -2320,6 +2317,5 @@ html.is-auto-journey-paused .journey-player {
   .journey-player__icon svg { width: 19px; height: 19px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .journey-player { transition: none; }
-}
+
+
